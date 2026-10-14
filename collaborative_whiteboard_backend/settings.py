@@ -4,6 +4,8 @@ Django settings for collaborative_whiteboard_backend project.
 
 import os
 from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
 import dj_database_url
 from dotenv import load_dotenv
 
@@ -18,11 +20,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -------------------------------------------------------------
 # SECURITY SETTINGS
 # -------------------------------------------------------------
-# Always set SECRET_KEY in production; the fallback is for local development only.
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-4-b^8=^287@np#7mr$+l9*5!+2tvn_6ecx#4n+six8ep3!ln-#")
+# The fallback key is public (it is in git) and only for local development.
+_DEV_SECRET_KEY = "django-insecure-4-b^8=^287@np#7mr$+l9*5!+2tvn_6ecx#4n+six8ep3!ln-#"
+SECRET_KEY = os.getenv("SECRET_KEY", _DEV_SECRET_KEY)
 
 # Render sets RENDER=true, so production defaults to DEBUG off unless overridden.
 DEBUG = os.getenv("DEBUG", "False" if os.getenv("RENDER") else "True") == "True"
+
+if not DEBUG and (SECRET_KEY == _DEV_SECRET_KEY or len(SECRET_KEY) < 50):
+    raise ImproperlyConfigured(
+        "SECRET_KEY must be set to a long random value (50+ characters) when DEBUG is off. "
+        "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(64))\""
+    )
 
 ALLOWED_HOSTS = [
     'collaboard-z4sx.onrender.com',
@@ -35,12 +44,40 @@ if os.getenv("RENDER_EXTERNAL_HOSTNAME"):
 
 CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS if h not in ("localhost", "127.0.0.1")]
 
-# Render terminates TLS at its proxy; trust its header so request.is_secure()
-# and build_absolute_uri() produce https:// URLs.
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# Behind Render's proxy: trust its X-Forwarded-Proto (so request.is_secure()
+# works) and X-Forwarded-For (client IP for rate limiting). Never trust these
+# headers when the app is reachable directly, because clients could forge them.
+BEHIND_PROXY = bool(os.getenv("RENDER")) or os.getenv("BEHIND_PROXY") == "True"
+TRUST_X_FORWARDED_FOR = BEHIND_PROXY
+if BEHIND_PROXY:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Cookies: not readable by JS (session), same-site, sent over HTTPS only in production.
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # log in again after a week
+
+X_FRAME_OPTIONS = "DENY"
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "same-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    # Redirect http → https and tell browsers to stay on https (HSTS).
+    SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "True") == "True"
+    SECURE_REDIRECT_EXEMPT = [r"^healthz/$"]
+    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", str(60 * 60 * 24 * 30)))
+
+# Django admin lives here; set ADMIN_URL to something less guessable in production.
+ADMIN_URL = os.getenv("ADMIN_URL", "admin/").strip("/") + "/"
+
+# Rate-limit counters (single process, so local memory is enough).
+CACHES = {
+    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "collaboard"},
+}
 
 # -------------------------------------------------------------
 # APPLICATIONS
@@ -58,7 +95,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third-party apps
-    'rest_framework',
     'channels',
 
     # Your modular apps
@@ -78,6 +114,7 @@ INSTALLED_APPS = [
 # -------------------------------------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'modules.core.middleware.security_headers.SecurityHeadersMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -165,7 +202,7 @@ LOGIN_URL = "/auth/login/"
 # -------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 10}},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
     # Project-specific complexity validator: requires uppercase, digit, special char

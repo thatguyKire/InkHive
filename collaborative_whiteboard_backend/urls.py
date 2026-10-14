@@ -17,11 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 
+from django.conf import settings
+
 from modules.core import views as core_views
 
 urlpatterns = [
-    # Django admin (superusers / staff)
-    path('admin/', admin.site.urls),
+    # Django admin (superusers / staff); path configurable via ADMIN_URL
+    path(settings.ADMIN_URL, admin.site.urls),
+    path('healthz/', core_views.healthz, name='healthz'),
 
     # Core landing page (redirects to login)
     path('', include('modules.core.urls')),

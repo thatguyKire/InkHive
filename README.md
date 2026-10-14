@@ -20,8 +20,8 @@ COLLABoard is a real-time web whiteboard for classes. A **teacher** creates a se
 
 | Layer | Tools |
 |---|---|
-| Frontend | HTML, CSS, vanilla JavaScript, Chart.js |
-| Backend | Python 3.11+, Django 5.2, Django Channels, Daphne (ASGI), WhiteNoise |
+| Frontend | HTML, CSS, vanilla JavaScript, Chart.js (vendored) |
+| Backend | Python 3.11+, Django 5.2 LTS, Django Channels, Daphne (ASGI), WhiteNoise |
 | Database | SQLite (PostgreSQL optional via `DATABASE_URL`) |
 | Realtime | WebSockets via Django Channels (broadcast and presence), no external service |
 | File storage | Local `media/` folder served by the app |
@@ -90,7 +90,11 @@ python manage.py runserver
 python manage.py test modules
 ```
 
-The suite (67 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications and dashboards.
+The suite (97 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, and 29 security attack tests.
+
+## Security
+
+See **[SECURITY.md](SECURITY.md)** for the threat model, every security control, and the **pre-launch checklist that must be completed before the site goes live**.
 
 ## Project structure
 

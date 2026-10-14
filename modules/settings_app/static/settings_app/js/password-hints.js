@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
       const v = pwInput.value || '';
       const missing = [];
+      if (v.length < 10) missing.push('At least 10 characters');
       if (!/[A-Z]/.test(v)) missing.push('At least one uppercase letter');
       if (!/\d/.test(v)) missing.push('At least one digit');
       if (!/[^A-Za-z0-9]/.test(v)) missing.push('At least one special character');

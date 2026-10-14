@@ -12,6 +12,7 @@ Project documentation for **COLLABoard**, the Collaborative Whiteboard built by 
 | [UI_UX_DESIGN_BRIEF.md](UI_UX_DESIGN_BRIEF.md): UI/UX Design Brief | Visual identity, design tokens, components, accessibility | Designers, front-end |
 | [BACKEND_SCHEMA.md](BACKEND_SCHEMA.md): Backend Schema | ER diagram, tables, HTTP API, realtime message protocol | Back-end, front-end |
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md): Implementation Plan | What has been built, what was fixed, what comes next | Whole team |
+| [../SECURITY.md](../SECURITY.md): Security | Threat model, controls, pre-launch checklist, reporting | Whole team, before launch |
 
 ## Conventions
 

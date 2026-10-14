@@ -12,12 +12,23 @@ logger = logging.getLogger(__name__)
 
 
 def _whiteboard_context(request, session, *, can_draw, title, back_url):
+    is_teacher = session.created_by == request.user
+    board_config = {
+        "canDraw": bool(can_draw),
+        "isTeacher": is_teacher,
+        "chatEnabled": session.chat_enabled,
+        "sessionId": str(session.id),
+        "userId": str(request.user.id),
+        "snapshotUrl": session.snapshot_url or "",
+        "recordStrokeUrl": reverse("record_stroke", kwargs={"session_id": session.id}),
+    }
     return {
+        "board_config": board_config,
         "session": session,
         "session_title": title,
         "snapshot_url": session.snapshot_url or "",
         "can_draw": can_draw,
-        "is_teacher": session.created_by == request.user,
+        "is_teacher": is_teacher,
         "back_url": back_url,
         "uploads": session.uploads.order_by("uploaded_at"),
     }

@@ -112,6 +112,6 @@
 {{ performance_chart|json_script:"teacher_perf_data" }}
 
 <!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="{% static 'dashboard/vendor/chart.umd.min.js' %}"></script>
 <script src="{% static 'dashboard/js/teacher_performance_chart.js' %}"></script>
 {% endblock %}

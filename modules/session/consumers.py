@@ -11,6 +11,7 @@ send what (only users allowed to draw can send strokes, only the teacher can
 change permissions, clear the board or toggle chat).
 """
 import logging
+import time
 from collections import defaultdict
 
 from channels.db import database_sync_to_async
@@ -22,6 +23,11 @@ logger = logging.getLogger(__name__)
 
 # Close codes understood by the browser client (4403 = do not reconnect).
 CLOSE_FORBIDDEN = 4403
+CLOSE_FLOODING = 4429
+
+# Flood protection per connection: fast drawing sends ~60-120 msgs/s.
+MAX_MESSAGES_PER_SECOND = 200
+MAX_DROPPED_BEFORE_CLOSE = 2000
 
 MAX_MESSAGE_BYTES = 2 * 1024 * 1024  # layer syncs carry a PNG data URL
 
@@ -51,6 +57,9 @@ class BoardConsumer(AsyncJsonWebsocketConsumer):
             return
         self.user_id = str(user.id)
         self.is_teacher, self.can_draw = access
+        self._window_start = time.monotonic()
+        self._window_count = 0
+        self._dropped = 0
 
         await self.channel_layer.group_add(self.group, self.channel_name)
         await self.accept()
@@ -67,10 +76,31 @@ class BoardConsumer(AsyncJsonWebsocketConsumer):
         await self._announce_presence()
 
     async def receive(self, text_data=None, bytes_data=None, **kwargs):
-        if text_data and len(text_data) > MAX_MESSAGE_BYTES:
-            logger.warning("Dropped oversized realtime message from user %s", getattr(self, "user_id", "?"))
+        if not hasattr(self, "user_id"):
             return
-        await super().receive(text_data=text_data, bytes_data=bytes_data, **kwargs)
+        if bytes_data is not None:
+            return  # the protocol is JSON text only
+        if text_data and len(text_data) > MAX_MESSAGE_BYTES:
+            logger.warning("Dropped oversized realtime message from user %s", self.user_id)
+            return
+        if self._flooding():
+            self._dropped += 1
+            if self._dropped >= MAX_DROPPED_BEFORE_CLOSE:
+                logger.warning("Closing flooding realtime connection for user %s", self.user_id)
+                await self.close(code=CLOSE_FLOODING)
+            return
+        try:
+            await super().receive(text_data=text_data, bytes_data=None, **kwargs)
+        except ValueError:  # malformed JSON
+            return
+
+    def _flooding(self):
+        now = time.monotonic()
+        if now - self._window_start >= 1.0:
+            self._window_start = now
+            self._window_count = 0
+        self._window_count += 1
+        return self._window_count > MAX_MESSAGES_PER_SECOND
 
     async def receive_json(self, content, **kwargs):
         if not isinstance(content, dict):

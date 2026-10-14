@@ -15,7 +15,9 @@ from django.utils import timezone
 from django.utils.text import get_valid_filename
 from django.conf import settings
 
+from modules.core import ratelimit
 from modules.core.decorators import safe_view
+from ..file_checks import content_matches
 from ..models import Session, Participant, UploadedFile, generate_session_code
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,7 @@ ALLOWED_UPLOAD_TYPES = {
     ".pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
 }
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+UPLOADS_PER_10_MIN = 30
 
 
 def _is_owner_or_staff(request, session):
@@ -78,16 +81,24 @@ def upload_attachment(request, session_id):
     if not content_type:
         return JsonResponse({"ok": False, "error": "Unsupported file type."}, status=400)
 
-    safe_name = get_valid_filename(os.path.basename(fileobj.name)) or f"upload{ext}"
-    relative_path = f"session_files/{session_id}/{int(systime.time())}_{safe_name}"
+    if not ratelimit.allow("upload", request.user.pk, UPLOADS_PER_10_MIN, 10 * 60):
+        return JsonResponse({"ok": False, "error": "Too many uploads. Please wait a few minutes."}, status=429)
+
     data = fileobj.read()
+    if not content_matches(ext, data):
+        logger.warning("Rejected upload %r from user %s: content does not match %s",
+                       fileobj.name, request.user.pk, ext)
+        return JsonResponse({"ok": False, "error": "File content does not match its type."}, status=400)
+
+    stem = os.path.splitext(get_valid_filename(os.path.basename(fileobj.name)))[0][:80] or "upload"
+    relative_path = f"session_files/{session_id}/{int(systime.time())}_{stem}{ext}"
 
     try:
         saved_path = default_storage.save(relative_path, ContentFile(data))
         file_url = default_storage.url(saved_path)
-    except Exception as e:
+    except Exception:
         logger.exception("Upload failed for session %s", session_id)
-        return JsonResponse({"ok": False, "error": str(e)}, status=500)
+        return JsonResponse({"ok": False, "error": "Upload failed."}, status=500)
 
     UploadedFile.objects.create(
         session=session,

@@ -117,19 +117,9 @@
 </div>
 
 {% csrf_token %}
-{{ can_draw|json_script:"can_draw_data" }}
-{{ is_teacher|json_script:"is_teacher_data" }}
-{{ session.chat_enabled|json_script:"chat_enabled_data" }}
-<script>
-  window.CAN_DRAW = JSON.parse(document.getElementById("can_draw_data").textContent);
-  window.IS_TEACHER = JSON.parse(document.getElementById("is_teacher_data").textContent);
-  window.CHAT_ENABLED = JSON.parse(document.getElementById("chat_enabled_data").textContent);
-  window.CURRENT_SESSION_ID = "{{ session.id }}";
-  window.CURRENT_USER_ID = "{{ request.user.id }}";
-  // Last saved snapshot (if any) is drawn as the board background.
-  window.SNAPSHOT_URL = "{{ snapshot_url|default:''|escapejs }}";
-  window.RECORD_STROKE_URL = "{% url 'record_stroke' session.id %}";
-</script>
+{# Page settings as inert JSON (no inline <script>, so a strict CSP can block injected scripts) #}
+{{ board_config|json_script:"board-config" }}
+<script src="{% static 'session/js/board_config.js' %}"></script>
 <script src="{% static 'core/js/realtime.js' %}"></script>
 <script src="{% static 'session/js/whiteboard.js' %}"></script>
 {% if is_teacher %}

@@ -9,12 +9,17 @@ from django.urls import reverse
 from django.utils import timezone
 
 from modules.authentication.decorators import role_required
+from modules.core import ratelimit
 from modules.core.decorators import safe_view
 from ..models import Session, Participant, generate_session_code
 
 logger = logging.getLogger(__name__)
 
 TITLE_MAX_LENGTH = Session._meta.get_field("title").max_length
+
+# Join codes are short, so cap wrong guesses per account to stop code scanning.
+MAX_FAILED_JOINS = 10
+FAILED_JOIN_WINDOW = 10 * 60
 
 
 @login_required
@@ -62,9 +67,15 @@ def create_session(request):
 def join_session(request):
     """Join an existing session by its code."""
     if request.method == "POST":
-        code = (request.POST.get("code") or "").strip().upper()
+        code = (request.POST.get("code") or "").strip().upper()[:8]
+        if ratelimit.is_limited("join-fail", request.user.pk, MAX_FAILED_JOINS):
+            logger.warning("Join blocked (too many wrong codes) for user %s", request.user.pk)
+            return render(request, "session/join_session.html",
+                          {"error": "Too many wrong codes. Please wait 10 minutes and try again.", "code": code},
+                          status=429)
         session = Session.objects.filter(code__iexact=code, is_archived=False).first() if code else None
         if not session:
+            ratelimit.hit("join-fail", request.user.pk, FAILED_JOIN_WINDOW)
             return render(request, "session/join_session.html", {"error": "Invalid session code", "code": code})
         if session.created_by == request.user:
             return redirect(reverse("whiteboard", kwargs={"session_id": session.id}))

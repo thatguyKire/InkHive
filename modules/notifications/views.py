@@ -7,6 +7,9 @@ from django.views.decorators.http import require_GET, require_POST
 from django.contrib import messages
 from modules.session.models import Session, Participant
 from .notify import notify
+from modules.core import ratelimit
+
+ANNOUNCEMENTS_PER_MINUTE = 10
 from django.db.models import Min, Count
 from django.db.models.functions import TruncMinute
 
@@ -64,6 +67,8 @@ def send_announcement(request, session_id):
         return JsonResponse({"ok": False, "error": "empty"}, status=400)
     if len(text) > 1000:
         return JsonResponse({"ok": False, "error": "too_long"}, status=400)
+    if not ratelimit.allow("announce", request.user.pk, ANNOUNCEMENTS_PER_MINUTE, 60):
+        return JsonResponse({"ok": False, "error": "rate_limited"}, status=429)
 
     participant_qs = (
         Participant.objects

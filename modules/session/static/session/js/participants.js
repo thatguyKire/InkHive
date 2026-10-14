@@ -151,8 +151,11 @@ document.addEventListener("DOMContentLoaded", () => {
           const url = `/session/${window.CURRENT_SESSION_ID}/presence/sync/`;
           const payload = JSON.stringify({ present_user_ids: [] });
           if (navigator.sendBeacon) {
-            const blob = new Blob([payload], { type: "application/json" });
-            navigator.sendBeacon(url, blob);
+            // sendBeacon cannot set headers, so the CSRF token goes in the form body
+            const fd = new FormData();
+            fd.append("csrfmiddlewaretoken", getCookie("csrftoken"));
+            fd.append("present_user_ids", "[]");
+            navigator.sendBeacon(url, fd);
           } else {
             fetch(url, {
               method: "POST",

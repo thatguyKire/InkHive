@@ -2,6 +2,7 @@
 import shutil
 import tempfile
 
+from django.core.cache import cache
 from django.test import TestCase, override_settings
 
 from modules.authentication.models import CustomUser
@@ -28,6 +29,10 @@ class CollaboardTestCase(TestCase):
     def tearDownClass(cls):
         super().tearDownClass()
         shutil.rmtree(_TEMP_MEDIA, ignore_errors=True)
+
+    def setUp(self):
+        super().setUp()
+        cache.clear()  # rate-limit counters must not leak between tests
 
     @classmethod
     def setUpTestData(cls):

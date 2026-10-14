@@ -377,15 +377,17 @@ classDiagram
 |---|---|
 | Unauthorized board access | `whiteboard_view` / `student_whiteboard_view` require owner/staff or Participant; outsiders → join page |
 | Privilege escalation (students acting as teacher) | `role_required` on session management; owner checks on every teacher API; signup form only offers student/teacher |
-| CSRF | Django middleware; JS sends `X-CSRFToken`. Only `presence_sync` is exempt (sendBeacon) and it is owner-only and can only *remove* permissions |
+| CSRF | Django middleware on every POST, no exemptions; JS sends `X-CSRFToken`, the unload beacon sends the token as a form field |
 | XSS | Templates auto-escape; JS renders user text with `textContent`; participant names inserted via `textContent` |
 | Malicious uploads | Extension allow-list (no HTML/SVG), 10 MB cap, sanitized file names, `X-Content-Type-Options: nosniff`; snapshots must be real PNGs |
 | Board hijacking over WebSocket | Only owner/staff/participants can connect (session cookie); drawing events require `can_draw`; teacher-only events (`perm`, `meta`, `clear_all`) enforced server-side; `sid` overwritten with the real user id |
 | Secret leakage | No third-party API keys exist; `SECRET_KEY` only in the environment; `.env` gitignored |
 | Session hijack | Secure cookies when `DEBUG=False`, `SECURE_PROXY_SSL_HEADER` for Render, no-cache headers for authenticated pages |
-| Brute force | Django password hashing (PBKDF2); recommend rate limiting at proxy (Implementation Plan) |
+| Brute force | PBKDF2 hashing; login lockout per IP+account / account / IP (also covers admin); sign-up, join-code, chat, upload limits (`core/ratelimit.py`) |
+| XSS | Strict CSP (`script-src 'self'`, no inline scripts, all assets vendored) on top of auto-escaping |
+| Cross-site WebSocket hijacking | `AllowedHostsOriginValidator` rejects foreign origins even with valid cookies |
 
-**Known limitations:** files under `/media/` are reachable by anyone who has the exact (unguessable) URL. A student whose drawing right was revoked can no longer send their layer to late joiners, so those joiners won't see that student's earlier strokes until the teacher saves a snapshot.
+Full control list: [SECURITY.md](../SECURITY.md). **Known limitation:** a student whose drawing right was revoked can no longer send their layer to late joiners, so those joiners won't see that student's earlier strokes until the teacher saves a snapshot.
 
 ## 9. Error handling and logging
 * `modules.core.decorators.safe_view` logs unhandled exceptions with the view name and swallows `BrokenPipeError` (client disconnected).

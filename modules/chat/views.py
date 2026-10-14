@@ -3,8 +3,11 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from modules.session.models import Session, Participant
+from modules.core import ratelimit
 from .models import ChatRoom, Message
 import json
+
+MESSAGES_PER_MINUTE = 30
 
 def _authorized(user, session: Session):
     return user == session.created_by or Participant.objects.filter(session=session, user=user).exists()
@@ -53,6 +56,8 @@ def send_message(request, room_id):
         return JsonResponse({"error": "Empty"}, status=400)
     if len(content) > 1000:
         return JsonResponse({"error": "Too long"}, status=400)
+    if not ratelimit.allow("chat", request.user.pk, MESSAGES_PER_MINUTE, 60):
+        return JsonResponse({"error": "Slow down"}, status=429)
     msg = Message.objects.create(room=room, sender=request.user, content=content)
     return JsonResponse({
         "chat_enabled": True,

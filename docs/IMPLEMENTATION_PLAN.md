@@ -13,6 +13,7 @@
 | v1 feature set (PRD §6) | ✅ Implemented |
 | Refinement pass (`refine/fixes-and-docs`, merged to `main`) | ✅ 40+ defects fixed, 67 automated tests, docs written |
 | Supabase removal | ✅ SQLite + local media + built-in WebSocket server (§3.3) |
+| Security hardening | ✅ §3.4 · launch blocked until the [SECURITY.md checklist](../SECURITY.md#4-pre-launch-checklist) is done |
 | v1.1 (stability + persistence) | ⏳ Planned, §5 |
 | v2 (richer tools, integrations) | 💡 Proposed, §5 |
 
@@ -38,6 +39,7 @@ gantt
     section Refinement
     Code audit, fixes, tests, documentation        :done, r1, 2026-10-14, 1d
     Supabase removal: SQLite, media, Channels      :done, r2, 2026-10-14, 1d
+    Security hardening                             :done, r3, 2026-10-14, 1d
 ```
 
 ## 3. Refinement fix log (this branch)
@@ -118,6 +120,28 @@ Side effects worth knowing:
 
 Verified by: 67 automated tests (including 6 WebSocket consumer tests), a live end-to-end run of two logged-in clients through Daphne and the real `realtime.js` (10/10 checks), and a production-mode smoke test (`DEBUG=False`: login, static files, snapshot save, `/media/` download, PDF export).
 
+### 3.4 Security hardening (pre-launch)
+
+| # | Sev | Problem | Fix |
+|---|---|---|---|
+| S-01 | 🔴 | Django 5.2.6 / Pillow 11.3.0 / python-dotenv 1.1.1 / DRF had ~100 known vulnerability entries (`pip-audit`) | Django 5.2.18 LTS, Pillow 12.3.0, python-dotenv 1.2.4; unused DRF removed → 0 known vulnerabilities |
+| S-02 | 🔴 | No brute-force protection on login or admin | Lockouts per IP+account (5), per account (10), per IP (50) / 15 min; sign-up limit |
+| S-03 | 🔴 | Uploaded files and snapshots downloadable by anyone with the URL, even logged out | `/media/` checks session membership (404 otherwise), sandbox CSP, downloads for non-images |
+| S-04 | 🔴 | Production could run with the public SECRET_KEY from git | App refuses to start with DEBUG off unless a 50+ char key is set |
+| S-05 | 🟠 | Upload type checked by extension only (HTML renamed to .png accepted) | Content verification with Pillow / signatures; decompression bombs rejected |
+| S-06 | 🟠 | No Content-Security-Policy; two inline scripts; scripts from a CDN | Strict CSP (`script-src 'self'`), inline scripts moved to files, Chart.js vendored and verified |
+| S-07 | 🟠 | Join codes could be brute-forced | 10 wrong codes per account per 10 min |
+| S-08 | 🟠 | `presence_sync` was CSRF-exempt | Token sent in the beacon's form body; exemption removed |
+| S-09 | 🟠 | No HTTPS redirect/HSTS; proxy headers trusted even without a proxy | SSL redirect + HSTS in production; proxy headers only behind Render |
+| S-10 | 🟡 | WebSocket could be flooded | 200 msgs/s per connection, flooding connections closed; binary/malformed frames ignored |
+| S-11 | 🟡 | Chat/announcement/upload spam | Per-user rate limits |
+| S-12 | 🟡 | Server error details returned to clients (`str(e)`) | Generic messages; details only in logs |
+| S-13 | 🟡 | Admin at the well-known `/admin/` | `ADMIN_URL` setting |
+| S-14 | ⚪ | Minimum password length 8 | 10 (UI hint updated) |
+| S-15 | 🔴 | Vendored Chart.js referenced a missing source map, which would have **failed the Render build** (`collectstatic`) | Reference removed; caught by the production smoke test |
+
+Verified by 30 new security tests (`core/test_security.py`, WebSocket flood test), `check --deploy`, `pip-audit`, a production-mode smoke test (HTTPS redirect, headers, admin path, private media) and a live cross-site WebSocket hijack attempt (rejected with 403).
+
 ## 4. Work breakdown (current architecture)
 
 | Module | Owner (suggested) | Remaining work |
@@ -143,9 +167,9 @@ Verified by: 67 automated tests (including 6 WebSocket consumer tests), a live e
 | R-06 | Chat and notifications pushed over the WebSocket (still stored in DB) | Instant messages, less polling | Message appears < 1 s; history still loads | 2 d |
 | R-07 | Delete a session's files from `media/` when it is deleted (keep snapshots shared by duplicates) | Disk growth | No orphaned files after delete | 1 d |
 | R-08 | Split `whiteboard.js` (≈1.3 k lines) into ES modules (state, render, tools, realtime) | Maintainability | Same behaviour; manual test plan passes | 3 d |
-| R-09 | Login rate limiting (e.g., `django-axes`) | Brute force protection | 5 failed attempts → cooldown | 1 d |
+| R-09 | ~~Login rate limiting~~ | | ✅ Done (§3.4, S-02) | n/a |
 | R-10 | CI: GitHub Actions running `manage.py test`, `check`, `makemigrations --check` | Prevent regressions | PRs blocked on red | 0.5 d |
-| R-11 | Serve `/media/` through a view that checks session membership | Files are currently reachable by anyone with the exact URL | Outsiders get 403 | 1 d |
+| R-11 | ~~Permission-checked `/media/`~~ | | ✅ Done (§3.4, S-03) | n/a |
 | R-12 | Optional scale-out: `channels-redis` + PostgreSQL | Run more than one instance | Two instances share board traffic | 2 d |
 
 ### v2: Richer collaboration (proposed)
@@ -169,7 +193,6 @@ gantt
     R-05 Participant constraint         :r5, after r3, 1d
     R-01 Persist strokes                :r1, after r3, 5d
     R-02 Password reset                 :r2, after r5, 2d
-    R-11 Media access control           :r4, after r1, 1d
     R-06 Chat over WebSocket            :r6, after r2, 2d
     R-07 Storage cleanup, R-09 rate limit :r7, after r6, 2d
     R-08 Modularize whiteboard.js       :r8, after r4, 3d
@@ -185,13 +208,15 @@ gantt
 ```bash
 python manage.py check
 python manage.py makemigrations --check --dry-run
-python manage.py test modules        # 67 tests
+python manage.py test modules        # 97 tests
+pip-audit -r requirements.txt        # must report no known vulnerabilities
 ```
 
 | Suite | Covers |
 |---|---|
 | `authentication/tests.py` | Signup rules, email login, role redirects, superuser role, POST logout |
 | `session/tests.py` | Create/duplicate/delete/search, codes, join, access control, permission toggle, presence sync regression, stroke counting, snapshot → media → PDF, attendance CSV, uploads |
+| `core/test_security.py` | 29 attack tests: headers/CSP, no inline or third-party scripts, login lockout (incl. admin, IP switching, forged X-Forwarded-For), sign-up/join/chat limits, disguised uploads, private media + path traversal, CSRF on every state change, SECRET_KEY guard |
 | `session/test_realtime.py` | WebSocket: outsider/anonymous rejected, relay without echo, `sid` enforcement, view-only blocked until `perm`, teacher-only events, presence join/leave, sync relay |
 | `chat/tests.py` | Room access, disabled chat, length limit |
 | `notifications/tests.py` | Announcements, duplicate window, mark-read POST, ownership |
@@ -219,6 +244,7 @@ python manage.py test modules        # 67 tests
 
 ## 7. Deployment checklist (Render)
 
+0. Complete the [SECURITY.md pre-launch checklist](../SECURITY.md#4-pre-launch-checklist); it supersedes the steps below.
 1. In Render → Environment: **delete** `DATABASE_URL` and all `SUPABASE_*` variables; set `SECRET_KEY`, `SQLITE_PATH=/var/data/db.sqlite3`, `MEDIA_ROOT=/var/data/media`. Leave `DEBUG` unset (defaults to False on Render).
 2. Add a persistent disk mounted at `/var/data` (paid instance), and set the start command to `daphne -b 0.0.0.0 -p $PORT collaborative_whiteboard_backend.asgi:application`. Keep 1 instance.
 3. Deploy; `build.sh` runs `migrate` (creates a fresh SQLite database on first deploy) and `collectstatic`. Accounts from the old Supabase database are **not** carried over; users sign up again.

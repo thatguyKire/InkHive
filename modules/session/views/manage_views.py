@@ -11,16 +11,18 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from modules.core import ratelimit
 from modules.core.decorators import safe_view
+from ..file_checks import content_matches
 from ..models import Session, Participant
 
 logger = logging.getLogger(__name__)
 
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 MAX_SNAPSHOT_BYTES = 15 * 1024 * 1024
+SNAPSHOTS_PER_10_MIN = 30
 
 
 def _is_owner_or_staff(user, session):
@@ -91,18 +93,20 @@ def save_snapshot(request, session_id):
     if not img_file:
         return JsonResponse({"ok": False, "error": "no_image"}, status=400)
 
+    if not ratelimit.allow("snapshot", request.user.pk, SNAPSHOTS_PER_10_MIN, 10 * 60):
+        return JsonResponse({"ok": False, "error": "rate_limited"}, status=429)
     if img_file.size > MAX_SNAPSHOT_BYTES:
         return JsonResponse({"ok": False, "error": "too_large"}, status=400)
-    if img_file.read(8) != PNG_SIGNATURE:
+    data = img_file.read()
+    if not data.startswith(PNG_SIGNATURE) or not content_matches(".png", data):
         return JsonResponse({"ok": False, "error": "not_png"}, status=400)
-    img_file.seek(0)
 
     file_path = f"snapshots/{session_id}_{int(systime.time())}.png"
     try:
-        saved_path = default_storage.save(file_path, ContentFile(img_file.read()))
-    except Exception as e:
+        saved_path = default_storage.save(file_path, ContentFile(data))
+    except Exception:
         logger.exception("Failed to store snapshot for session %s", session_id)
-        return JsonResponse({"ok": False, "error": str(e)}, status=500)
+        return JsonResponse({"ok": False, "error": "save_failed"}, status=500)
     public_url = default_storage.url(saved_path)
 
     session.snapshot_url = public_url
@@ -139,12 +143,13 @@ def toggle_chat(request, session_id):
 
 @login_required
 @require_POST
-@csrf_exempt  # allow navigator.sendBeacon on page unload (cannot set headers)
 @safe_view
 def presence_sync(request, session_id):
     """Teacher-initiated presence sync: revoke can_draw for absent users.
 
-    Body JSON: {"present_user_ids": [int, ...]}
+    Body: JSON {"present_user_ids": [int, ...]} (fetch with X-CSRFToken), or a
+    form with present_user_ids=<JSON list> + csrfmiddlewaretoken (sendBeacon on
+    page unload, which cannot set headers). CSRF is enforced either way.
     - Only the session owner (teacher) or staff can invoke this.
     - Participants are never deleted; absent users just lose can_draw.
     """
@@ -153,8 +158,13 @@ def presence_sync(request, session_id):
         return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
 
     try:
-        data = json.loads(request.body or "{}")
+        if request.content_type == "application/json":
+            data = json.loads(request.body or "{}")
+        else:
+            data = {"present_user_ids": json.loads(request.POST.get("present_user_ids") or "[]")}
     except json.JSONDecodeError:
+        data = {}
+    if not isinstance(data, dict):
         data = {}
 
     present_ids = set()

@@ -143,3 +143,30 @@ class BoardConsumerTests(TransactionTestCase):
             await teacher.disconnect()
             await student.disconnect()
         async_to_sync(run)()
+
+    def test_flooding_is_capped_and_garbage_ignored(self):
+        async def run():
+            teacher, _, _ = await self.connect(self.teacher)
+            student, _, _ = await self.connect(self.student)
+            await self.drain(teacher)
+            await self.drain(student)
+
+            # junk must not crash the consumer
+            await teacher.send_to(text_data="{not json")
+            await teacher.send_to(bytes_data=b"\x00\x01")
+            await teacher.send_json_to(["not", "a", "dict"])
+
+            from modules.session.consumers import MAX_MESSAGES_PER_SECOND
+            for i in range(MAX_MESSAGES_PER_SECOND + 100):
+                await teacher.send_json_to({"type": "broadcast", "event": "stroke",
+                                            "payload": {"t": "draw", "x": 0, "y": 0}})
+            received = 0
+            while not await student.receive_nothing(timeout=0.3):
+                msg = await student.receive_json_from()
+                if msg.get("type") == "broadcast":
+                    received += 1
+            self.assertLessEqual(received, MAX_MESSAGES_PER_SECOND)
+            self.assertGreater(received, 0)
+            await teacher.disconnect()
+            await student.disconnect()
+        async_to_sync(run)()
