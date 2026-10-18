@@ -48,6 +48,26 @@
       <p>Get assistance or contact our support team</p>
     </a>
 
+    <a href="{% url 'export_data' %}" class="setting-card">
+      <img src="{% static 'core/icons/savedsessionicon.png' %}" alt="">
+      <h2>Download My Data</h2>
+      <p>Get a copy of everything stored about your account</p>
+    </a>
+
+    <a href="{% url 'legal:privacy' %}" class="setting-card">
+      <img src="{% static 'core/icons/account.png' %}" alt="">
+      <h2>Terms &amp; Privacy</h2>
+      <p>How COLLABoard handles your data, and the rules of use</p>
+    </a>
+
+    {% if not user.is_staff %}
+    <a href="{% url 'delete_account' %}" class="setting-card logout-card">
+      <img src="{% static 'core/icons/trash.svg' %}" alt="">
+      <h2>Delete Account</h2>
+      <p>Permanently delete your account and data</p>
+    </a>
+    {% endif %}
+
     <form method="post" action="{% url 'auth:logout' %}" class="setting-card logout-card">
       {% csrf_token %}
       <button type="submit">

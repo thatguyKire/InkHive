@@ -70,10 +70,11 @@ Inside the session details page, click “Invite” to generate the QR code or t
   <div class="contact-section">
   <p>Need more help? We’d be happy to assist you!</p>
 
-  <a href="mailto:COLLABoardDevTeam@gmail.com" class="contact-email">
-    <img src="{% static 'help_app/img/gmail (1).png' %}" alt="Email Icon" class="email-icon">
-    COLLABoardDevTeam@gmail.com
+  <a href="mailto:{{ contact_email }}" class="contact-email">
+    <img src="{% static 'help_app/img/email.svg' %}" alt="" class="email-icon">
+    {{ contact_email }}
   </a>
+  <p class="legal-links"><a href="{% url 'legal:terms' %}">Terms of Service</a> · <a href="{% url 'legal:privacy' %}">Privacy Policy</a></p>
 </div>
   </section>
 

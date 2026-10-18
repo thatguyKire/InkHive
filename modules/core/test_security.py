@@ -138,11 +138,11 @@ class AbuseLimitTests(CollaboardTestCase):
         for i in range(10):
             self.client.post(reverse("auth:signup"), {
                 "username": f"bot{i}", "email": f"bot{i}@x.com", "role": "teacher",
-                "password1": "An0ther!Pass", "password2": "An0ther!Pass"}, REMOTE_ADDR="10.1.1.1")
+                "password1": "An0ther!Pass", "password2": "An0ther!Pass", "accept_terms": "on"}, REMOTE_ADDR="10.1.1.1")
             self.client.logout()
         resp = self.client.post(reverse("auth:signup"), {
             "username": "bot99", "email": "bot99@x.com", "role": "teacher",
-            "password1": "An0ther!Pass", "password2": "An0ther!Pass"}, REMOTE_ADDR="10.1.1.1")
+            "password1": "An0ther!Pass", "password2": "An0ther!Pass", "accept_terms": "on"}, REMOTE_ADDR="10.1.1.1")
         self.assertEqual(resp.status_code, 429)
 
     def test_join_code_scanning_blocked(self):

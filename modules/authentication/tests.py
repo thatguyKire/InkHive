@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import reverse
 
 from modules.authentication.models import CustomUser
@@ -13,6 +14,7 @@ class SignupTests(CollaboardTestCase):
             "role": "student",
             "password1": "An0ther!Pass",
             "password2": "An0ther!Pass",
+            "accept_terms": "on",
         }
         data.update(overrides)
         return self.client.post(reverse("auth:signup"), data)
@@ -72,7 +74,8 @@ class LoginTests(CollaboardTestCase):
             self.assertRedirects(resp, reverse(target))
 
     def test_superuser_becomes_admin(self):
-        admin = CustomUser.objects.create_superuser("root", "root@cit.edu", TEST_PASSWORD)
+        admin = CustomUser.objects.create_superuser("root", "root@cit.edu", TEST_PASSWORD,
+                                                   terms_version=settings.TERMS_VERSION)
         self.assertEqual(admin.role, "admin")
         self.client.force_login(admin)
         self.assertRedirects(self.client.get(reverse("redirect_dashboard")), reverse("admin_dashboard"))

@@ -10,7 +10,12 @@
 
 
 body {
-  background: #fefefe url("../img/graphy.png") /* pattern from transparenttextures.com, vendored */;
+  /* graph-paper grid drawn in CSS (no third-party image) */
+  background:
+    linear-gradient(#dcdcdc 1px, transparent 1px) 0 0 / 100% 80px,
+    linear-gradient(#e5e5e5 1px, transparent 1px) 0 0 / 5px 5px,
+    linear-gradient(90deg, #e5e5e5 1px, transparent 1px) 0 0 / 5px 5px,
+    #f1f1f1;
   color: #2c3e50;
   min-height: 100vh;
 }

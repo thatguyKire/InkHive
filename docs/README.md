@@ -13,6 +13,7 @@ Project documentation for **COLLABoard**, the Collaborative Whiteboard built by 
 | [BACKEND_SCHEMA.md](BACKEND_SCHEMA.md): Backend Schema | ER diagram, tables, HTTP API, realtime message protocol | Back-end, front-end |
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md): Implementation Plan | What has been built, what was fixed, what comes next | Whole team |
 | [../SECURITY.md](../SECURITY.md): Security | Threat model, controls, pre-launch checklist, reporting | Whole team, before launch |
+| [LEGAL.md](LEGAL.md): Legal and Privacy | Terms, Privacy Policy, personal data inventory, legal launch to-do, handling reports and breaches | Whole team, before launch |
 
 ## Conventions
 

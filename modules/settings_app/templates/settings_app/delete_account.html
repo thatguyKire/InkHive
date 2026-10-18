@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Delete Account - COLLABoard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'profiles/css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'settings_app/css/settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-body">
+  <div class="profile-container delete-account">
+    <div class="profile-header">
+      <h2>Delete Account</h2>
+    </div>
+
+    {% if messages %}
+      <ul class="form-errors">
+        {% for message in messages %}<li class="field-error">{{ message }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+
+    <p><strong>This cannot be undone.</strong> Deleting your account permanently removes:</p>
+    <ul class="delete-list">
+      <li>your account and profile;</li>
+      {% if user.role == "teacher" %}
+        <li><strong>every session you created</strong>, including its boards, snapshots, uploads, chat and attendance records, for you and your students;</li>
+      {% endif %}
+      <li>the files and chat messages you posted in other sessions;</li>
+      <li>your notifications.</li>
+    </ul>
+    <p class="text-muted">Strokes you drew on someone else's board may still appear in snapshots they already saved.
+      <a href="{% url 'export_data' %}">Download your data</a> first if you want a copy.</p>
+
+    <form method="post" class="profile-info">
+      {% csrf_token %}
+      <label for="delete-password">Enter your password to confirm</label>
+      <input type="password" id="delete-password" name="password" autocomplete="current-password" required>
+
+      <label class="delete-confirm">
+        <input type="checkbox" name="confirm" required>
+        <span>I understand that my account and data will be permanently deleted.</span>
+      </label>
+
+      <div class="profile-actions">
+        <button type="submit" class="btn btn-danger">Delete my account</button>
+        <a href="{% url 'settings' %}" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

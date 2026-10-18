@@ -14,6 +14,7 @@
 | Refinement pass (`refine/fixes-and-docs`, merged to `main`) | ✅ 40+ defects fixed, 67 automated tests, docs written |
 | Supabase removal | ✅ SQLite + local media + built-in WebSocket server (§3.3) |
 | Security hardening | ✅ §3.4 · launch blocked until the [SECURITY.md checklist](../SECURITY.md#4-pre-launch-checklist) is done |
+| Legal and privacy | ✅ §3.5 · team to-do in [LEGAL.md §3](LEGAL.md#3-before-launch-team-to-do) (rename, school approval) |
 | v1.1 (stability + persistence) | ⏳ Planned, §5 |
 | v2 (richer tools, integrations) | 💡 Proposed, §5 |
 
@@ -142,6 +143,19 @@ Verified by: 67 automated tests (including 6 WebSocket consumer tests), a live e
 
 Verified by 30 new security tests (`core/test_security.py`, WebSocket flood test), `check --deploy`, `pip-audit`, a production-mode smoke test (HTTPS redirect, headers, admin path, private media) and a live cross-site WebSocket hijack attempt (rejected with 403).
 
+### 3.5 Legal and privacy (pre-launch)
+
+| # | Problem | Fix |
+|---|---|---|
+| L-01 | No Terms of Service or Privacy Policy | `/legal/terms/` and `/legal/privacy/` (Data Privacy Act of 2012), linked from login, sign-up, Settings, Help |
+| L-02 | No record that users agreed to anything | Required checkbox at sign-up; `terms_version` + `terms_accepted_at` on the user; existing users must accept before continuing (`TermsAcceptanceMiddleware`) |
+| L-03 | Users could not get a copy of their data | Settings → Download my data (JSON) |
+| L-04 | Users could not delete their account | Settings → Delete account (password + confirmation, rate-limited; admins excluded) |
+| L-05 | Deleted sessions left their files on disk (R-07) | `session/storage.py` removes uploads and snapshots that nothing references any more |
+| L-06 | Background texture with no stated licence; Gmail logo on the Help page | CSS-drawn grid; own envelope icon; [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) |
+
+Verified by 19 tests in `modules/legal/tests.py` and screenshots of the new pages at desktop and phone widths. Still to do by the team: [LEGAL.md §3](LEGAL.md#3-before-launch-team-to-do).
+
 ## 4. Work breakdown (current architecture)
 
 | Module | Owner (suggested) | Remaining work |
@@ -165,7 +179,7 @@ Verified by 30 new security tests (`core/test_security.py`, WebSocket flood test
 | R-04 | ~~Access-controlled realtime channels~~ | | ✅ Done: consumer checks membership and rights | n/a |
 | R-05 | `UniqueConstraint(user, session)` on Participant (with data cleanup migration) | Prevent rare duplicate joins | Migration runs on prod copy; duplicate join impossible | 0.5 d |
 | R-06 | Chat and notifications pushed over the WebSocket (still stored in DB) | Instant messages, less polling | Message appears < 1 s; history still loads | 2 d |
-| R-07 | Delete a session's files from `media/` when it is deleted (keep snapshots shared by duplicates) | Disk growth | No orphaned files after delete | 1 d |
+| R-07 | ✅ Done (§3.5, L-05): delete a session's files from `media/` when it is deleted (keep snapshots shared by duplicates) | Disk growth | No orphaned files after delete | 1 d |
 | R-08 | Split `whiteboard.js` (≈1.3 k lines) into ES modules (state, render, tools, realtime) | Maintainability | Same behaviour; manual test plan passes | 3 d |
 | R-09 | ~~Login rate limiting~~ | | ✅ Done (§3.4, S-02) | n/a |
 | R-10 | CI: GitHub Actions running `manage.py test`, `check`, `makemigrations --check` | Prevent regressions | PRs blocked on red | 0.5 d |
@@ -208,7 +222,7 @@ gantt
 ```bash
 python manage.py check
 python manage.py makemigrations --check --dry-run
-python manage.py test modules        # 97 tests
+python manage.py test modules        # 116 tests
 pip-audit -r requirements.txt        # must report no known vulnerabilities
 ```
 
@@ -244,7 +258,7 @@ pip-audit -r requirements.txt        # must report no known vulnerabilities
 
 ## 7. Deployment checklist (Render)
 
-0. Complete the [SECURITY.md pre-launch checklist](../SECURITY.md#4-pre-launch-checklist); it supersedes the steps below.
+0. Complete the [SECURITY.md pre-launch checklist](../SECURITY.md#4-pre-launch-checklist) (it supersedes the steps below) and the [legal to-do](LEGAL.md#3-before-launch-team-to-do).
 1. In Render → Environment: **delete** `DATABASE_URL` and all `SUPABASE_*` variables; set `SECRET_KEY`, `SQLITE_PATH=/var/data/db.sqlite3`, `MEDIA_ROOT=/var/data/media`. Leave `DEBUG` unset (defaults to False on Render).
 2. Add a persistent disk mounted at `/var/data` (paid instance), and set the start command to `daphne -b 0.0.0.0 -p $PORT collaborative_whiteboard_backend.asgi:application`. Keep 1 instance.
 3. Deploy; `build.sh` runs `migrate` (creates a fresh SQLite database on first deploy) and `collectstatic`. Accounts from the old Supabase database are **not** carried over; users sign up again.

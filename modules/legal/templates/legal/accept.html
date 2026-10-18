@@ -1,0 +1,55 @@
+{% extends "legal/layout.html" %}
+
+{% block title %}Accept Terms - COLLABoard{% endblock %}
+
+{% block content %}
+<section class="legal-doc legal-accept">
+  <h1>{% if user.terms_version %}We've updated our terms{% else %}Before you continue{% endif %}</h1>
+  <p class="legal-lead">
+    {% if user.terms_version %}
+      Our Terms of Service and Privacy Policy changed on {{ effective_date|date:"F j, Y" }}. Please review and accept them to keep using COLLABoard.
+    {% else %}
+      Please review and accept our Terms of Service and Privacy Policy to keep using COLLABoard.
+    {% endif %}
+  </p>
+
+  {% if messages %}
+    {% for message in messages %}<p class="legal-alert" role="alert">{{ message }}</p>{% endfor %}
+  {% endif %}
+
+  <div class="legal-summary">
+    <h2>In short</h2>
+    <ul>
+      <li>You keep ownership of what you draw and upload. People in your session can see it.</li>
+      <li>Teachers can see the email, attendance and activity of students in their sessions.</li>
+      <li>No ads, no tracking, and we never sell your data.</li>
+      <li>You can download your data or delete your account at any time in Settings.</li>
+      <li>COLLABoard is a free student project, provided as is.</li>
+    </ul>
+  </div>
+
+  <form method="post" class="legal-accept-form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <label class="legal-check">
+      <input type="checkbox" name="agree" required>
+      <span>I am at least 18 years old (or my parent or guardian agrees for me), and I agree to the
+        <a href="{% url 'legal:terms' %}" target="_blank" rel="noopener">Terms of Service</a> and
+        <a href="{% url 'legal:privacy' %}" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+    </label>
+    <button type="submit" class="legal-btn">Agree and continue</button>
+  </form>
+
+  <div class="legal-decline">
+    <p>Don't agree?</p>
+    <form method="post" action="{% url 'auth:logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="legal-link-btn">Log out</button>
+    </form>
+    <span aria-hidden="true">·</span>
+    <a href="{% url 'export_data' %}">Download my data</a>
+    <span aria-hidden="true">·</span>
+    <a href="{% url 'delete_account' %}">Delete my account</a>
+  </div>
+</section>
+{% endblock %}

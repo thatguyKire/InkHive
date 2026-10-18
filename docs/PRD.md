@@ -84,6 +84,7 @@ Teachers need one place where they keep control of the board, can hand the "pen"
 | Snapshot save, saved sessions, PNG/PDF export | v1 | ✅ Done (PDF export fixed) |
 | Attendance page + CSV | v1 | ✅ Done |
 | Participation analytics (strokes, uploads, messages) | v1 | ✅ Done (metrics now real) |
+| Terms of Service, Privacy Policy, recorded agreement, data download, account deletion | v1 | ✅ Added before launch ([LEGAL.md](LEGAL.md)) |
 | Password reset by email | v1.1 | ⏳ Planned |
 | Persistent board state (vector strokes stored server-side) | v1.1 | ⏳ Planned |
 | Text and shape tools, page/slide navigation | v2 | 💡 Proposed |
@@ -114,7 +115,9 @@ Teachers need one place where they keep control of the board, can hand the "pen"
 | Hosting without a persistent disk | Database and uploads wiped on redeploy/restart | Mount a disk and set `SQLITE_PATH` / `MEDIA_ROOT` (TRD §8) |
 | Unsaved boards are lost when everyone leaves | Lost lesson content | "Save" button, reminders in help; planned server-side stroke storage |
 | Render free instance sleeps | Slow first load | Paid instance for class hours, or warm-up ping |
-| Students drawing inappropriate content | Classroom disruption | Draw is off by default; teacher toggles per student; Clear All |
+| Students drawing inappropriate content | Classroom disruption | Draw is off by default; teacher toggles per student; Clear All; Terms forbid it and allow suspension |
+| Product name *COLLABoard* matches a registered trademark (*COLLABOARD*, IBV Informatik AG, online whiteboard software) | Legal claim if launched publicly under this name | Rename before public launch ([LEGAL.md](LEGAL.md) L-1) |
+| Handling student personal data without a privacy notice or school approval | Data Privacy Act complaints | Privacy Policy, data rights in Settings, school DPO approval ([LEGAL.md](LEGAL.md) L-2) |
 
 ## 10. Related documents
 

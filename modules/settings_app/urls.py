@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path("", views.settings_view, name="settings"),
+    path("export/", views.export_data, name="export_data"),
+    path("delete-account/", views.delete_account, name="delete_account"),
 
     # Password change
     path(

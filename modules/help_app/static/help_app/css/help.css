@@ -166,6 +166,12 @@
   object-fit: contain;
 }
 
+.help-section .contact-section .legal-links {
+  margin: 18px 0 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
 /* FAQ article layout fix */
 .articles.help-scroll {
   text-align: left !important;

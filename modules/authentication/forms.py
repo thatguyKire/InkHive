@@ -27,6 +27,11 @@ class CustomSignupForm(UserCreationForm):
         choices=[("student", "Student"), ("teacher", "Teacher")],
         widget=forms.Select(attrs={"autocomplete": "off"})
     )
+    # Clickwrap agreement to the Terms of Service and Privacy Policy (modules/legal)
+    accept_terms = forms.BooleanField(
+        required=True,
+        error_messages={"required": "Please agree to the Terms of Service and Privacy Policy to create an account."},
+    )
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
@@ -152,6 +157,7 @@ class CustomSignupForm(UserCreationForm):
         user.role = (self.cleaned_data.get("role") or "").lower()
         # already normalized by clean()
         user.student_id = self.cleaned_data.get("student_id")
+        user.accept_terms()
         if commit:
             user.save()
         return user

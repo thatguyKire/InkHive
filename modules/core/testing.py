@@ -2,6 +2,7 @@
 import shutil
 import tempfile
 
+from django.conf import settings
 from django.core.cache import cache
 from django.test import TestCase, override_settings
 
@@ -43,6 +44,7 @@ class CollaboardTestCase(TestCase):
 
     @staticmethod
     def make_user(username, role, **extra):
+        extra.setdefault("terms_version", settings.TERMS_VERSION)  # already agreed to the Terms
         return CustomUser.objects.create_user(
             username=username, email=f"{username}@cit.edu", password=TEST_PASSWORD, role=role, **extra
         )

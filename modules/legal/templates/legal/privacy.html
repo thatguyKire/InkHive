@@ -1,0 +1,147 @@
+{% extends "legal/layout.html" %}
+
+{% block title %}Privacy Policy - COLLABoard{% endblock %}
+
+{% block content %}
+<article class="legal-doc">
+  <h1>Privacy Policy</h1>
+  <p class="legal-meta">Effective {{ effective_date|date:"F j, Y" }}</p>
+
+  <p class="legal-lead">This policy explains what personal data COLLABoard collects, why, who can see it, how long we keep it, and your rights under the Philippine <strong>Data Privacy Act of 2012</strong> (Republic Act No. 10173). COLLABoard is a free student project run by the CSIT327 Group 4 team (“<strong>we</strong>”). We are responsible for the personal data described here.</p>
+
+  <div class="legal-summary">
+    <h2>The short version</h2>
+    <ul>
+      <li>We collect only what is needed to run class whiteboards: your account details and what you do in sessions.</li>
+      <li>No ads, no tracking or analytics, no third-party scripts, and we never sell your data.</li>
+      <li>Teachers can see the email, attendance and activity of students in their sessions.</li>
+      <li>You can download all your data or delete your account at any time in Settings.</li>
+    </ul>
+  </div>
+
+  <nav class="legal-toc" aria-label="Contents">
+    <ol>
+      <li><a href="#collect">What we collect</a></li>
+      <li><a href="#cookies">Cookies</a></li>
+      <li><a href="#use">Why we use it</a></li>
+      <li><a href="#see">Who can see it</a></li>
+      <li><a href="#retention">How long we keep it</a></li>
+      <li><a href="#rights">Your rights</a></li>
+      <li><a href="#security">How we protect it</a></li>
+      <li><a href="#minors">Users under 18</a></li>
+      <li><a href="#changes">Changes to this policy</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </nav>
+
+  <section id="collect">
+    <h2>1. What we collect</h2>
+    <h3>When you sign up</h3>
+    <ul>
+      <li>username, institutional email address and role (student or teacher);</li>
+      <li>student ID number (students only);</li>
+      <li>your password, stored only as a salted one-way hash, so nobody (including us) can read it;</li>
+      <li>when you joined, when you last logged in, and which version of these policies you agreed to and when.</li>
+    </ul>
+    <h3>When you use sessions</h3>
+    <ul>
+      <li>sessions you create or join, when you joined, when you were last active, and whether you may draw;</li>
+      <li>how many strokes you drew and files you uploaded (participation counts teachers see);</li>
+      <li>your drawings, uploaded files and images, saved snapshots, chat messages, announcements and notifications.</li>
+    </ul>
+    <h3>For security</h3>
+    <ul>
+      <li>your IP address, used to limit password guessing and spam. Counters are kept in memory for at most one hour;</li>
+      <li>server logs of failed or blocked logins (the username or email typed and the IP address) and other security events. Our hosting provider keeps these logs for a limited period.</li>
+    </ul>
+    <p>We do <strong>not</strong> collect your location, contacts, camera, microphone or payment details. We never ask for sensitive personal information (such as health, religion or government ID numbers). Please do not put it on a board or in chat.</p>
+  </section>
+
+  <section id="cookies">
+    <h2>2. Cookies</h2>
+    <p>COLLABoard uses only two cookies, and both are needed for the site to work:</p>
+    <div class="legal-table-wrap">
+      <table class="legal-table">
+        <thead><tr><th>Cookie</th><th>What it does</th><th>How long</th></tr></thead>
+        <tbody>
+          <tr><td><code>sessionid</code></td><td>Keeps you signed in</td><td>Up to 7 days, or until you log out</td></tr>
+          <tr><td><code>csrftoken</code></td><td>Protects your forms from being sent by other websites</td><td>1 year</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>There are no analytics, advertising or tracking cookies, and every page loads its scripts, styles and fonts from COLLABoard itself, so no other company sees your visits.</p>
+  </section>
+
+  <section id="use">
+    <h2>3. Why we use it</h2>
+    <ul>
+      <li><strong>To run COLLABoard for you:</strong> your account, the sessions you create or join, live drawing, chat, uploads and notifications. This is necessary to provide the service you signed up for.</li>
+      <li><strong>So teachers can run their classes:</strong> participant lists, drawing permissions, attendance and participation.</li>
+      <li><strong>To keep COLLABoard secure:</strong> stopping password guessing, spam, harmful uploads and misuse.</li>
+      <li><strong>When the law requires it.</strong></li>
+    </ul>
+    <p>These are lawful reasons for processing under Section 12 of the Data Privacy Act: providing a service you asked for, legitimate interests that do not override your rights, and legal obligations. We do not sell personal data, use it for advertising, build profiles of you, make automated decisions about you, or use your content to train AI.</p>
+  </section>
+
+  <section id="see">
+    <h2>4. Who can see it</h2>
+    <ul>
+      <li><strong>People in your sessions</strong> see your username and role, whether you are online, and what you draw, upload or write there.</li>
+      <li><strong>The teacher who owns a session</strong> also sees your email, when you joined, when you were last active, and your stroke and upload counts. They can export this as a spreadsheet.</li>
+      <li><strong>Site administrators</strong> (members of our team) can access data when needed to run, fix or secure COLLABoard.</li>
+      <li><strong>Our hosting provider (Render)</strong> stores the data and runs the servers for us. Its servers may be outside the Philippines. It may only use the data to provide hosting to us.</li>
+      <li><strong>Authorities</strong>, only when the law requires us to share it.</li>
+    </ul>
+    <p>Nobody else. We do not sell, rent or trade personal data.</p>
+  </section>
+
+  <section id="retention">
+    <h2>5. How long we keep it</h2>
+    <ul>
+      <li><strong>Your account:</strong> until you delete it.</li>
+      <li><strong>Session content</strong> (boards, uploads, snapshots, chat): until the teacher deletes the session, or the teacher's account is deleted.</li>
+      <li><strong>When you delete your account</strong> (Settings → Delete account), we immediately delete your account, every session you created (with its boards, uploads, snapshots, chat and attendance), the files and messages you posted in other sessions, and your notifications.
+        <br>Two things can remain: strokes you drew on another teacher's board can still appear in snapshots they already saved, and people may have downloaded or screenshotted things you shared.</li>
+      <li><strong>Backups:</strong> deleted data can remain in backups for up to 30 days until they are replaced.</li>
+      <li><strong>Security data:</strong> IP counters for at most one hour; logs for our hosting provider's limited log period.</li>
+      <li><strong>If COLLABoard shuts down</strong>, we will try to give notice so you can download your data, then delete all personal data within 30 days.</li>
+    </ul>
+  </section>
+
+  <section id="rights">
+    <h2>6. Your rights</h2>
+    <p>Under the Data Privacy Act you have the right to:</p>
+    <ul>
+      <li><strong>be informed</strong> about how your data is used (this policy);</li>
+      <li><strong>access</strong> your data and <strong>take it with you</strong>: Settings → <strong>Download my data</strong> gives you a file with everything linked to your account;</li>
+      <li><strong>correct</strong> it: change your email in your profile, or ask us to fix anything else;</li>
+      <li><strong>erase or block</strong> it: Settings → <strong>Delete account</strong>, or ask us;</li>
+      <li><strong>object</strong> to how we use it;</li>
+      <li><strong>be compensated</strong> for damage caused by wrongful use of your data;</li>
+      <li><strong>complain</strong> to the National Privacy Commission (<a href="https://privacy.gov.ph" rel="noopener" target="_blank">privacy.gov.ph</a>).</li>
+    </ul>
+    <p>To use a right that is not self-service, email us. We may ask you to confirm the request from the email on your account. We aim to reply within 15 days.</p>
+  </section>
+
+  <section id="security">
+    <h2>7. How we protect it</h2>
+    <p>Everything is sent over HTTPS. Passwords are hashed. Files and boards are only available to members of the session. Uploads are checked. Repeated login failures lock the account for a while. Strict browser security rules block injected scripts and other websites.</p>
+    <p>No system is perfectly secure. If a breach of personal data is likely to put you at risk, we will tell you and the National Privacy Commission, as the law requires.</p>
+  </section>
+
+  <section id="minors">
+    <h2>8. Users under 18</h2>
+    <p>COLLABoard is meant for college classes. Users under 18 need their parent or guardian's permission. If you are a parent or guardian and believe your child is using COLLABoard without your permission, email us and we will delete the account.</p>
+  </section>
+
+  <section id="changes">
+    <h2>9. Changes to this policy</h2>
+    <p>If we change this policy, we will update the date at the top. If the change affects how your data is used, we will ask you to agree again the next time you use COLLABoard.</p>
+  </section>
+
+  <section id="contact">
+    <h2>10. Contact us</h2>
+    <p>For privacy questions and requests, email <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>. Our data protection officer is the project's lead developer and can be reached at this address.</p>
+  </section>
+</article>
+{% endblock %}

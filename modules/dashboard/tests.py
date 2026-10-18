@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.urls import reverse
 
 from modules.authentication.models import CustomUser
@@ -41,7 +42,8 @@ class DashboardTests(CollaboardTestCase):
         self.assertContains(resp, reverse("student_whiteboard", args=[self.session.id]))
 
     def test_admin_dashboard_shows_real_counts(self):
-        admin = CustomUser.objects.create_superuser("root", "root@cit.edu", TEST_PASSWORD)
+        admin = CustomUser.objects.create_superuser("root", "root@cit.edu", TEST_PASSWORD,
+                                                   terms_version=settings.TERMS_VERSION)
         self.client.force_login(admin)
         resp = self.client.get(reverse("admin_dashboard"))
         self.assertEqual(resp.context["student_count"], 2)

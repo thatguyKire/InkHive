@@ -17,6 +17,7 @@ from modules.core import ratelimit
 from modules.core.decorators import safe_view
 from ..file_checks import content_matches
 from ..models import Session, Participant
+from ..storage import session_file_paths, delete_unreferenced
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,9 @@ def delete_session(request, session_id):
 
     title = session.title
     try:
+        files = session_file_paths(Session.objects.filter(pk=session.pk))
         session.delete()
+        delete_unreferenced(files)
         messages.success(request, f"Session '{title}' deleted.")
     except Exception as exc:
         logger.exception("Failed to delete session %s: %s", session_id, exc)

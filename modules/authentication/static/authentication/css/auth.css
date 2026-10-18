@@ -339,3 +339,29 @@ body {
   .form-group input { font-size: 1rem; padding: 12px 14px; }
   .btn { font-size: 1.05rem; padding: 12px 16px; }
 }
+
+/* Terms agreement checkbox on sign-up */
+.form-group.terms-check label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: normal;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+}
+.form-group.terms-check input[type="checkbox"] {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  padding: 0;
+  box-shadow: none;
+}
+.form-group.terms-check a { color: #1f6fb2; font-weight: bold; }
+.form-group.terms-check.has-error label { color: #b3261e; }
+
+/* Terms / Privacy links under the auth forms */
+.legal-links { margin-top: 10px; font-size: 13px; }
+.legal-links a { color: #555; }

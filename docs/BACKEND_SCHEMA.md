@@ -31,6 +31,8 @@ erDiagram
         varchar password "PBKDF2 hash"
         varchar role "student, teacher or admin"
         varchar student_id UK "nullable, max 50"
+        varchar terms_version "accepted Terms version"
+        timestamptz terms_accepted_at "nullable"
         bool is_staff
         bool is_superuser
         bool is_active
@@ -115,6 +117,8 @@ Django's own tables (`django_session`, `auth_group`, `auth_permission`, `django_
 | `password` | varchar(128) | not null | Django hasher string |
 | `role` | varchar(20) | default `student` | `student`, `teacher`, `admin`; superusers forced to `admin` on save |
 | `student_id` | varchar(50) | unique, nullable | Required for students; NULL for others (avoids `''` collisions) |
+| `terms_version` | varchar(20) | default `''` | Terms/Privacy version the user agreed to; must equal `settings.TERMS_VERSION` to use the app |
+| `terms_accepted_at` | timestamptz | nullable | When they agreed |
 | `first_name`, `last_name` | varchar(150) | blank | Not used in UI |
 | `is_staff`, `is_superuser`, `is_active` | bool | | Django auth |
 | `date_joined`, `last_login` | timestamptz | | |
@@ -241,6 +245,10 @@ All endpoints require login (redirect to `/auth/login/` otherwise) unless noted.
 | GET | `/profiles/`, GET/POST `/profiles/edit/` | `profile`, `edit_profile` | logged in |
 | GET | `/settings/`, GET/POST `/settings/password_change/` | `settings`, `password_change` | logged in |
 | GET | `/help/` | `help` | logged in |
+| GET | `/legal/terms/`, `/legal/privacy/` | `legal:terms`, `legal:privacy` | public |
+| GET/POST | `/legal/accept/` | `legal:accept` | logged in (`agree=on`, `next`) |
+| GET | `/settings/export/` | `export_data` | logged in → JSON download of the user's data |
+| GET/POST | `/settings/delete-account/` | `delete_account` | logged in, not staff (`password`, `confirm=on`) |
 | * | `/admin/` | Django Admin | staff |
 
 ### 4.2 Whiteboard JSON API (`modules/session`)
@@ -350,9 +358,9 @@ Coordinates `x, y, w, h` are **normalized 0–1** relative to the sender's canva
 
 | Event | Effect |
 |---|---|
-| Delete user | Cascades to their sessions, participations, uploads, messages and notifications |
-| Delete session | Cascades to participants, uploads, chat room + messages; notifications keep text but `session_id → NULL` |
+| Delete user (Settings → Delete account) | Cascades to their sessions, participations, uploads, messages and notifications; notifications about their sessions are deleted; their files are removed from `media/` |
+| Delete session | Cascades to participants, uploads, chat room + messages; notifications keep text but `session_id → NULL`; its uploads and snapshot are removed from `media/` |
 | Save snapshot | New file in `media/snapshots/`; `snapshot_url` points to newest (older snapshots stay on disk) |
 | Duplicate session | New row with new code; shares the same `snapshot_url` (no file copy) |
 
-Files in `media/` are **not** deleted automatically when sessions are deleted; see Implementation Plan task R-07.
+Files are removed by `modules/session/storage.py`. A snapshot shared by a duplicated session is kept until no session points at it. Older snapshots of a session that was re-saved stay on disk until the session is deleted.

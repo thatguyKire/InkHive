@@ -40,6 +40,7 @@ urlpatterns = [
     path('help/', include('modules.help_app.urls')),
     path('session/', include('modules.session.urls')),
     path("chat/", include("modules.chat.urls")),
+    path('legal/', include(('modules.legal.urls', 'legal'), namespace='legal')),
 
 ]
 

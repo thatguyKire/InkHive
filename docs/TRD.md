@@ -50,6 +50,7 @@ All configuration is read in `collaborative_whiteboard_backend/settings.py`. Tem
 | `DATABASE_URL` | No | unset | If set, PostgreSQL is used instead of SQLite |
 | `LOG_LEVEL` | No | `INFO` | Root log level |
 | `ADMIN_URL` | Recommended | `admin/` | Path of the Django admin; use something unguessable in production |
+| `CONTACT_EMAIL` | Recommended | `COLLABoardDevTeam@gmail.com` | Inbox shown on the Terms, Privacy and Help pages for privacy, copyright and abuse reports |
 | `BEHIND_PROXY` | No | `True` on Render, else `False` | Trust `X-Forwarded-Proto/For` (HTTPS detection, client IP for rate limits) |
 | `SECURE_SSL_REDIRECT` | No | `True` when DEBUG off | Redirect http → https (`/healthz/` exempt) |
 | `SECURE_HSTS_SECONDS` | No | `2592000` (30 days) when DEBUG off | HSTS max-age |
@@ -113,6 +114,7 @@ Full threat model, control list and pre-launch checklist: **[SECURITY.md](../SEC
 | TR-S7 | Upload restrictions | Extension allow-list (no HTML/SVG), size cap, **content verified** (Pillow / PDF / Office signatures), sanitized names, nosniff; snapshots must be real PNGs |
 | TR-S8 | Clickjacking protection | `XFrameOptionsMiddleware` (DENY) |
 | TR-S9 | Authenticated pages not cached | `NoCacheForAuthMiddleware` |
+| TR-S16 | Data-subject rights (RA 10173) | Terms/Privacy agreement recorded per user; JSON data download; account deletion that also removes files ([LEGAL.md](LEGAL.md)) |
 | TR-S10 | Deploy check | `python manage.py check --deploy` passes except the optional HSTS subdomain/preload flags (not applicable to an `onrender.com` subdomain) |
 
 ## 8. Build, deploy and operations
@@ -139,7 +141,7 @@ flowchart LR
 
 | Level | Tooling | Scope / command |
 |---|---|---|
-| Unit + integration | Django `TestCase` / `TransactionTestCase`, Channels `WebsocketCommunicator` | `python manage.py test modules`: 97 tests covering auth, sessions, access control, HTTP APIs, the WebSocket consumer (auth, relay, rights, presence, flooding), uploads, snapshot → media → PDF, chat, notifications, dashboards, page rendering, and 29 security tests (`core/test_security.py`) |
+| Unit + integration | Django `TestCase` / `TransactionTestCase`, Channels `WebsocketCommunicator` | `python manage.py test modules`: 116 tests covering auth, sessions, access control, HTTP APIs, the WebSocket consumer (auth, relay, rights, presence, flooding), uploads, snapshot → media → PDF, chat, notifications, dashboards, page rendering, 29 security tests (`core/test_security.py`), and the legal features (`legal/tests.py`) |
 | Static checks | `manage.py check`, `makemigrations --check`, `node --check` on edited JS | Before each PR |
 | Live realtime E2E | Daphne + two logged-in clients running the real `realtime.js` | Verified for this release: connect, presence, relay, view-only block, permission grant, `sid` enforcement, teacher-only clear, disconnect |
 | Manual E2E | Two browsers (teacher + student) | Checklist in [Implementation Plan §6](IMPLEMENTATION_PLAN.md#6-test-plan) |

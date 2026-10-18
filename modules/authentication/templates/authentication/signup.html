@@ -28,7 +28,7 @@
         <ul class="errors-list">
           {% for field, errors in form.errors.items %}
             {% for error in errors %}
-              <li>{% if field != '__all__' %}<b>{{ field|capfirst }}:</b> {% endif %}{{ error }}</li>
+              <li>{% if field != '__all__' and field != 'accept_terms' %}<b>{{ field|capfirst }}:</b> {% endif %}{{ error }}</li>
             {% endfor %}
           {% endfor %}
         </ul>
@@ -74,12 +74,22 @@
         {% if form.password2.errors %}<p class="error-text">{{ form.password2.errors|striptags }}</p>{% endif %}
       </div>
 
+      <div class="form-group terms-check{% if form.accept_terms.errors %} has-error{% endif %}">
+        <label>
+          <input type="checkbox" name="accept_terms" id="id_accept_terms" required{% if form.accept_terms.value %} checked{% endif %}>
+          <span>I am at least 18 years old (or my parent or guardian agrees for me), and I agree to the
+            <a href="{% url 'legal:terms' %}" target="_blank" rel="noopener">Terms of Service</a> and
+            <a href="{% url 'legal:privacy' %}" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+        </label>
+      </div>
+
       <button type="submit" class="btn">Create Account</button>
     </form>
 
     <p class="switch-auth">
       Already have an account? <a href="{% url 'auth:login' %}">Login here</a>
     </p>
+    <p class="legal-links"><a href="{% url 'legal:terms' %}">Terms</a> · <a href="{% url 'legal:privacy' %}">Privacy</a></p>
   </div>
 </body>
 </html>

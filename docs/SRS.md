@@ -128,7 +128,7 @@ Priority: **M** = must, **S** = should, **C** = could.
 | FR-01 | The system shall let a visitor sign up with username, email, role (student/teacher), password and confirmation. | M |
 | FR-02 | Students shall provide a unique Student ID; teachers shall not (stored as NULL). | M |
 | FR-03 | Emails shall be stored lower-case and be unique (case-insensitive). | M |
-| FR-04 | Passwords shall have ≥ 8 characters, one uppercase letter, one digit, one special character, and must not be common, numeric-only or similar to the username. Each rule's message is shown once. | M |
+| FR-04 | Passwords shall have ≥ 10 characters, one uppercase letter, one digit, one special character, and must not be common, numeric-only or similar to the username. Each rule's message is shown once. | M |
 | FR-05 | Users shall log in with **username or email** plus password. | M |
 | FR-06 | After login or signup the user shall be redirected to the dashboard for their role. | M |
 | FR-07 | Logout shall require POST (CSRF-protected). | M |
@@ -233,6 +233,17 @@ stateDiagram-v2
 
 ---
 
+### 3.11 Legal and privacy (LEGAL)
+
+| ID | Requirement | Priority |
+|---|---|---|
+| FR-51 | The Terms of Service (`/legal/terms/`) and Privacy Policy (`/legal/privacy/`) shall be public and linked from login, sign-up, Settings and Help. | M |
+| FR-52 | Sign-up shall require ticking an agreement to both documents, including an 18+/guardian statement. The accepted version (`TERMS_VERSION`) and time shall be stored on the user. | M |
+| FR-53 | A signed-in user who has not accepted the current version shall be sent to `/legal/accept/` before any other page (other requests get 403). Logging out, the legal pages, data download and account deletion stay reachable. | M |
+| FR-54 | Users shall download all data stored about their account as JSON (Settings → Download my data). | M |
+| FR-55 | Non-admin users shall delete their account after entering their password and ticking a confirmation. This removes their sessions, participation, uploads, messages, notifications and the related files. Wrong passwords are limited to 5 per 15 minutes. | M |
+| FR-56 | Deleting a session shall delete its uploaded files and snapshot from storage, unless another session (a duplicate) still uses the snapshot. | S |
+
 ## 4. External interface requirements
 
 ### 4.1 User interfaces
@@ -285,3 +296,4 @@ HTTPS for pages and JSON APIs; WSS for the whiteboard socket (authenticated by t
 | FR-39–FR-41 | SDD §5.4 | `UploadTests` |
 | FR-42–FR-47 | SDD §5.5 | `modules/notifications/tests.py`, `modules/chat/tests.py` |
 | FR-48–FR-50 | SDD §5.6 | `WhiteboardApiTests` (snapshot → media → PDF, attendance CSV) |
+| FR-51–FR-56 | [LEGAL.md](LEGAL.md) §1 | `modules/legal/tests.py` |

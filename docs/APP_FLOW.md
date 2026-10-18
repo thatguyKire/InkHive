@@ -13,6 +13,8 @@ This document maps every screen, who can reach it, and how users move between sc
 flowchart TB
     ROOT["/ (landing)"] --> LOGIN["/auth/login/"]
     LOGIN <--> SIGNUP["/auth/signup/"]
+    LOGIN --> LEGAL["/legal/terms/ and /legal/privacy/"]
+    SIGNUP --> LEGAL
     LOGIN --> REDIR["/dashboard/redirect/"]
     SIGNUP --> REDIR
     REDIR -->|student| SD["/dashboard/student/"]
@@ -22,7 +24,7 @@ flowchart TB
     subgraph Shared["Sidebar (all roles)"]
         NOTIF["Bell dropdown → /notifications/"]
         PROF["/profiles/ → /profiles/edit/"]
-        SETT["/settings/ → /settings/password_change/"]
+        SETT["/settings/ → password change, download my data, delete account"]
         HELP["/help/"]
         CHATW["Chat window (on a board)"]
         LOGOUT["Logout (POST)"]
@@ -63,9 +65,12 @@ flowchart TB
 | Attendance | `/session/{id}/attendance/` | owner, staff | `session/attendance.html` | Live table, CSV export |
 | Notifications | `/notifications/` | all | `notifications/notifications.html` | Full list of notifications |
 | Profile / Edit | `/profiles/`, `/profiles/edit/` | all | `profiles/*.html` | View profile, change email |
-| Settings | `/settings/` | all | `settings_app/settings.html` | Links to profile, password change, help, logout |
+| Settings | `/settings/` | all | `settings_app/settings.html` | Links to profile, password change, help, download my data, Terms & Privacy, delete account, logout |
 | Change password | `/settings/password_change/` | all | `settings_app/password_change.html` | Change password (stays logged in) |
-| Help | `/help/` | all | `help_app/help.html` | FAQs |
+| Help | `/help/` | all | `help_app/help.html` | FAQs, contact, links to Terms and Privacy |
+| Terms / Privacy | `/legal/terms/`, `/legal/privacy/` | anyone | `legal/terms.html`, `legal/privacy.html` | Read the Terms of Service and Privacy Policy |
+| Accept terms | `/legal/accept/` | logged in | `legal/accept.html` | Agree to the current terms, or log out / download data / delete account |
+| Delete account | `/settings/delete-account/` | all except admins | `settings_app/delete_account.html` | Password + confirmation, then everything is deleted |
 | Django Admin | `/admin/` | staff | Django | Manage users, sessions, notifications, chat |
 
 ## 3. Authentication flow
@@ -76,18 +81,20 @@ flowchart TD
     B -- no --> L[Login page]
     B -- yes --> L
     L -->|"Sign up here"| S[Sign up form]
-    S --> V{Form valid?<br/>unique username/email,<br/>student ID if student,<br/>password rules}
+    S --> V{Form valid?<br/>unique username/email,<br/>student ID if student,<br/>password rules,<br/>terms box ticked}
     V -- no --> S
     V -- yes --> CU[Create user + log in] --> R
     L --> C{Credentials OK?<br/>username or email}
     C -- no --> L
-    C -- yes --> R{{"/dashboard/redirect/"}}
+    C -- yes --> TA{Accepted current<br/>terms version?}
+    TA -- no --> ACC["/legal/accept/"] --> R
+    TA -- yes --> R{{"/dashboard/redirect/"}}
     R -->|role = student| SD[Student dashboard]
     R -->|role = teacher| TD[Teacher dashboard]
     R -->|role = admin| AD[Admin dashboard]
 ```
 
-The login page is shown even to logged-in users (intentional: lets users switch accounts). A `next` parameter is ignored; users always land on their dashboard.
+Sign-up records the accepted terms version, so new users skip the accept page. Existing users see it once after each `TERMS_VERSION` change. The login page is shown even to logged-in users (intentional: lets users switch accounts). A `next` parameter is ignored; users always land on their dashboard.
 
 ## 4. Teacher flow: running a class
 

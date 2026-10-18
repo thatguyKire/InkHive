@@ -15,6 +15,7 @@ COLLABoard is a real-time web whiteboard for classes. A **teacher** creates a se
 * Announcements, notification bell, session chat with teacher toggle
 * Snapshots saved on the server, saved sessions, PNG/PDF export
 * Attendance page with CSV export; teacher/student/admin dashboards with charts
+* Terms of Service and Privacy Policy with recorded agreement; download my data; delete my account
 
 ## Tech stack
 
@@ -37,6 +38,7 @@ Full project documentation lives in [`docs/`](docs/README.md):
 | [SDD](docs/SDD.md): Software Design Document | [TRD](docs/TRD.md): Technical Requirements |
 | [App Flow](docs/APP_FLOW.md) | [UI/UX Design Brief](docs/UI_UX_DESIGN_BRIEF.md) |
 | [Backend Schema](docs/BACKEND_SCHEMA.md): ERD, API, realtime protocol | [Implementation Plan](docs/IMPLEMENTATION_PLAN.md): fix log, roadmap, test plan |
+| [Legal & Privacy](docs/LEGAL.md): terms, privacy, data rights, legal launch to-do | [Third-party notices](THIRD_PARTY_NOTICES.md) |
 
 ## Getting started
 
@@ -90,11 +92,15 @@ python manage.py runserver
 python manage.py test modules
 ```
 
-The suite (97 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, and 29 security attack tests.
+The suite (116 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, 29 security attack tests, and the legal features (terms agreement, data download, account deletion).
 
 ## Security
 
 See **[SECURITY.md](SECURITY.md)** for the threat model, every security control, and the **pre-launch checklist that must be completed before the site goes live**.
+
+## Legal and privacy
+
+The app has a [Terms of Service](modules/legal/templates/legal/terms.html) and [Privacy Policy](modules/legal/templates/legal/privacy.html) (Philippine Data Privacy Act of 2012) at `/legal/terms/` and `/legal/privacy/`. Users must agree at sign-up, and again whenever `TERMS_VERSION` changes. They can download their data or delete their account in Settings. **Before a public launch, finish the team to-do in [docs/LEGAL.md](docs/LEGAL.md#3-before-launch-team-to-do)**. Most importantly, *COLLABOARD* is another company's registered trademark for whiteboard software, so the app needs a new name.
 
 ## Project structure
 
@@ -110,6 +116,7 @@ modules/
   profiles/         profile and email edit
   settings_app/     settings hub, password change
   help_app/         FAQ page
+  legal/            Terms of Service, Privacy Policy, terms-acceptance gate
 docs/               PRD, SRS, SDD, TRD, app flow, UI/UX brief, schema, plan
 build.sh            Render build script
 ```

@@ -2,7 +2,7 @@
 
 **System:** COLLABoard: Collaborative Whiteboard · **Last review:** 2026-10-14
 
-This document lists what COLLABoard protects, how, and what must be done before (and after) going live. Every control below has an automated test in `modules/core/test_security.py`, `modules/session/test_realtime.py` or the module test suites (97 tests in total).
+This document lists what COLLABoard protects, how, and what must be done before (and after) going live. Every control below has an automated test in `modules/core/test_security.py`, `modules/session/test_realtime.py` or the module test suites (116 tests in total).
 
 > **Status: not yet approved for launch.** Complete the [pre-launch checklist](#4-pre-launch-checklist) first.
 
@@ -81,6 +81,7 @@ Out of scope for this app: DDoS at network level (handled by Render/Cloudflare),
 | Chat messages | 30 per user per minute |
 | Announcements | 10 per teacher per minute |
 | Uploads / snapshots | 30 per user per 10 min each |
+| Password attempts on *Delete account* | 5 per account per 15 min |
 
 ### 2.7 Configuration safety
 | Control | Where |
@@ -117,6 +118,7 @@ Do these **in order** before letting users in:
 8. ☐ Verify from outside: `http://` redirects to `https://`; `/admin/` returns 404; response headers include `Content-Security-Policy` and `Strict-Transport-Security`; a logged-out request to a `/media/...` URL redirects to login.
 9. ☐ Run the two-browser checklist (Implementation Plan §6.2).
 10. ☐ Turn on Render log alerts for repeated "Login blocked" / "Closing flooding" messages.
+11. ☐ Finish the legal to-do in [docs/LEGAL.md §3](docs/LEGAL.md#3-before-launch-team-to-do): new app name (trademark), school/DPO approval, review of the Terms and Privacy Policy, a monitored `CONTACT_EMAIL`, icon licences, backups kept ≤ 30 days.
 
 ## 5. Ongoing maintenance
 

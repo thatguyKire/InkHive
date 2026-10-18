@@ -74,6 +74,12 @@ if not DEBUG:
 # Django admin lives here; set ADMIN_URL to something less guessable in production.
 ADMIN_URL = os.getenv("ADMIN_URL", "admin/").strip("/") + "/"
 
+# Terms of Service / Privacy Policy (modules/legal). Bump TERMS_VERSION whenever
+# either text changes in a way users must agree to: everyone is asked again.
+TERMS_VERSION = "2026-10-18"
+# Shown on the legal and help pages for privacy, copyright and abuse reports.
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "COLLABoardDevTeam@gmail.com")
+
 # Rate-limit counters (single process, so local memory is enough).
 CACHES = {
     "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "collaboard"},
@@ -107,6 +113,7 @@ INSTALLED_APPS = [
     'modules.session',
     'modules.core',             # ✅ where base templates/icons live
     'modules.chat',
+    'modules.legal',
 ]
 
 # -------------------------------------------------------------
@@ -122,6 +129,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'modules.core.middleware.no_cache.NoCacheForAuthMiddleware',  # renamed to match actual class
     'django.contrib.messages.middleware.MessageMiddleware',
+    'modules.legal.middleware.TermsAcceptanceMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

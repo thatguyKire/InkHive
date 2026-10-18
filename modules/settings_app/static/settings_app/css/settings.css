@@ -366,3 +366,28 @@ html, body {
     grid-template-columns: 1fr;
   }
 }
+/* Delete account page */
+.delete-account p { line-height: 1.6; }
+.delete-list { margin: 8px 0 12px 1.4rem; line-height: 1.6; }
+.delete-account .profile-info { margin-top: 20px; }
+.profile-info .delete-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0 12px;
+  font-weight: 400;
+  cursor: pointer;
+}
+.profile-info .delete-confirm input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  padding: 0;
+}
+.profile-actions .btn-danger { background: var(--error); }
+.profile-actions .btn-danger:hover { background: var(--error-dark); }
+
+@media (max-width: 600px) {
+  .delete-account { padding: 32px 20px; }
+}

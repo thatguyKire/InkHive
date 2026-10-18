@@ -13,12 +13,12 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import get_valid_filename
-from django.conf import settings
 
 from modules.core import ratelimit
 from modules.core.decorators import safe_view
 from ..file_checks import content_matches
 from ..models import Session, Participant, UploadedFile, generate_session_code
+from ..storage import media_path
 
 logger = logging.getLogger(__name__)
 
@@ -39,13 +39,6 @@ UPLOADS_PER_10_MIN = 30
 
 def _is_owner_or_staff(request, session):
     return request.user.is_staff or session.created_by == request.user
-
-
-def _storage_path(url):
-    """Map a /media/... URL back to its storage path (None for other URLs)."""
-    if url and url.startswith(settings.MEDIA_URL):
-        return url[len(settings.MEDIA_URL):]
-    return None
 
 
 # ==========================
@@ -154,7 +147,7 @@ def export_session_pdf(request, session_id):
     session = get_object_or_404(Session, id=session_id)
     if not _is_owner_or_staff(request, session):
         return HttpResponse(status=403)
-    snapshot_path = _storage_path(session.snapshot_url)
+    snapshot_path = media_path(session.snapshot_url)
     if not snapshot_path or not default_storage.exists(snapshot_path):
         return HttpResponse("No snapshot available", status=404)
 
