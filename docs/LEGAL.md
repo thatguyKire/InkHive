@@ -26,6 +26,7 @@ This document lists what the app does to stay on the right side of the law, what
 | **Own icons and logo**: every icon and the logo are SVGs drawn for this project | `core/static/core/icons/*.svg`, `authentication/static/authentication/img/logo-wordmark.svg` | The old PNG icons had no recorded source, and some looked like stock icons that need attribution |
 | Accurate backup promise + `manage.py backup` that deletes our own copies after 30 days | Privacy Policy §5, `core/management/commands/backup.py` | Render keeps its daily disk snapshots for a period it sets (at least 7 days), so we cannot promise a maximum for those |
 | Contact address for privacy, copyright and abuse reports | `CONTACT_EMAIL` setting (default `COLLABoardDevTeam@gmail.com`) | Shown on the legal and Help pages |
+| **Portfolio demo mode** (`DEMO_MODE=True`): shared demo accounts, sign-up off, "don't enter personal information" banner, demo section in the Terms and Privacy Policy, daily wipe of demo data | `modules/demo/` | A public demo then collects almost no personal data |
 
 Tests: `modules/legal/tests.py` (20 tests: public pages, signup agreement, the accept gate, data export, account deletion with files, session file cleanup, backup retention).
 
@@ -46,6 +47,8 @@ Tests: `modules/legal/tests.py` (20 tests: public pages, signup agreement, the a
 No sensitive personal information (health, religion, government IDs …) is requested. Data is hosted by Render (possibly outside the Philippines).
 
 ## 3. Before launch: team to-do
+
+**Portfolio demo only (`DEMO_MODE=True`)?** Then sign-up is off, visitors use shared demo accounts, and demo data is wiped daily, so the app holds almost no real personal data. In that case L-2, L-3 and L-7 are not needed, L-4 can be any inbox you read, and only L-9 (the old Render site) really matters. The full list applies if real classes ever use the app.
 
 | # | Task | Owner | Why |
 |---|---|---|---|

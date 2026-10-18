@@ -51,6 +51,7 @@ All configuration is read in `collaborative_whiteboard_backend/settings.py`. Tem
 | `LOG_LEVEL` | No | `INFO` | Root log level |
 | `ADMIN_URL` | Recommended | `admin/` | Path of the Django admin; use something unguessable in production |
 | `CONTACT_EMAIL` | Recommended | `COLLABoardDevTeam@gmail.com` | Inbox shown on the Terms, Privacy and Help pages for privacy, copyright and abuse reports. Set it to an inbox under the new name (LEGAL.md L-4) |
+| `DEMO_MODE` | No | `False` | `True` for the public portfolio demo: one-click demo accounts, sign-up off, demo data reset daily (`modules/demo`) |
 | `BACKUP_DIR` | Recommended | `./backups` | Where `manage.py backup` writes copies (e.g. `/var/data/backups`); keep it outside `MEDIA_ROOT` |
 | `BEHIND_PROXY` | No | `True` on Render, else `False` | Trust `X-Forwarded-Proto/For` (HTTPS detection, client IP for rate limits) |
 | `SECURE_SSL_REDIRECT` | No | `True` when DEBUG off | Redirect http → https (`/healthz/` exempt) |

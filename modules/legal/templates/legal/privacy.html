@@ -19,6 +19,17 @@
     </ul>
   </div>
 
+  {% if demo_mode %}
+  <div class="legal-summary" id="demo">
+    <h2>This site is a public demo</h2>
+    <ul>
+      <li>Visitors sign in with shared demo accounts, so anything you draw, write or upload can be seen by other visitors.</li>
+      <li>Everything made with the demo accounts is deleted automatically when the demo resets, about once a day (sooner if the server restarts).</li>
+      <li>Please don't enter personal information. The demo doesn't need any.</li>
+    </ul>
+  </div>
+  {% endif %}
+
   <nav class="legal-toc" aria-label="Contents">
     <ol>
       <li><a href="#collect">What we collect</a></li>

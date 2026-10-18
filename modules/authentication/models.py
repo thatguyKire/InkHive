@@ -17,6 +17,8 @@ class CustomUser(AbstractUser):
     # (see settings.TERMS_VERSION and modules/legal).
     terms_version = models.CharField(max_length=20, blank=True, default="")
     terms_accepted_at = models.DateTimeField(blank=True, null=True)
+    # Shared account for the public demo (modules/demo); no password, can't be edited.
+    is_demo = models.BooleanField(default=False)
 
     @property
     def has_accepted_terms(self):

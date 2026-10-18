@@ -32,6 +32,9 @@
     <p>{{ brand_name }} is a free, real-time whiteboard for classes. Teachers create sessions; students join with a code to watch, draw (when the teacher allows it), chat and share files.</p>
     <p>{{ brand_name }} is built and run by a team of students (“<strong>we</strong>”, “<strong>us</strong>”) as a course project (CSIT327, Group 4). It is <strong>not an official service of Cebu Institute of Technology – University</strong>, and the university is not responsible for it.</p>
     <p>Because it is a student project, features may change and the service may be paused or shut down at any time, for example when the course ends. If we plan to shut it down, we will try to give notice so you can download your data.</p>
+    {% if demo_mode %}
+    <p><strong>This site is a public demo.</strong> Visitors share demo accounts, other visitors can see what you put in, and everything is deleted when the demo resets. Do not put personal or confidential information, or material you do not have the right to share, into the demo.</p>
+    {% endif %}
   </section>
 
   <section id="who">

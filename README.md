@@ -4,7 +4,7 @@ InkHive is a real-time web whiteboard for classes. A **teacher** creates a sessi
 
 *Formerly called COLLABoard. Renamed because COLLABOARD is another company's registered trademark for whiteboard software (see [docs/LEGAL.md](docs/LEGAL.md)).*
 
-**Status:** not public yet. The [security checklist](SECURITY.md#4-pre-launch-checklist) and the [legal to-do](docs/LEGAL.md#3-before-launch-team-to-do) come first.
+**Status:** a portfolio project, not yet online. It is meant to run as a public demo (see [Portfolio demo](#portfolio-demo)).
 
 ## Features
 
@@ -94,7 +94,7 @@ python manage.py runserver
 python manage.py test modules
 ```
 
-The suite (117 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, 29 security attack tests, and the legal features (terms agreement, data download, account deletion, backup retention).
+The suite (127 tests) covers the portfolio demo mode, authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, 29 security attack tests, and the legal features (terms agreement, data download, account deletion, backup retention).
 
 ## Security
 
@@ -121,8 +121,25 @@ modules/
   settings_app/     settings hub, password change
   help_app/         FAQ page
   legal/            Terms of Service, Privacy Policy, terms-acceptance gate
+  demo/             portfolio demo mode: one-click demo accounts, daily reset
 docs/               PRD, SRS, SDD, TRD, app flow, UI/UX brief, schema, plan
 build.sh            Render build script
+```
+
+## Portfolio demo
+
+Set `DEMO_MODE=True` and the login page gets **Try as a teacher** / **Try as a student** buttons, so visitors can try the app without signing up:
+
+* Visitors share three demo accounts (`demo_teacher`, `demo_student`, `demo_classmate`) and start in a sample class with a chat message and an announcement.
+* Sign-up is turned off. The demo accounts have no password, and can't change their email or delete themselves, so one visitor can't lock the others out.
+* Every page shows a banner asking visitors not to enter personal information, and the Terms and Privacy Policy explain the demo.
+* Everything the demo accounts make (boards, uploads, chat) is deleted once a day, the next time someone starts the demo. `python manage.py seed_demo --reset` does it by hand.
+* Your own accounts (for example the admin) are never touched.
+
+On Render's **free** plan you need no disk. The database lives on the temporary filesystem, so it also resets whenever the free server goes to sleep, which suits a demo. Set `SECRET_KEY` and `DEMO_MODE=True`, and use this start command so the database is created again after each restart:
+
+```bash
+python manage.py migrate --noinput && daphne -b 0.0.0.0 -p $PORT collaborative_whiteboard_backend.asgi:application
 ```
 
 ## Deployment (Render)

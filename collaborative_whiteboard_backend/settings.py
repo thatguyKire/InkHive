@@ -77,6 +77,10 @@ ADMIN_URL = os.getenv("ADMIN_URL", "admin/").strip("/") + "/"
 # login page (authentication/img/logo-wordmark.svg) spells it out too.
 SITE_NAME = "InkHive"
 
+# Public portfolio demo (modules/demo): one-click demo accounts on the login
+# page, sign-up turned off, and demo data that resets itself. Off by default.
+DEMO_MODE = os.getenv("DEMO_MODE", "False") == "True"
+
 # Terms of Service / Privacy Policy (modules/legal). Bump TERMS_VERSION whenever
 # either text changes in a way users must agree to: everyone is asked again.
 TERMS_VERSION = "2026-10-18"
@@ -117,6 +121,7 @@ INSTALLED_APPS = [
     'modules.core',             # ✅ where base templates/icons live
     'modules.chat',
     'modules.legal',
+    'modules.demo',
 ]
 
 # -------------------------------------------------------------
@@ -133,6 +138,7 @@ MIDDLEWARE = [
     'modules.core.middleware.no_cache.NoCacheForAuthMiddleware',  # renamed to match actual class
     'django.contrib.messages.middleware.MessageMiddleware',
     'modules.legal.middleware.TermsAcceptanceMiddleware',
+    'modules.demo.middleware.DemoModeMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 

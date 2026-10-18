@@ -41,6 +41,7 @@ Out of scope for this app: DDoS at network level (handled by Render/Cloudflare),
 | Every session action checks ownership (owner/staff) or membership (participant) on the server | `session/views/*`, `chat/views.py`, `notifications/views.py` |
 | Drawing/uploading requires the teacher's per-student `can_draw` | upload view, WebSocket consumer |
 | Users cannot sign up as admin | `authentication/forms.py` |
+| Demo mode: demo accounts have no password (only the POST-only, rate-limited demo buttons sign in), cannot change their password or email or delete themselves, and sign-up is off; demo data is wiped daily | `modules/demo/` |
 | Uploaded files and snapshots: only members of that session can download them (others get 404) | `core/views.py::media`, `session/access.py` |
 
 ### 2.3 Real-time (WebSocket)

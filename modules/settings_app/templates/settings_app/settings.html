@@ -36,11 +36,13 @@
       <p>Update your name, email, and other details</p>
     </a>
 
+    {% if not user.is_demo %}
     <a href="{% url 'edit_profile' %}" class="setting-card">
       <img src="{% static 'core/icons/lock.svg' %}" alt="Account Settings">
       <h2>Account Settings</h2>
       <p>Change password and security preferences</p>
     </a>
+    {% endif %}
 
     <a href="{% url 'help' %}" class="setting-card">
       <img src="{% static 'core/icons/help.svg' %}" alt="Help & Support">
@@ -60,7 +62,7 @@
       <p>How {{ brand_name }} handles your data, and the rules of use</p>
     </a>
 
-    {% if not user.is_staff %}
+    {% if not user.is_staff and not user.is_demo %}
     <a href="{% url 'delete_account' %}" class="setting-card logout-card">
       <img src="{% static 'core/icons/trash.svg' %}" alt="">
       <h2>Delete Account</h2>

@@ -104,6 +104,9 @@
   </aside>
 
   <main class="main">
+    {% if user.is_demo %}
+      <p class="demo-banner" role="note"><strong>Demo account.</strong> Other visitors share it and can see what you draw, write and upload. Everything resets about once a day. Password, email and account deletion are turned off. Please don't enter personal information.</p>
+    {% endif %}
     {% block content %}{% endblock %}
   </main>
 
