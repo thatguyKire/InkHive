@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateIcon() {
     const isCollapsed = sidebar.classList.contains("collapsed");
     toggleIcon.src = isCollapsed
-      ? "/static/core/icons/right-arrow.png"
-      : "/static/core/icons/left-arrow.png";
+      ? "/static/core/icons/right-arrow.svg"
+      : "/static/core/icons/left-arrow.svg";
     toggleIcon.alt = isCollapsed ? "Expand sidebar" : "Collapse sidebar";
   }
 });

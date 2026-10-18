@@ -1,12 +1,14 @@
 import json
 import logging
 
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout, update_session_auth_hash
 from django.http import HttpResponse
+from django.utils.text import slugify
 
 from modules.core import ratelimit
 from .account import export_user_data, delete_user_account
@@ -37,7 +39,8 @@ def export_data(request):
     """Download everything stored about the signed-in user as JSON."""
     data = json.dumps(export_user_data(request.user), indent=2, ensure_ascii=False)
     response = HttpResponse(data, content_type="application/json; charset=utf-8")
-    response["Content-Disposition"] = 'attachment; filename="collaboard-my-data.json"'
+    filename = f"{slugify(settings.SITE_NAME)}-my-data.json"
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
     return response
 
 

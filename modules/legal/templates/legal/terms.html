@@ -1,20 +1,20 @@
 {% extends "legal/layout.html" %}
 
-{% block title %}Terms of Service - COLLABoard{% endblock %}
+{% block title %}Terms of Service - {{ brand_name }}{% endblock %}
 
 {% block content %}
 <article class="legal-doc">
   <h1>Terms of Service</h1>
   <p class="legal-meta">Effective {{ effective_date|date:"F j, Y" }}</p>
 
-  <p class="legal-lead">These terms are the rules for using COLLABoard. Please read them. By creating an account or using COLLABoard, you agree to them and to our <a href="{% url 'legal:privacy' %}">Privacy Policy</a>. If you do not agree, do not use COLLABoard.</p>
+  <p class="legal-lead">These terms are the rules for using {{ brand_name }}. Please read them. By creating an account or using {{ brand_name }}, you agree to them and to our <a href="{% url 'legal:privacy' %}">Privacy Policy</a>. If you do not agree, do not use {{ brand_name }}.</p>
 
   <nav class="legal-toc" aria-label="Contents">
     <ol>
-      <li><a href="#what">What COLLABoard is</a></li>
+      <li><a href="#what">What {{ brand_name }} is</a></li>
       <li><a href="#who">Who can use it</a></li>
       <li><a href="#account">Your account</a></li>
-      <li><a href="#rules">Rules for using COLLABoard</a></li>
+      <li><a href="#rules">Rules for using {{ brand_name }}</a></li>
       <li><a href="#content">Your content</a></li>
       <li><a href="#teachers">Teachers</a></li>
       <li><a href="#reports">Reporting copyright problems and abuse</a></li>
@@ -28,16 +28,16 @@
   </nav>
 
   <section id="what">
-    <h2>1. What COLLABoard is</h2>
-    <p>COLLABoard is a free, real-time whiteboard for classes. Teachers create sessions; students join with a code to watch, draw (when the teacher allows it), chat and share files.</p>
-    <p>COLLABoard is built and run by a team of students (“<strong>we</strong>”, “<strong>us</strong>”) as a course project (CSIT327, Group 4). It is <strong>not an official service of Cebu Institute of Technology – University</strong>, and the university is not responsible for it.</p>
+    <h2>1. What {{ brand_name }} is</h2>
+    <p>{{ brand_name }} is a free, real-time whiteboard for classes. Teachers create sessions; students join with a code to watch, draw (when the teacher allows it), chat and share files.</p>
+    <p>{{ brand_name }} is built and run by a team of students (“<strong>we</strong>”, “<strong>us</strong>”) as a course project (CSIT327, Group 4). It is <strong>not an official service of Cebu Institute of Technology – University</strong>, and the university is not responsible for it.</p>
     <p>Because it is a student project, features may change and the service may be paused or shut down at any time, for example when the course ends. If we plan to shut it down, we will try to give notice so you can download your data.</p>
   </section>
 
   <section id="who">
     <h2>2. Who can use it</h2>
-    <p>You may use COLLABoard if you are <strong>at least 18 years old</strong>, or if your parent or legal guardian has read these terms and agrees to them for you.</p>
-    <p>You must not use COLLABoard if the law or your school does not allow you to.</p>
+    <p>You may use {{ brand_name }} if you are <strong>at least 18 years old</strong>, or if your parent or legal guardian has read these terms and agrees to them for you.</p>
+    <p>You must not use {{ brand_name }} if the law or your school does not allow you to.</p>
   </section>
 
   <section id="account">
@@ -46,14 +46,14 @@
       <li>Give true information when you sign up. Use your own institutional email and your own student ID.</li>
       <li>One account per person. Do not share your account or let others use it.</li>
       <li>Keep your password secret. If you think someone else has used your account, change your password and tell us.</li>
-      <li>Only sign up as a teacher if you actually teach the class you will use COLLABoard with.</li>
+      <li>Only sign up as a teacher if you actually teach the class you will use {{ brand_name }} with.</li>
       <li>You are responsible for what happens under your account.</li>
     </ul>
   </section>
 
   <section id="rules">
-    <h2>4. Rules for using COLLABoard</h2>
-    <p>You must not use COLLABoard to:</p>
+    <h2>4. Rules for using {{ brand_name }}</h2>
+    <p>You must not use {{ brand_name }} to:</p>
     <ul>
       <li>post or upload anything illegal, threatening, harassing, bullying, hateful, sexually explicit or violent;</li>
       <li>post anything that sexualises or endangers a minor (we will remove it and report it to the authorities);</li>
@@ -70,10 +70,10 @@
 
   <section id="content">
     <h2>5. Your content</h2>
-    <p>“Your content” means what you put into COLLABoard: drawings, uploaded files and images, chat messages, announcements and session titles.</p>
+    <p>“Your content” means what you put into {{ brand_name }}: drawings, uploaded files and images, chat messages, announcements and session titles.</p>
     <ul>
       <li><strong>You keep ownership</strong> of your content. We do not claim it.</li>
-      <li>You allow us to store, copy, display and send your content <strong>only as needed to run COLLABoard</strong> for you and the people in your sessions. For example, we show your strokes on classmates' screens and keep the snapshots a teacher saves. This permission is free, non-exclusive and ends when the content is deleted, except for copies that a teacher has already saved in a snapshot or that others have downloaded.</li>
+      <li>You allow us to store, copy, display and send your content <strong>only as needed to run {{ brand_name }}</strong> for you and the people in your sessions. For example, we show your strokes on classmates' screens and keep the snapshots a teacher saves. This permission is free, non-exclusive and ends when the content is deleted, except for copies that a teacher has already saved in a snapshot or that others have downloaded.</li>
       <li>You confirm that you have the right to share everything you upload.</li>
       <li><strong>Boards are shared.</strong> Everything you draw, upload or write in a session can be seen by everyone in that session. It becomes part of the class board, so the teacher can save it, export it or clear it. We cannot stop other people from taking screenshots.</li>
       <li>We do not sell your content and do not use it for advertising.</li>
@@ -84,7 +84,7 @@
     <h2>6. Teachers</h2>
     <p>If you create sessions, you also agree that:</p>
     <ul>
-      <li>you are allowed by your school to use COLLABoard with your students, and you will get any permission your school or the law requires first, especially for students under 18;</li>
+      <li>you are allowed by your school to use {{ brand_name }} with your students, and you will get any permission your school or the law requires first, especially for students under 18;</li>
       <li>you decide who may draw, whether chat is on, and what is saved, and you will remove content in your sessions that breaks these terms;</li>
       <li>attendance and participation data (names, emails, join times, activity counts) you view or export is personal data about your students. Use it only for your class and protect it as your school's rules and the Data Privacy Act of 2012 require.</li>
     </ul>
@@ -92,7 +92,7 @@
 
   <section id="reports">
     <h2>7. Reporting copyright problems and abuse</h2>
-    <p>If you believe something on COLLABoard infringes your copyright or breaks these terms, email <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> with:</p>
+    <p>If you believe something on {{ brand_name }} infringes your copyright or breaks these terms, email <a href="mailto:{{ contact_email }}">{{ contact_email }}</a> with:</p>
     <ul>
       <li>what the content is and where it is (session title or code, and roughly when it was posted);</li>
       <li>for copyright, a description of your work and a statement that you own it or are allowed to act for the owner;</li>
@@ -103,22 +103,22 @@
 
   <section id="ending">
     <h2>8. Suspension and ending your account</h2>
-    <p>You can stop using COLLABoard at any time and delete your account in <strong>Settings → Delete account</strong>. What gets deleted is explained in the <a href="{% url 'legal:privacy' %}#retention">Privacy Policy</a>.</p>
+    <p>You can stop using {{ brand_name }} at any time and delete your account in <strong>Settings → Delete account</strong>. What gets deleted is explained in the <a href="{% url 'legal:privacy' %}#retention">Privacy Policy</a>.</p>
     <p>We may remove content, or suspend or delete an account, if it breaks these terms, puts other people or the service at risk, or if the law requires it. When it is reasonable and safe, we will tell you why.</p>
   </section>
 
   <section id="warranty">
     <h2>9. No warranty</h2>
-    <p>COLLABoard is provided free, <strong>“as is” and “as available”</strong>. As far as the law allows, we make no promises that it will always be available, error-free or secure, or that your data will never be lost.</p>
-    <p>Keep your own copies of important work: use the PNG and PDF export, or <strong>Settings → Download my data</strong>. Do not use COLLABoard as the only place you keep grades, records or other work you cannot afford to lose.</p>
+    <p>{{ brand_name }} is provided free, <strong>“as is” and “as available”</strong>. As far as the law allows, we make no promises that it will always be available, error-free or secure, or that your data will never be lost.</p>
+    <p>Keep your own copies of important work: use the PNG and PDF export, or <strong>Settings → Download my data</strong>. Do not use {{ brand_name }} as the only place you keep grades, records or other work you cannot afford to lose.</p>
   </section>
 
   <section id="liability">
     <h2>10. Limits on our liability</h2>
     <p>As far as the law allows:</p>
     <ul>
-      <li>we are not liable for indirect or consequential losses, such as lost data, lost work, lost grades or lost opportunities, that come from using or not being able to use COLLABoard;</li>
-      <li>our total liability to you for all claims about COLLABoard is limited to <strong>₱1,000</strong>.</li>
+      <li>we are not liable for indirect or consequential losses, such as lost data, lost work, lost grades or lost opportunities, that come from using or not being able to use {{ brand_name }};</li>
+      <li>our total liability to you for all claims about {{ brand_name }} is limited to <strong>₱1,000</strong>.</li>
     </ul>
     <p>Nothing in these terms limits liability that cannot legally be limited, such as liability for fraud, bad faith or gross negligence.</p>
     <p>If someone makes a claim against us because of content you posted or because you broke these terms, you agree to cover our reasonable costs of dealing with it, as far as the law allows.</p>
@@ -126,13 +126,13 @@
 
   <section id="changes">
     <h2>11. Changes to these terms</h2>
-    <p>We may update these terms. When we do, we will change the date at the top and ask you to agree again the next time you use COLLABoard. If you do not agree to the new terms, stop using COLLABoard; you can still download your data and delete your account.</p>
+    <p>We may update these terms. When we do, we will change the date at the top and ask you to agree again the next time you use {{ brand_name }}. If you do not agree to the new terms, stop using {{ brand_name }}; you can still download your data and delete your account.</p>
   </section>
 
   <section id="law">
     <h2>12. Governing law</h2>
     <p>These terms are governed by the laws of the Republic of the Philippines. Disputes will be handled by the courts of Cebu City, unless the law gives you the right to go to a different court.</p>
-    <p>If part of these terms cannot be enforced, the rest still applies. If we do not enforce a rule right away, we can still enforce it later. These terms and the Privacy Policy are the whole agreement between you and us about COLLABoard.</p>
+    <p>If part of these terms cannot be enforced, the rest still applies. If we do not enforce a rule right away, we can still enforce it later. These terms and the Privacy Policy are the whole agreement between you and us about {{ brand_name }}.</p>
   </section>
 
   <section id="contact">

@@ -3,7 +3,7 @@ import json
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
-from modules.core.testing import CollaboardTestCase
+from modules.core.testing import AppTestCase
 from modules.session.models import Session, Participant, UploadedFile, SESSION_CODE_ALPHABET
 
 def _png_bytes():
@@ -17,7 +17,7 @@ def _png_bytes():
 PNG_1x1 = _png_bytes()
 
 
-class SessionManagementTests(CollaboardTestCase):
+class SessionManagementTests(AppTestCase):
     def test_create_session_generates_readable_code(self):
         self.client.force_login(self.teacher)
         resp = self.client.post(reverse("create_session"), {"title": "Geometry"})
@@ -78,7 +78,7 @@ class SessionManagementTests(CollaboardTestCase):
         self.assertEqual(resp["Content-Type"], "image/png")
 
 
-class JoinAndAccessTests(CollaboardTestCase):
+class JoinAndAccessTests(AppTestCase):
     def test_join_with_code_case_insensitive(self):
         self.client.force_login(self.student)
         resp = self.client.post(reverse("join_session"), {"code": self.session.code.lower()})
@@ -129,7 +129,7 @@ class JoinAndAccessTests(CollaboardTestCase):
         self.assertContains(resp, "participantsList")
 
 
-class WhiteboardApiTests(CollaboardTestCase):
+class WhiteboardApiTests(AppTestCase):
     def test_toggle_draw_permission_owner_only(self):
         self.join(self.student)
         url = reverse("toggle_draw_permission", args=[self.session.id, self.student.id])
@@ -237,7 +237,7 @@ class WhiteboardApiTests(CollaboardTestCase):
         self.assertEqual(self.client.get(reverse("attendance_json", args=[self.session.id])).status_code, 403)
 
 
-class UploadTests(CollaboardTestCase):
+class UploadTests(AppTestCase):
     def upload(self, name, content, content_type):
         return self.client.post(
             reverse("upload_attachment", args=[self.session.id]),

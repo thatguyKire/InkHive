@@ -1,8 +1,8 @@
 # Security
 
-**System:** COLLABoard: Collaborative Whiteboard · **Last review:** 2026-10-14
+**System:** InkHive: Collaborative Whiteboard (formerly COLLABoard) · **Last review:** 2026-10-18
 
-This document lists what COLLABoard protects, how, and what must be done before (and after) going live. Every control below has an automated test in `modules/core/test_security.py`, `modules/session/test_realtime.py` or the module test suites (116 tests in total).
+This document lists what InkHive protects, how, and what must be done before (and after) going live. Every control below has an automated test in `modules/core/test_security.py`, `modules/session/test_realtime.py` or the module test suites (117 tests in total).
 
 > **Status: not yet approved for launch.** Complete the [pre-launch checklist](#4-pre-launch-checklist) first.
 
@@ -108,7 +108,7 @@ Out of scope for this app: DDoS at network level (handled by Render/Cloudflare),
 
 Do these **in order** before letting users in:
 
-1. ☐ **Suspend or redeploy the current Render service.** The live site still runs the old code (before these fixes). Render → *Settings* → *Suspend Web Service* until steps 2–8 are done.
+1. ☐ **Suspend the current Render service** (`collaboard-z4sx`, still live on 2026-10-18 with the old code). Render → the service → *Settings* → *Suspend Web Service*. Its address also carries the old brand name, so for launch create a **new** web service with a new name (steps 2–8 apply to it), then delete the old one.
 2. ☐ In Render → *Environment*: **delete** `DATABASE_URL` and all `SUPABASE_*` variables.
 3. ☐ Set `SECRET_KEY` to a fresh random value: `python -c "import secrets; print(secrets.token_urlsafe(64))"`. Never reuse a key that was ever committed or shared.
 4. ☐ Set `ADMIN_URL` to something unguessable (e.g. `manage-7f3k9q/`).
@@ -118,7 +118,7 @@ Do these **in order** before letting users in:
 8. ☐ Verify from outside: `http://` redirects to `https://`; `/admin/` returns 404; response headers include `Content-Security-Policy` and `Strict-Transport-Security`; a logged-out request to a `/media/...` URL redirects to login.
 9. ☐ Run the two-browser checklist (Implementation Plan §6.2).
 10. ☐ Turn on Render log alerts for repeated "Login blocked" / "Closing flooding" messages.
-11. ☐ Finish the legal to-do in [docs/LEGAL.md §3](docs/LEGAL.md#3-before-launch-team-to-do): new app name (trademark), school/DPO approval, review of the Terms and Privacy Policy, a monitored `CONTACT_EMAIL`, icon licences, backups kept ≤ 30 days.
+11. ☐ Finish the legal to-do in [docs/LEGAL.md §3](docs/LEGAL.md#3-before-launch-team-to-do): adviser and CIT-U DPO approval, review of the Terms and Privacy Policy, a monitored `CONTACT_EMAIL` under the new name, a name check in the trademark registries.
 
 ## 5. Ongoing maintenance
 

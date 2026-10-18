@@ -2,10 +2,10 @@ import json
 
 from django.urls import reverse
 
-from modules.core.testing import CollaboardTestCase
+from modules.core.testing import AppTestCase
 
 
-class ChatTests(CollaboardTestCase):
+class ChatTests(AppTestCase):
     def room_id(self):
         return self.client.get(reverse("session_chat_room", args=[self.session.id])).json()["room_id"]
 

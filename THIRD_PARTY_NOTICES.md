@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-COLLABoard includes the following third-party material in this repository. Their licences require the notices below to be kept.
+InkHive includes the following third-party material in this repository. Their licences require the notices below to be kept.
 
 ## Chart.js 4.4.1
 
@@ -40,7 +40,8 @@ The server uses the packages in `requirements.txt` (Django, Channels, Daphne, Wh
 
 * `core/img/graphy.png`, the "Graphy" texture by We Are Pixel8 from transparenttextures.com. No licence was stated, so the graph-paper background is now drawn with CSS.
 * `help_app/img/gmail (1).png` (the Gmail logo, a Google trademark), replaced by our own envelope icon.
+* All PNG icons in `core/icons/` and `dashboard/icons/` and the old COLLABoard logos (`collaboard-logo.png` / `.svg`). Their source was never recorded, so they were replaced by our own SVGs.
 
 ## Our own artwork
 
-The SVG icons `core/icons/trash.svg` and `help_app/img/email.svg` were drawn for this project. The origin of the PNG icons in `core/icons/` and the COLLABoard logo still has to be confirmed by the team (see [docs/LEGAL.md](docs/LEGAL.md) item L-5).
+Every icon and logo in the app was drawn for this project and belongs to the team: the SVG icons in `core/static/core/icons/` (arrows, bell, chat, dashboard, bookmark, profile, settings gear, help, plus, user, logout, lock, shield, download, profile settings, trash, the InkHive logo), `help_app/img/email.svg` and `authentication/img/logo-wordmark.svg`. They are simple geometric line drawings, not copied from an icon set.

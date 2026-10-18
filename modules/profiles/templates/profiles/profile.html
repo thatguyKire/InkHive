@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}My Profile - COLLABoard{% endblock %}
+{% block title %}My Profile - {{ brand_name }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'profiles/css/profile.css' %}">
@@ -15,15 +15,15 @@
   <div class="back-dashboard">
     {% if user.role == "student" %}
       <a href="{% url 'student_dashboard' %}" class="back-arrow">
-        <img src="{% static 'core/icons/left-arrow.png' %}" alt="Back" class="back-icon">
+        <img src="{% static 'core/icons/left-arrow.svg' %}" alt="Back" class="back-icon">
       </a>
     {% elif user.role == "teacher" %}
       <a href="{% url 'teacher_dashboard' %}" class="back-arrow">
-        <img src="{% static 'core/icons/left-arrow.png' %}" alt="Back" class="back-icon">
+        <img src="{% static 'core/icons/left-arrow.svg' %}" alt="Back" class="back-icon">
       </a>
     {% elif user.role == "admin" %}
       <a href="{% url 'admin_dashboard' %}" class="back-arrow">
-        <img src="{% static 'core/icons/left-arrow.png' %}" alt="Back" class="back-icon">
+        <img src="{% static 'core/icons/left-arrow.svg' %}" alt="Back" class="back-icon">
       </a>
     {% endif %}
   </div>

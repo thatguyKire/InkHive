@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="username" content="{{ request.user.username }}">
   <meta name="user-id" content="{{ request.user.id }}">
-  <title>{% block title %}COLLABoard{% endblock %}</title>
+  <title>{% block title %}{{ brand_name }}{% endblock %}</title>
 
 
-  <link rel="icon" type="image/png" href="{% static 'core/icons/collaboard-logo.png' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'core/icons/logo.svg' %}">
 
  
   <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
@@ -26,11 +26,11 @@
     <!-- Header: Logo + Toggle -->
     <div class="sidebar-header">
       <div class="logo">
-        <img src="{% static 'core/icons/collaboard-logo.png' %}" alt="COLLABoard" class="logo-image">
-        <span class="logo-text">COLLABoard</span>
+        <img src="{% static 'core/icons/logo.svg' %}" alt="" class="logo-image">
+        <span class="logo-text">{{ brand_name }}</span>
       </div>
       <button class="toggle-btn" id="toggleBtn">
-        <img src="{% static 'core/icons/left-arrow.png' %}" class="toggle-icon" alt="Toggle Sidebar" />
+        <img src="{% static 'core/icons/left-arrow.svg' %}" class="toggle-icon" alt="Toggle Sidebar" />
       </button>
     </div>
 
@@ -38,7 +38,7 @@
       <!-- Notifications (as menu item) -->
       <div class="menu-item-wrap" id="notifWrap">
         <button id="notifBell" class="menu-btn notif-btn-sidebar" aria-haspopup="true" aria-expanded="false">
-          <img src="{% static 'core/icons/bell.png' %}" alt="Notifications" class="menu-icon">
+          <img src="{% static 'core/icons/bell.svg' %}" alt="Notifications" class="menu-icon">
           <span class="menu-text">Notifications</span>
           <span id="notifBadge" class="notif-badge-sidebar {% if notif_unread_count == 0 %}hidden{% endif %}">
             {{ notif_unread_count|default:0 }}
@@ -48,42 +48,42 @@
 
       {% if user.role == "teacher" %}
         <a href="{% url 'teacher_dashboard' %}" class="menu-btn">
-          <img src="{% static 'core/icons/dashboardicon.png' %}" class="menu-icon" alt="">
+          <img src="{% static 'core/icons/dashboard.svg' %}" class="menu-icon" alt="">
           <span class="menu-text">My Dashboard</span>
         </a>
         <a href="{% url 'saved_sessions' %}" class="menu-btn">
-          <img src="{% static 'core/icons/savedsessionicon.png' %}" class="menu-icon" alt="">
+          <img src="{% static 'core/icons/bookmark.svg' %}" class="menu-icon" alt="">
           <span class="menu-text">Saved Sessions</span>
         </a>
       {% elif user.role == "admin" %}
         <a href="{% url 'admin_dashboard' %}" class="menu-btn">
-          <img src="{% static 'core/icons/dashboardicon.png' %}" class="menu-icon" alt="">
+          <img src="{% static 'core/icons/dashboard.svg' %}" class="menu-icon" alt="">
           <span class="menu-text">My Dashboard</span>
         </a>
       {% else %}
         <a href="{% url 'join_session' %}" class="menu-btn">
-          <img src="{% static 'core/icons/plus.png' %}" class="menu-icon" alt="">
+          <img src="{% static 'core/icons/plus.svg' %}" class="menu-icon" alt="">
           <span class="menu-text">Join Session</span>
         </a>
         <a href="{% url 'student_dashboard' %}" class="menu-btn">
-          <img src="{% static 'core/icons/dashboardicon.png' %}" class="menu-icon" alt="">
+          <img src="{% static 'core/icons/dashboard.svg' %}" class="menu-icon" alt="">
           <span class="menu-text">My Dashboard</span>
         </a>
       {% endif %}
       <a href="{% url 'profile' %}" class="menu-btn">
-        <img src="{% static 'core/icons/myprofileicon.png' %}" class="menu-icon" alt="">
+        <img src="{% static 'core/icons/my-profile.svg' %}" class="menu-icon" alt="">
         <span class="menu-text">My Profile</span>
       </a>
       <a href="#" class="menu-btn" id="sidebarChatBtn">
-        <img src="{% static 'core/icons/chaticon.png' %}" class="menu-icon" alt="">
+        <img src="{% static 'core/icons/chat.svg' %}" class="menu-icon" alt="">
         <span class="menu-text">Chats</span>
       </a>
       <a href="{% url 'settings' %}" class="menu-btn">
-        <img src="{% static 'core/icons/settings.png' %}" class="menu-icon" alt="">
+        <img src="{% static 'core/icons/settings.svg' %}" class="menu-icon" alt="">
         <span class="menu-text">Settings</span>
       </a>
       <a href="{% url 'help' %}" class="menu-btn">
-        <img src="{% static 'core/icons/help.png' %}" class="menu-icon" alt="">
+        <img src="{% static 'core/icons/help.svg' %}" class="menu-icon" alt="">
         <span class="menu-text">FAQs and Help</span>
       </a>
     </nav>
@@ -91,7 +91,7 @@
     <!-- Footer: User Profile -->
     <div class="sidebar-footer">
       <div class="user-profile">
-        <img src="{% static 'core/icons/usertopbar.png' %}" class="user-avatar" alt="User">
+        <img src="{% static 'core/icons/user.svg' %}" class="user-avatar" alt="User">
         <div class="user-info">
           <span class="username">{{ user.username }}</span>
           <form action="{% url 'auth:logout' %}" method="post" class="logout-form">

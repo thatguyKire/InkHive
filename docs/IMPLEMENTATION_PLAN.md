@@ -1,6 +1,6 @@
 # Implementation Plan
 
-**System:** COLLABoard: Collaborative Whiteboard
+**System:** InkHive: Collaborative Whiteboard (formerly COLLABoard)
 **Version:** 1.0 · **Date:** 2026-10-14
 **Team:** Erik Samuel L. Bien (Lead Developer), Angel Anel C. Beato (Developer), Paul Andrei E. Bibit (Developer)
 
@@ -14,7 +14,7 @@
 | Refinement pass (`refine/fixes-and-docs`, merged to `main`) | ✅ 40+ defects fixed, 67 automated tests, docs written |
 | Supabase removal | ✅ SQLite + local media + built-in WebSocket server (§3.3) |
 | Security hardening | ✅ §3.4 · launch blocked until the [SECURITY.md checklist](../SECURITY.md#4-pre-launch-checklist) is done |
-| Legal and privacy | ✅ §3.5 · team to-do in [LEGAL.md §3](LEGAL.md#3-before-launch-team-to-do) (rename, school approval) |
+| Legal and privacy | ✅ §3.5 · renamed to InkHive, own icons · team to-do in [LEGAL.md §3](LEGAL.md#3-before-launch-team-to-do) (school approval, contact inbox) |
 | v1.1 (stability + persistence) | ⏳ Planned, §5 |
 | v2 (richer tools, integrations) | 💡 Proposed, §5 |
 
@@ -22,7 +22,7 @@
 
 ```mermaid
 gantt
-    title COLLABoard: delivered work
+    title InkHive: delivered work
     dateFormat YYYY-MM-DD
     axisFormat %b %d
     section Foundation
@@ -153,6 +153,9 @@ Verified by 30 new security tests (`core/test_security.py`, WebSocket flood test
 | L-04 | Users could not delete their account | Settings → Delete account (password + confirmation, rate-limited; admins excluded) |
 | L-05 | Deleted sessions left their files on disk (R-07) | `session/storage.py` removes uploads and snapshots that nothing references any more |
 | L-06 | Background texture with no stated licence; Gmail logo on the Help page | CSS-drawn grid; own envelope icon; [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) |
+| L-07 | Name "COLLABoard" is another company's registered trademark for whiteboard software | Renamed to **InkHive**; the name is one setting (`SITE_NAME`, templates use `{{ brand_name }}`) |
+| L-08 | PNG icons and logo of unknown origin (some in a stock-icon style) | Replaced by SVG icons and a logo drawn for this project; unused icons removed |
+| L-09 | Privacy Policy promised backups ≤ 30 days, but Render's snapshot retention is set by Render | Policy now describes Render's daily snapshots accurately; `manage.py backup` deletes our own copies after 30 days |
 
 Verified by 19 tests in `modules/legal/tests.py` and screenshots of the new pages at desktop and phone widths. Still to do by the team: [LEGAL.md §3](LEGAL.md#3-before-launch-team-to-do).
 
@@ -222,7 +225,7 @@ gantt
 ```bash
 python manage.py check
 python manage.py makemigrations --check --dry-run
-python manage.py test modules        # 116 tests
+python manage.py test modules        # 117 tests
 pip-audit -r requirements.txt        # must report no known vulnerabilities
 ```
 

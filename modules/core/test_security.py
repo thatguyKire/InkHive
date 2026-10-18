@@ -13,7 +13,7 @@ from django.test import Client
 from django.urls import reverse
 
 from modules.chat.models import ChatRoom
-from modules.core.testing import CollaboardTestCase, TEST_PASSWORD
+from modules.core.testing import AppTestCase, TEST_PASSWORD
 from modules.session.models import Session, generate_session_code
 
 
@@ -36,7 +36,7 @@ INLINE_SCRIPT = re.compile(r"<script(?![^>]*\bsrc=)(?![^>]*application/json)[^>]
 EXTERNAL_ASSET = re.compile(r"""<(?:script|link|img)[^>]+(?:src|href)=["']https?://""", re.I)
 
 
-class SecurityHeaderTests(CollaboardTestCase):
+class SecurityHeaderTests(AppTestCase):
     def test_headers_on_every_page(self):
         self.client.force_login(self.teacher)
         resp = self.client.get(reverse("teacher_dashboard"))
@@ -77,7 +77,7 @@ class SecurityHeaderTests(CollaboardTestCase):
         self.assertEqual(self.client.get("/healthz/").content, b"ok")
 
 
-class LoginBruteForceTests(CollaboardTestCase):
+class LoginBruteForceTests(AppTestCase):
     def attempt(self, username, password, ip="10.0.0.1", path=None):
         return self.client.post(path or reverse("auth:login"),
                                 {"username": username, "password": password}, REMOTE_ADDR=ip)
@@ -133,7 +133,7 @@ class LoginBruteForceTests(CollaboardTestCase):
         self.assertEqual(resp.status_code, 429)
 
 
-class AbuseLimitTests(CollaboardTestCase):
+class AbuseLimitTests(AppTestCase):
     def test_signup_flood_blocked(self):
         for i in range(10):
             self.client.post(reverse("auth:signup"), {
@@ -171,7 +171,7 @@ class AbuseLimitTests(CollaboardTestCase):
         self.assertContains(resp, "too short")
 
 
-class UploadContentTests(CollaboardTestCase):
+class UploadContentTests(AppTestCase):
     def upload(self, name, data, ctype="application/octet-stream"):
         self.client.force_login(self.teacher)
         return self.client.post(reverse("upload_attachment", args=[self.session.id]),
@@ -202,7 +202,7 @@ class UploadContentTests(CollaboardTestCase):
         self.assertRegex(url, r"^/media/session_files/[0-9a-f-]{36}/\d+_[\w.-]+\.png$")
 
 
-class MediaAccessTests(CollaboardTestCase):
+class MediaAccessTests(AppTestCase):
     def setUp(self):
         super().setUp()
         self.join(self.student)
@@ -249,7 +249,7 @@ class MediaAccessTests(CollaboardTestCase):
                 self.assertIn(self.client.get(url).status_code, (400, 404))
 
 
-class CsrfTests(CollaboardTestCase):
+class CsrfTests(AppTestCase):
     def test_presence_sync_requires_csrf_token(self):
         client = Client(enforce_csrf_checks=True)
         client.force_login(self.teacher)
@@ -273,7 +273,7 @@ class CsrfTests(CollaboardTestCase):
         self.assertTrue(Session.objects.filter(id=self.session.id).exists())
 
 
-class ProductionConfigTests(CollaboardTestCase):
+class ProductionConfigTests(AppTestCase):
     def run_settings(self, **env):
         base = {k: v for k, v in os.environ.items() if k not in ("SECRET_KEY", "DEBUG", "RENDER")}
         base.update(env, DJANGO_SETTINGS_MODULE="collaborative_whiteboard_backend.settings")

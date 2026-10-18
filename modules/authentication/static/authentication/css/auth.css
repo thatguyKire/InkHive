@@ -66,7 +66,7 @@ body {
   width: clamp(200px, 28vw, 360px);            /* scaled down ~15% */
   height: clamp(200px, 28vw, 360px);
   background:
-    url("/static/authentication/img/collaboard-logo.png") center/contain no-repeat;
+    url("../img/logo-wordmark.svg") center/contain no-repeat;
   filter: drop-shadow(3px 3px 0 rgba(34,34,34,0.7))
           brightness(0.97) contrast(0.92) saturate(1.05); /* soften outline */
   pointer-events: none;

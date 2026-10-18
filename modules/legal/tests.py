@@ -1,34 +1,44 @@
+import io
 import json
+import shutil
+import sqlite3
+import tempfile
+from contextlib import closing
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.test import override_settings
+from django.core.management import call_command
+from django.test import TransactionTestCase, override_settings
 from django.urls import reverse
 
 from modules.authentication.models import CustomUser
 from modules.chat.models import ChatRoom, Message
-from modules.core.testing import CollaboardTestCase, TEST_PASSWORD
+from modules.core.testing import AppTestCase, TEST_PASSWORD
 from modules.notifications.models import Notification
 from modules.session.models import Session, Participant, UploadedFile, generate_session_code
 
 
-class LegalPageTests(CollaboardTestCase):
+class LegalPageTests(AppTestCase):
     def test_terms_and_privacy_are_public(self):
         for name in ("legal:terms", "legal:privacy"):
             resp = self.client.get(reverse(name))
             self.assertEqual(resp.status_code, 200)
             self.assertContains(resp, settings.CONTACT_EMAIL)
+            self.assertContains(resp, f"{settings.SITE_NAME} is a free student project")
             self.assertNotContains(resp, "<script")  # CSP: no inline scripts
 
     def test_auth_pages_link_to_terms(self):
         for name in ("auth:login", "auth:signup"):
             resp = self.client.get(reverse(name))
+            self.assertContains(resp, f" - {settings.SITE_NAME}</title>")
             self.assertContains(resp, reverse("legal:terms"))
             self.assertContains(resp, reverse("legal:privacy"))
 
 
-class SignupAgreementTests(CollaboardTestCase):
+class SignupAgreementTests(AppTestCase):
     def signup(self, **extra):
         data = {
             "username": "newbie", "email": "newbie@cit.edu", "student_id": "2024-7777", "role": "student",
@@ -50,7 +60,7 @@ class SignupAgreementTests(CollaboardTestCase):
         self.assertIsNotNone(user.terms_accepted_at)
 
 
-class TermsGateTests(CollaboardTestCase):
+class TermsGateTests(AppTestCase):
     """Users who have not agreed to the current terms must do so first."""
 
     def setUp(self):
@@ -103,7 +113,7 @@ class TermsGateTests(CollaboardTestCase):
             self.assertContains(self.client.get(reverse("legal:accept")), "We've updated our terms")
 
 
-class ExportDataTests(CollaboardTestCase):
+class ExportDataTests(AppTestCase):
     def test_export_contains_own_data_only(self):
         self.join(self.student)
         room = ChatRoom.objects.create(name="Algebra chat", session=self.session)
@@ -114,7 +124,7 @@ class ExportDataTests(CollaboardTestCase):
         self.client.force_login(self.student)
         resp = self.client.get(reverse("export_data"))
         self.assertEqual(resp.status_code, 200)
-        self.assertIn("attachment", resp["Content-Disposition"])
+        self.assertEqual(resp["Content-Disposition"], 'attachment; filename="inkhive-my-data.json"')
         data = json.loads(resp.content)
         self.assertEqual(data["account"]["email"], "student1@cit.edu")
         self.assertEqual(data["account"]["student_id"], "2024-0001")
@@ -130,7 +140,7 @@ class ExportDataTests(CollaboardTestCase):
         self.assertEqual([s["title"] for s in data["sessions_created"]], ["Algebra"])
 
 
-class DeleteAccountTests(CollaboardTestCase):
+class DeleteAccountTests(AppTestCase):
     def save_file(self, path):
         return default_storage.save(path, ContentFile(b"x"))
 
@@ -196,7 +206,7 @@ class DeleteAccountTests(CollaboardTestCase):
         self.assertTrue(Session.objects.filter(pk=self.session.pk).exists())
 
 
-class SessionDeleteFilesTests(CollaboardTestCase):
+class SessionDeleteFilesTests(AppTestCase):
     def test_deleting_a_session_removes_its_files_but_keeps_shared_snapshots(self):
         snap = default_storage.save(f"snapshots/{self.session.id}_2.png", ContentFile(b"x"))
         self.session.snapshot_url = settings.MEDIA_URL + snap
@@ -214,3 +224,33 @@ class SessionDeleteFilesTests(CollaboardTestCase):
 
         self.client.post(reverse("delete_session", args=[copy.id]))
         self.assertFalse(default_storage.exists(snap))
+
+
+class BackupTests(TransactionTestCase):
+    """The Privacy Policy promises our own backups are deleted after 30 days.
+
+    TransactionTestCase: the backup reads the database on its own connection,
+    which would wait forever on TestCase's open transaction.
+    """
+
+    def test_backup_copies_data_and_deletes_old_backups(self):
+        backup_dir = Path(tempfile.mkdtemp(prefix="app-test-backups-"))
+        media = Path(tempfile.mkdtemp(prefix="app-test-media-"))
+        for folder in (backup_dir, media):
+            self.addCleanup(shutil.rmtree, folder, ignore_errors=True)
+        expired = backup_dir / "backup-20000101-000000"
+        recent = backup_dir / f"backup-{datetime.now(timezone.utc) - timedelta(days=29):%Y%m%d-%H%M%S}"
+        expired.mkdir()
+        recent.mkdir()
+        (media / "board.png").write_bytes(b"x")
+
+        with override_settings(BACKUP_DIR=backup_dir, MEDIA_ROOT=media):
+            call_command("backup", stdout=io.StringIO())
+
+        self.assertFalse(expired.exists())
+        self.assertTrue(recent.exists())
+        [new] = [p for p in backup_dir.iterdir() if p != recent]
+        self.assertTrue((new / "media.zip").exists())
+        with closing(sqlite3.connect(new / "db.sqlite3")) as db:
+            tables = {name for (name,) in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        self.assertIn("authentication_customuser", tables)

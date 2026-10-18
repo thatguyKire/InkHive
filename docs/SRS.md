@@ -1,6 +1,6 @@
 # Software Requirements Specification (SRS)
 
-**System:** COLLABoard: Collaborative Whiteboard
+**System:** InkHive: Collaborative Whiteboard
 **Version:** 1.0 · **Date:** 2026-10-14
 **Prepared by:** CSIT327 Group 4
 **Format:** adapted from IEEE 830 / ISO/IEC/IEEE 29148
@@ -10,10 +10,10 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This document specifies the functional and non-functional requirements of COLLABoard. It is the reference for design ([SDD](SDD.md)), implementation and testing.
+This document specifies the functional and non-functional requirements of InkHive. It is the reference for design ([SDD](SDD.md)), implementation and testing.
 
 ### 1.2 Scope
-COLLABoard is a Django web application that provides real-time shared whiteboards for classes. It covers account management, role-based dashboards, whiteboard sessions with live drawing, permission control, uploads, announcements, chat, notifications, snapshots, attendance and participation analytics.
+InkHive is a Django web application that provides real-time shared whiteboards for classes. It covers account management, role-based dashboards, whiteboard sessions with live drawing, permission control, uploads, announcements, chat, notifications, snapshots, attendance and participation analytics.
 
 ### 1.3 Definitions
 
@@ -43,7 +43,7 @@ flowchart TB
         S([Student])
         A([Admin])
     end
-    subgraph COLLABoard["COLLABoard (one Daphne process)"]
+    subgraph InkHive["InkHive (one Daphne process)"]
         APP["Django views<br/>(HTTP)"]
         WS["Channels consumer<br/>(WebSocket)"]
     end
@@ -75,7 +75,7 @@ flowchart LR
     Teacher([Teacher])
     Admin([Admin])
 
-    subgraph System["COLLABoard"]
+    subgraph System["InkHive"]
         UC1(("Sign up / Log in"))
         UC2(("Join session"))
         UC3(("View live board"))

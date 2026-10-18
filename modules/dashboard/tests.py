@@ -5,11 +5,11 @@ from django.urls import reverse
 
 from modules.authentication.models import CustomUser
 from modules.chat.models import ChatRoom, Message
-from modules.core.testing import CollaboardTestCase, TEST_PASSWORD
+from modules.core.testing import AppTestCase, TEST_PASSWORD
 from modules.session.models import Session
 
 
-class DashboardTests(CollaboardTestCase):
+class DashboardTests(AppTestCase):
     def test_teacher_metrics_are_real(self):
         p = self.join(self.student, can_draw=True)
         p.strokes_count = 7
@@ -56,7 +56,7 @@ class DashboardTests(CollaboardTestCase):
                              target_status_code=302)
 
 
-class PageSmokeTests(CollaboardTestCase):
+class PageSmokeTests(AppTestCase):
     """Every page renders for the roles that can see it."""
 
     def test_pages_render(self):

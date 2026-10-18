@@ -1,8 +1,10 @@
-# COLLABoard: Collaborative Whiteboard
+# InkHive: Collaborative Whiteboard
 
-COLLABoard is a real-time web whiteboard for classes. A **teacher** creates a session and shares a join code or QR code. **Students** join from any browser and watch the board live, and draw when the teacher allows it. The teacher can upload images and files, send announcements, toggle a session chat, save snapshots (PNG/PDF), and review attendance and participation.
+InkHive is a real-time web whiteboard for classes. A **teacher** creates a session and shares a join code or QR code. **Students** join from any browser and watch the board live, and draw when the teacher allows it. The teacher can upload images and files, send announcements, toggle a session chat, save snapshots (PNG/PDF), and review attendance and participation.
 
-**Live:** https://collaboard-z4sx.onrender.com
+*Formerly called COLLABoard. Renamed because COLLABOARD is another company's registered trademark for whiteboard software (see [docs/LEGAL.md](docs/LEGAL.md)).*
+
+**Status:** not public yet. The [security checklist](SECURITY.md#4-pre-launch-checklist) and the [legal to-do](docs/LEGAL.md#3-before-launch-team-to-do) come first.
 
 ## Features
 
@@ -92,7 +94,7 @@ python manage.py runserver
 python manage.py test modules
 ```
 
-The suite (116 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, 29 security attack tests, and the legal features (terms agreement, data download, account deletion).
+The suite (117 tests) covers authentication, sessions, access control, the whiteboard APIs and WebSocket consumer, uploads, snapshots/PDF, chat, notifications, dashboards, 29 security attack tests, and the legal features (terms agreement, data download, account deletion, backup retention).
 
 ## Security
 
@@ -100,7 +102,9 @@ See **[SECURITY.md](SECURITY.md)** for the threat model, every security control,
 
 ## Legal and privacy
 
-The app has a [Terms of Service](modules/legal/templates/legal/terms.html) and [Privacy Policy](modules/legal/templates/legal/privacy.html) (Philippine Data Privacy Act of 2012) at `/legal/terms/` and `/legal/privacy/`. Users must agree at sign-up, and again whenever `TERMS_VERSION` changes. They can download their data or delete their account in Settings. **Before a public launch, finish the team to-do in [docs/LEGAL.md](docs/LEGAL.md#3-before-launch-team-to-do)**. Most importantly, *COLLABOARD* is another company's registered trademark for whiteboard software, so the app needs a new name.
+The app has a [Terms of Service](modules/legal/templates/legal/terms.html) and [Privacy Policy](modules/legal/templates/legal/privacy.html) (Philippine Data Privacy Act of 2012) at `/legal/terms/` and `/legal/privacy/`. Users must agree at sign-up, and again whenever `TERMS_VERSION` changes. They can download their data or delete their account in Settings. **Before a public launch, finish the team to-do in [docs/LEGAL.md](docs/LEGAL.md#3-before-launch-team-to-do)**.
+
+The name lives in one place: `SITE_NAME` in `collaborative_whiteboard_backend/settings.py` (templates use `{{ brand_name }}`). The big login-page logo, `modules/authentication/static/authentication/img/logo-wordmark.svg`, spells it out too. All icons and the logo were drawn for this project ([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
 
 ## Project structure
 
@@ -128,6 +132,7 @@ build.sh            Render build script
 * **Persistent disk:** SQLite and uploads are files. Without a disk, Render wipes them on every deploy/restart. Add a disk (e.g., mounted at `/var/data`) and set `SQLITE_PATH=/var/data/db.sqlite3` and `MEDIA_ROOT=/var/data/media`
 * **Environment:** the variables from `.env.example`; set `SECRET_KEY`; `DEBUG` defaults to `False` on Render
 * Run a **single instance** (the realtime layer lives in process memory)
+* **Backups:** Render snapshots the disk daily. For extra copies, run `python manage.py backup` (Render Shell); it saves the database and `media/` to `BACKUP_DIR` (e.g. `/var/data/backups`) and deletes copies older than 30 days, as the Privacy Policy promises
 
 ## Team
 

@@ -338,7 +338,7 @@ img {
 }
 
 .sidebar.collapsed .toggle-icon {
-  content: url("../icons/right-arrow.png");
+  content: url("../icons/right-arrow.svg");
 }
 
 /* ---------- Menu ---------- */

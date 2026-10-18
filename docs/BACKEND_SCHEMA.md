@@ -1,6 +1,6 @@
 # Backend Schema
 
-**System:** COLLABoard: Collaborative Whiteboard
+**System:** InkHive: Collaborative Whiteboard
 **Version:** 1.0 · **Date:** 2026-10-14 · **Migrations:** authentication 0001, session 0005, chat 0001, notifications 0003 · **Database:** SQLite (default) or PostgreSQL
 
 Covers the relational schema, file storage layout, HTTP API and the WebSocket (realtime) message protocol.

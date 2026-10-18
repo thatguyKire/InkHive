@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}COLLABoard{% endblock %}</title>
-  <link rel="icon" type="image/png" href="{% static 'core/icons/collaboard-logo.png' %}">
+  <title>{% block title %}{{ brand_name }}{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'core/icons/logo.svg' %}">
   <link rel="stylesheet" href="{% static 'legal/css/legal.css' %}">
 </head>
 <body>
   <header class="legal-header">
     <a class="legal-brand" href="{% if user.is_authenticated %}{% url 'redirect_dashboard' %}{% else %}{% url 'auth:login' %}{% endif %}">
-      <img src="{% static 'core/icons/collaboard-logo.png' %}" alt="">
-      <span>COLLABoard</span>
+      <img src="{% static 'core/icons/logo.svg' %}" alt="">
+      <span>{{ brand_name }}</span>
     </a>
     <nav class="legal-nav" aria-label="Legal">
       <a href="{% url 'legal:terms' %}"{% if request.resolver_match.url_name == 'terms' %} aria-current="page"{% endif %}>Terms</a>
@@ -30,7 +30,7 @@
   </main>
 
   <footer class="legal-footer">
-    <p>COLLABoard is a free student project (CSIT327, Group 4). It is not an official service of Cebu Institute of Technology – University.</p>
+    <p>{{ brand_name }} is a free student project (CSIT327, Group 4). It is not an official service of Cebu Institute of Technology – University.</p>
     <p><a href="{% url 'legal:terms' %}">Terms of Service</a> · <a href="{% url 'legal:privacy' %}">Privacy Policy</a> · <a href="mailto:{{ contact_email }}">{{ contact_email }}</a></p>
   </footer>
 </body>

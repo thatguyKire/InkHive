@@ -11,7 +11,7 @@ from modules.session.models import Session, Participant, generate_session_code
 
 TEST_PASSWORD = "Str0ng!Pass"
 
-_TEMP_MEDIA = tempfile.mkdtemp(prefix="collaboard-test-media-")
+_TEMP_MEDIA = tempfile.mkdtemp(prefix="app-test-media-")
 
 
 @override_settings(
@@ -23,7 +23,7 @@ _TEMP_MEDIA = tempfile.mkdtemp(prefix="collaboard-test-media-")
     },
     MEDIA_ROOT=_TEMP_MEDIA,
 )
-class CollaboardTestCase(TestCase):
+class AppTestCase(TestCase):
     """Creates a teacher, two students and one session owned by the teacher."""
 
     @classmethod

@@ -9,7 +9,6 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 def _context(**extra):
     return {
-        "contact_email": settings.CONTACT_EMAIL,
         "effective_date": date.fromisoformat(settings.TERMS_VERSION),
         **extra,
     }

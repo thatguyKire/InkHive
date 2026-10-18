@@ -34,7 +34,6 @@ if not DEBUG and (SECRET_KEY == _DEV_SECRET_KEY or len(SECRET_KEY) < 50):
     )
 
 ALLOWED_HOSTS = [
-    'collaboard-z4sx.onrender.com',
     'localhost',
     '127.0.0.1',
 ]
@@ -74,6 +73,10 @@ if not DEBUG:
 # Django admin lives here; set ADMIN_URL to something less guessable in production.
 ADMIN_URL = os.getenv("ADMIN_URL", "admin/").strip("/") + "/"
 
+# The app's public name: page titles, sidebar and legal pages. The big logo on the
+# login page (authentication/img/logo-wordmark.svg) spells it out too.
+SITE_NAME = "InkHive"
+
 # Terms of Service / Privacy Policy (modules/legal). Bump TERMS_VERSION whenever
 # either text changes in a way users must agree to: everyone is asked again.
 TERMS_VERSION = "2026-10-18"
@@ -82,7 +85,7 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "COLLABoardDevTeam@gmail.com")
 
 # Rate-limit counters (single process, so local memory is enough).
 CACHES = {
-    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "collaboard"},
+    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "ratelimit"},
 }
 
 # -------------------------------------------------------------
@@ -162,6 +165,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'modules.notifications.notifcounts.notif_counts',  # was wrong module path
+                'modules.core.context_processors.site',
             ],
         },
     },
@@ -237,6 +241,12 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # the app at /media/. Point MEDIA_ROOT at a persistent disk in production.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(os.getenv("MEDIA_ROOT", str(BASE_DIR / 'media')))
+
+# `manage.py backup` writes copies of the database and media here and deletes
+# copies older than BACKUP_RETENTION_DAYS (the Privacy Policy promises 30).
+# Keep it outside MEDIA_ROOT so backups are never served.
+BACKUP_DIR = Path(os.getenv("BACKUP_DIR", str(BASE_DIR / 'backups')))
+BACKUP_RETENTION_DAYS = 30
 
 # ✅ WhiteNoise for Render (static caching)
 STORAGES = {

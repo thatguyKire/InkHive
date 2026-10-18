@@ -1,10 +1,10 @@
 from django.urls import reverse
 
-from modules.core.testing import CollaboardTestCase
+from modules.core.testing import AppTestCase
 from modules.notifications.models import Notification
 
 
-class AnnouncementTests(CollaboardTestCase):
+class AnnouncementTests(AppTestCase):
     def announce(self, text, urgent=False):
         return self.client.post(
             reverse("notifications:send_announcement", args=[self.session.id]),
@@ -44,7 +44,7 @@ class AnnouncementTests(CollaboardTestCase):
         self.assertEqual([i["content"] for i in items], ["Read chapter 2"])
 
 
-class ReadStateTests(CollaboardTestCase):
+class ReadStateTests(AppTestCase):
     def test_mark_all_read_requires_post(self):
         Notification.objects.create(recipient=self.student, content="x")
         self.client.force_login(self.student)

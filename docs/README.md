@@ -1,6 +1,6 @@
-# COLLABoard Documentation
+# InkHive Documentation
 
-Project documentation for **COLLABoard**, the Collaborative Whiteboard built by CSIT327 Group 4.
+Project documentation for **InkHive** (formerly COLLABoard), the Collaborative Whiteboard built by CSIT327 Group 4.
 
 | Document | What it answers | Main audience |
 |---|---|---|
@@ -29,7 +29,7 @@ flowchart LR
     T([Teacher]) -->|creates sessions, controls drawing| W
     S([Student]) -->|joins with code, draws when allowed| W
     A([Admin]) -->|monitors platform| W
-    W["COLLABoard<br/>Django + Channels (Daphne)"] <-->|ORM| DB[("SQLite<br/>db.sqlite3")]
+    W["InkHive<br/>Django + Channels (Daphne)"] <-->|ORM| DB[("SQLite<br/>db.sqlite3")]
     W -->|uploads, snapshots| ST[("Local media folder")]
     T & S <-.->|"WebSocket: live strokes, presence"| W
 ```

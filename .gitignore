@@ -32,6 +32,8 @@ db.sqlite3
 
 media/
 
+backups/
+
 
 # Static files
 

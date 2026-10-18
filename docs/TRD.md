@@ -1,7 +1,7 @@
 # Technical Requirements Document (TRD)
 
-**System:** COLLABoard: Collaborative Whiteboard
-**Version:** 1.2 · **Date:** 2026-10-14 · **Changes:** 1.1 Supabase removed (SQLite + local media + Channels); 1.2 security hardening (see [SECURITY.md](../SECURITY.md))
+**System:** InkHive: Collaborative Whiteboard (formerly COLLABoard)
+**Version:** 1.3 · **Date:** 2026-10-18 · **Changes:** 1.1 Supabase removed (SQLite + local media + Channels); 1.2 security hardening (see [SECURITY.md](../SECURITY.md)); 1.3 renamed, legal features, backup command (see [LEGAL.md](LEGAL.md))
 
 This document fixes the technical choices, environments, configuration and quality bars that the implementation must meet. Functional behaviour is in the [SRS](SRS.md); design is in the [SDD](SDD.md).
 
@@ -33,8 +33,8 @@ No third-party backend service or CDN is required. `pip-audit` reports **0 known
 | Environment | Database | Files | DEBUG | URL |
 |---|---|---|---|---|
 | Local dev | `./db.sqlite3` | `./media/` | `True` (default when `RENDER` unset) | http://127.0.0.1:8000 (`manage.py runserver`, Daphne) |
-| Test (`manage.py test`) | SQLite in memory | temp folder (`CollaboardTestCase`) | False | n/a |
-| Production | `SQLITE_PATH` on a persistent disk | `MEDIA_ROOT` on the same disk | `False` (default when `RENDER=true`) | https://collaboard-z4sx.onrender.com |
+| Test (`manage.py test`) | SQLite in memory | temp folder (`AppTestCase`) | False | n/a |
+| Production | `SQLITE_PATH` on a persistent disk | `MEDIA_ROOT` on the same disk | `False` (default when `RENDER=true`) | Not launched. Create a new Render service with a name that does not use the old brand; its `*.onrender.com` host is allowed automatically. The old `collaboard-z4sx` service should be suspended and then deleted |
 
 ## 3. Configuration (environment variables)
 
@@ -44,13 +44,14 @@ All configuration is read in `collaborative_whiteboard_backend/settings.py`. Tem
 |---|---|---|---|
 | `SECRET_KEY` | **Yes** | insecure dev key | Django signing key. With `DEBUG` off the app **refuses to start** unless it is set and ≥ 50 characters |
 | `DEBUG` | No | `False` on Render, else `True` | Never `True` in production |
-| `ALLOWED_HOSTS` | No | `collaboard-z4sx.onrender.com, localhost, 127.0.0.1` + `RENDER_EXTERNAL_HOSTNAME` | Extra comma-separated hosts (also used by the WebSocket origin check) |
+| `ALLOWED_HOSTS` | No | `localhost, 127.0.0.1` + `RENDER_EXTERNAL_HOSTNAME` (set by Render) | Extra comma-separated hosts, e.g. a custom domain (also used by the WebSocket origin check) |
 | `SQLITE_PATH` | **Yes on Render** | `./db.sqlite3` | Database file; put it on the persistent disk (e.g. `/var/data/db.sqlite3`) |
 | `MEDIA_ROOT` | **Yes on Render** | `./media` | Snapshots and uploads (e.g. `/var/data/media`) |
 | `DATABASE_URL` | No | unset | If set, PostgreSQL is used instead of SQLite |
 | `LOG_LEVEL` | No | `INFO` | Root log level |
 | `ADMIN_URL` | Recommended | `admin/` | Path of the Django admin; use something unguessable in production |
-| `CONTACT_EMAIL` | Recommended | `COLLABoardDevTeam@gmail.com` | Inbox shown on the Terms, Privacy and Help pages for privacy, copyright and abuse reports |
+| `CONTACT_EMAIL` | Recommended | `COLLABoardDevTeam@gmail.com` | Inbox shown on the Terms, Privacy and Help pages for privacy, copyright and abuse reports. Set it to an inbox under the new name (LEGAL.md L-4) |
+| `BACKUP_DIR` | Recommended | `./backups` | Where `manage.py backup` writes copies (e.g. `/var/data/backups`); keep it outside `MEDIA_ROOT` |
 | `BEHIND_PROXY` | No | `True` on Render, else `False` | Trust `X-Forwarded-Proto/For` (HTTPS detection, client IP for rate limits) |
 | `SECURE_SSL_REDIRECT` | No | `True` when DEBUG off | Redirect http → https (`/healthz/` exempt) |
 | `SECURE_HSTS_SECONDS` | No | `2592000` (30 days) when DEBUG off | HSTS max-age |
@@ -67,7 +68,7 @@ Derived settings: secure/HttpOnly/SameSite cookies, 7-day sessions, `X_FRAME_OPT
    * `session_files/<session_uuid>/<unix_ts>_<filename>`: uploads
 3. Files are served by the app at `/media/…` in every environment (`modules.core.views.media`) and are same-origin, so the canvas can draw and export them.
 4. **Persistence:** on Render the default filesystem is wiped on every deploy and restart. A **persistent disk** must be mounted (e.g. `/var/data`) and `SQLITE_PATH`/`MEDIA_ROOT` pointed at it. Without it, accounts, sessions and uploads disappear.
-5. **Backups:** copy `db.sqlite3` with `sqlite3 db.sqlite3 ".backup backup.sqlite3"` (safe while running) and archive `media/`.
+5. **Backups:** Render takes an encrypted snapshot of the disk every 24 hours and keeps each for at least 7 days (Render's setting). For extra copies, run `python manage.py backup`: it copies the database with SQLite's online backup (safe while running) and zips `media/` into `BACKUP_DIR/backup-<UTC time>/`, then deletes copies older than `BACKUP_RETENTION_DAYS` (30, as the Privacy Policy promises). `--prune-only` just deletes old copies.
 
 ## 5. Realtime requirements
 
@@ -141,7 +142,7 @@ flowchart LR
 
 | Level | Tooling | Scope / command |
 |---|---|---|
-| Unit + integration | Django `TestCase` / `TransactionTestCase`, Channels `WebsocketCommunicator` | `python manage.py test modules`: 116 tests covering auth, sessions, access control, HTTP APIs, the WebSocket consumer (auth, relay, rights, presence, flooding), uploads, snapshot → media → PDF, chat, notifications, dashboards, page rendering, 29 security tests (`core/test_security.py`), and the legal features (`legal/tests.py`) |
+| Unit + integration | Django `TestCase` / `TransactionTestCase`, Channels `WebsocketCommunicator` | `python manage.py test modules`: 117 tests covering auth, sessions, access control, HTTP APIs, the WebSocket consumer (auth, relay, rights, presence, flooding), uploads, snapshot → media → PDF, chat, notifications, dashboards, page rendering, 29 security tests (`core/test_security.py`), and the legal features (`legal/tests.py`) |
 | Static checks | `manage.py check`, `makemigrations --check`, `node --check` on edited JS | Before each PR |
 | Live realtime E2E | Daphne + two logged-in clients running the real `realtime.js` | Verified for this release: connect, presence, relay, view-only block, permission grant, `sid` enforcement, teacher-only clear, disconnect |
 | Manual E2E | Two browsers (teacher + student) | Checklist in [Implementation Plan §6](IMPLEMENTATION_PLAN.md#6-test-plan) |

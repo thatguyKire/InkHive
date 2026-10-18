@@ -1,15 +1,15 @@
 {% extends "legal/layout.html" %}
 
-{% block title %}Accept Terms - COLLABoard{% endblock %}
+{% block title %}Accept Terms - {{ brand_name }}{% endblock %}
 
 {% block content %}
 <section class="legal-doc legal-accept">
   <h1>{% if user.terms_version %}We've updated our terms{% else %}Before you continue{% endif %}</h1>
   <p class="legal-lead">
     {% if user.terms_version %}
-      Our Terms of Service and Privacy Policy changed on {{ effective_date|date:"F j, Y" }}. Please review and accept them to keep using COLLABoard.
+      Our Terms of Service and Privacy Policy changed on {{ effective_date|date:"F j, Y" }}. Please review and accept them to keep using {{ brand_name }}.
     {% else %}
-      Please review and accept our Terms of Service and Privacy Policy to keep using COLLABoard.
+      Please review and accept our Terms of Service and Privacy Policy to keep using {{ brand_name }}.
     {% endif %}
   </p>
 
@@ -24,7 +24,7 @@
       <li>Teachers can see the email, attendance and activity of students in their sessions.</li>
       <li>No ads, no tracking, and we never sell your data.</li>
       <li>You can download your data or delete your account at any time in Settings.</li>
-      <li>COLLABoard is a free student project, provided as is.</li>
+      <li>{{ brand_name }} is a free student project, provided as is.</li>
     </ul>
   </div>
 

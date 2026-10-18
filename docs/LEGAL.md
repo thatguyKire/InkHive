@@ -1,6 +1,6 @@
 # Legal and Privacy
 
-**System:** COLLABoard: Collaborative Whiteboard · **Date:** 2026-10-18 · **Terms version:** `2026-10-18`
+**System:** InkHive: Collaborative Whiteboard (formerly COLLABoard) · **Date:** 2026-10-18 · **Terms version:** `2026-10-18`
 
 This document lists what the app does to stay on the right side of the law, what personal data it holds, and the **items the team must finish before real users are let in**. It goes with [SECURITY.md](../SECURITY.md).
 
@@ -22,9 +22,12 @@ This document lists what the app does to stay on the right side of the law, what
 | Only strictly necessary cookies (`sessionid`, `csrftoken`); no analytics, ads, trackers or third-party scripts/fonts | CSP in `core/middleware/security_headers.py` | No cookie-consent banner is needed for strictly necessary cookies |
 | "Not an official service of CIT-U" notice | legal pages footer, Terms §1 | Avoids implying the university runs or endorses the app |
 | Third-party code licences recorded; unlicensed assets removed | [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) | The background texture (unclear licence) is now drawn in CSS; the Gmail logo on the Help page was replaced by our own envelope icon |
+| **New name: InkHive** (was COLLABoard) | `SITE_NAME` in `settings.py`; templates use `{{ brand_name }}`; `authentication/img/logo-wordmark.svg` | "COLLABOARD" is IBV Informatik AG's registered trademark (US Reg. No. 5505406) for collaboration software, and they sell an online whiteboard called *Collaboard* |
+| **Own icons and logo**: every icon and the logo are SVGs drawn for this project | `core/static/core/icons/*.svg`, `authentication/static/authentication/img/logo-wordmark.svg` | The old PNG icons had no recorded source, and some looked like stock icons that need attribution |
+| Accurate backup promise + `manage.py backup` that deletes our own copies after 30 days | Privacy Policy §5, `core/management/commands/backup.py` | Render keeps its daily disk snapshots for a period it sets (at least 7 days), so we cannot promise a maximum for those |
 | Contact address for privacy, copyright and abuse reports | `CONTACT_EMAIL` setting (default `COLLABoardDevTeam@gmail.com`) | Shown on the legal and Help pages |
 
-Tests: `modules/legal/tests.py` (19 tests: public pages, signup agreement, the accept gate, data export, account deletion with files, session file cleanup).
+Tests: `modules/legal/tests.py` (20 tests: public pages, signup agreement, the accept gate, data export, account deletion with files, session file cleanup, backup retention).
 
 ## 2. Personal data inventory
 
@@ -37,6 +40,7 @@ Tests: `modules/legal/tests.py` (19 tests: public pages, signup agreement, the a
 | Chat messages | `chat_message` | Session members | Session or sender deleted |
 | Announcements / notifications | `notifications_notification` | Recipient | Recipient deleted, or the teacher's account deleted |
 | IP address | In-memory rate-limit counters | Nobody (code only) | ≤ 1 hour |
+| Copies of all of the above | Render's daily disk snapshots; our own `manage.py backup` copies in `BACKUP_DIR` | Team members with Render access | Render: its own retention (at least 7 days); ours: 30 days |
 | Failed/blocked login (typed username or email + IP), security events | Server logs (stdout → Render) | Team members with Render access | Render's log retention |
 
 No sensitive personal information (health, religion, government IDs …) is requested. Data is hosted by Render (possibly outside the Philippines).
@@ -45,14 +49,15 @@ No sensitive personal information (health, religion, government IDs …) is requ
 
 | # | Task | Owner | Why |
 |---|---|---|---|
-| L-1 | ☐ **Rename the app before any public launch.** "COLLABOARD" is a registered US trademark (Reg. No. 5505406, serial 79213521) of IBV Informatik AG for collaboration software, and they sell a product called *Collaboard* that is also an online whiteboard. Using the same name for the same kind of product is the clearest lawsuit risk in this project. Keeping the name for a class demo is low risk; publishing it as a real service is not. | Team | Trademark infringement |
-| L-2 | ☐ Get written OK from the course adviser and, before using it with real classes, from CIT-U's Data Protection Officer. Student data handled for a class can make the school responsible too. | Lead | Data Privacy Act, school policy |
+| L-1 | ✅ **Renamed to InkHive** (2026-10-18). "COLLABOARD" is a registered US trademark (Reg. No. 5505406, serial 79213521) of IBV Informatik AG, which sells an online whiteboard called *Collaboard*. A web search found no app, company or trademark called "InkHive". ☐ Before a public launch, also search the free registries for "InkHive" in classes 9 and 42: IPOPHL's trademark search ([ipophil.gov.ph](https://www.ipophil.gov.ph/) → e-Services) for the Philippines and the [WIPO Global Brand Database](https://branddb.wipo.int/). If anything close turns up, change `SITE_NAME` and the logo text. | Team | Trademark infringement |
+| L-2 | ☐ Get written OK from the course adviser and, before using it with real classes, from CIT-U's Data Protection Officer (dpo@cit.edu, per CIT-U's website privacy notice). Student data handled for a class can make the school responsible too. | Lead | Data Privacy Act, school policy |
 | L-3 | ☐ Have the adviser (or a lawyer, if the app goes beyond the course) review the Terms and Privacy Policy. | Lead | Not legal advice |
-| L-4 | ☐ Make sure `CONTACT_EMAIL` is an inbox someone checks at least weekly. Privacy requests: answer within 15 days (we promise this). | Team | Promised in the Privacy Policy |
-| L-5 | ☐ Confirm who made every icon in `modules/*/static/**/icons/` and the logo. If any came from a site such as Flaticon, Freepik or Icons8, follow its licence (often an attribution link) or replace it, and record it in THIRD_PARTY_NOTICES.md. | Front-end | Copyright |
-| L-6 | ☐ Keep backups of `db.sqlite3` and `media/` for **at most 30 days** (the Privacy Policy promises this). | DevOps | Promised retention |
+| L-4 | ☐ Create an inbox under the new name (for example a new Gmail account), set `CONTACT_EMAIL` to it on Render, and check it at least weekly. Until then the pages show the old team inbox. Privacy requests: answer within 15 days (we promise this). | Team | Promised in the Privacy Policy |
+| L-5 | ✅ All icons and the logo were replaced by SVGs drawn for this project, and unused icons were deleted. Any new icon or image must be the team's own work or come with a licence recorded in THIRD_PARTY_NOTICES.md. | Front-end | Copyright |
+| L-6 | ✅ The Privacy Policy now describes Render's daily snapshots as they are, and `python manage.py backup` deletes our own copies after 30 days. ☐ Do not keep other copies of the database or `media/` (for example on a laptop) for longer than 30 days. | DevOps | Promised retention |
 | L-7 | ☐ Decide who the Data Protection Officer is (the Privacy Policy says the lead developer) and make sure that person knows the breach steps in §5. | Lead | RA 10173 |
 | L-8 | ☐ Choose a licence for the source code (e.g. MIT) or keep "all rights reserved", and agree on it as a team. All three members hold copyright in the code they wrote. | Team | Clarity for reuse; optional |
+| L-9 | ☐ Suspend the old Render service (`collaboard-z4sx.onrender.com`, still live with the old code and name), launch on a new service with a new name, then delete the old one ([SECURITY.md](../SECURITY.md#4-pre-launch-checklist) item 1). | Lead | Old name and old code still public |
 
 ## 4. Changing the Terms or Privacy Policy
 
@@ -60,6 +65,8 @@ No sensitive personal information (health, religion, government IDs …) is requ
 2. If users should agree again (anything that changes their rights or how data is used), set `TERMS_VERSION` in `collaborative_whiteboard_backend/settings.py` to today's date (`YYYY-MM-DD`). The pages show it as the effective date.
 3. Deploy. On their next visit every user sees "We've updated our terms" and must accept before continuing.
 4. If you change what is collected, exported or deleted, update `modules/settings_app/account.py` and §2 above so the policy stays true.
+
+**Changing the app's name:** set `SITE_NAME` in `settings.py` and edit the two `<text>` lines in `modules/authentication/static/authentication/img/logo-wordmark.svg`. Every page, including the Terms and Privacy Policy, picks up the new name. A name change alone does not need a new `TERMS_VERSION`.
 
 ## 5. Handling reports
 

@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Settings - COLLABoard{% endblock %}
+{% block title %}Settings - {{ brand_name }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'settings_app/css/settings.css' %}">
@@ -19,7 +19,7 @@
               {% else %}
                 {% url 'student_dashboard' %}
               {% endif %}" class="back-arrow">
-      <img src="{% static 'core/icons/left-arrow.png' %}" alt="Back">
+      <img src="{% static 'core/icons/left-arrow.svg' %}" alt="Back">
     </a>
 
     <div class="settings-header-text">
@@ -31,33 +31,33 @@
   <!-- Options -->
   <div class="settings-container">
     <a href="{% url 'profile' %}" class="setting-card">
-      <img src="{% static 'core/icons/profile.png' %}" alt="Profile Management">
+      <img src="{% static 'core/icons/profile-settings.svg' %}" alt="Profile Management">
       <h2>Profile Management</h2>
       <p>Update your name, email, and other details</p>
     </a>
 
     <a href="{% url 'edit_profile' %}" class="setting-card">
-      <img src="{% static 'core/icons/account.png' %}" alt="Account Settings">
+      <img src="{% static 'core/icons/lock.svg' %}" alt="Account Settings">
       <h2>Account Settings</h2>
       <p>Change password and security preferences</p>
     </a>
 
     <a href="{% url 'help' %}" class="setting-card">
-      <img src="{% static 'core/icons/help.png' %}" alt="Help & Support">
+      <img src="{% static 'core/icons/help.svg' %}" alt="Help & Support">
       <h2>Help & Support</h2>
       <p>Get assistance or contact our support team</p>
     </a>
 
     <a href="{% url 'export_data' %}" class="setting-card">
-      <img src="{% static 'core/icons/savedsessionicon.png' %}" alt="">
+      <img src="{% static 'core/icons/download.svg' %}" alt="">
       <h2>Download My Data</h2>
       <p>Get a copy of everything stored about your account</p>
     </a>
 
     <a href="{% url 'legal:privacy' %}" class="setting-card">
-      <img src="{% static 'core/icons/account.png' %}" alt="">
+      <img src="{% static 'core/icons/shield.svg' %}" alt="">
       <h2>Terms &amp; Privacy</h2>
-      <p>How COLLABoard handles your data, and the rules of use</p>
+      <p>How {{ brand_name }} handles your data, and the rules of use</p>
     </a>
 
     {% if not user.is_staff %}
@@ -71,9 +71,9 @@
     <form method="post" action="{% url 'auth:logout' %}" class="setting-card logout-card">
       {% csrf_token %}
       <button type="submit">
-        <img src="{% static 'core/icons/logout.png' %}" alt="Logout">
+        <img src="{% static 'core/icons/logout.svg' %}" alt="Logout">
         <h2>Logout</h2>
-        <p>Sign out from your COLLABoard account</p>
+        <p>Sign out from your {{ brand_name }} account</p>
       </button>
     </form>
   </div>

@@ -1,6 +1,6 @@
 # Application Flow
 
-**System:** COLLABoard: Collaborative Whiteboard
+**System:** InkHive: Collaborative Whiteboard
 **Version:** 1.0 · **Date:** 2026-10-14
 
 This document maps every screen, who can reach it, and how users move between screens. URL names match `urls.py`.

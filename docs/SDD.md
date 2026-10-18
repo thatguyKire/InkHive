@@ -1,6 +1,6 @@
 # Software Design Document (SDD)
 
-**System:** COLLABoard: Collaborative Whiteboard
+**System:** InkHive: Collaborative Whiteboard
 **Version:** 1.0 · **Date:** 2026-10-14
 **Prepared by:** CSIT327 Group 4
 **Format:** adapted from IEEE 1016
@@ -9,7 +9,7 @@
 
 ## 1. Introduction
 
-This document describes *how* COLLABoard is built so a new developer can find, change and extend any part of it. Requirements are in the [SRS](SRS.md); tables and endpoints are in the [Backend Schema](BACKEND_SCHEMA.md).
+This document describes *how* InkHive is built so a new developer can find, change and extend any part of it. Requirements are in the [SRS](SRS.md); tables and endpoints are in the [Backend Schema](BACKEND_SCHEMA.md).
 
 ## 2. Design goals and principles
 

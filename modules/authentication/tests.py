@@ -2,10 +2,10 @@ from django.conf import settings
 from django.urls import reverse
 
 from modules.authentication.models import CustomUser
-from modules.core.testing import CollaboardTestCase, TEST_PASSWORD
+from modules.core.testing import AppTestCase, TEST_PASSWORD
 
 
-class SignupTests(CollaboardTestCase):
+class SignupTests(AppTestCase):
     def signup(self, **overrides):
         data = {
             "username": "newstudent",
@@ -53,7 +53,7 @@ class SignupTests(CollaboardTestCase):
         self.assertIn("email", resp.context["form"].errors)
 
 
-class LoginTests(CollaboardTestCase):
+class LoginTests(AppTestCase):
     def test_login_with_username(self):
         resp = self.client.post(reverse("auth:login"), {"username": "teacher1", "password": TEST_PASSWORD})
         self.assertRedirects(resp, reverse("redirect_dashboard"), fetch_redirect_response=False)

@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Student Dashboard - COLLABoard{% endblock %}
+{% block title %}Student Dashboard - {{ brand_name }}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
@@ -16,7 +16,7 @@
 
   <div class="sessions-row">
     <a href="{% url 'join_session' %}" class="session-card" aria-label="Join a session">
-      <img src="{% static 'core/icons/plus.png' %}" alt="Join session" class="icon-plus">
+      <img src="{% static 'core/icons/plus.svg' %}" alt="Join session" class="icon-plus">
       <p class="session-label">Join Session</p>
     </a>
   </div>

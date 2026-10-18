@@ -1,13 +1,13 @@
 {% extends "legal/layout.html" %}
 
-{% block title %}Privacy Policy - COLLABoard{% endblock %}
+{% block title %}Privacy Policy - {{ brand_name }}{% endblock %}
 
 {% block content %}
 <article class="legal-doc">
   <h1>Privacy Policy</h1>
   <p class="legal-meta">Effective {{ effective_date|date:"F j, Y" }}</p>
 
-  <p class="legal-lead">This policy explains what personal data COLLABoard collects, why, who can see it, how long we keep it, and your rights under the Philippine <strong>Data Privacy Act of 2012</strong> (Republic Act No. 10173). COLLABoard is a free student project run by the CSIT327 Group 4 team (“<strong>we</strong>”). We are responsible for the personal data described here.</p>
+  <p class="legal-lead">This policy explains what personal data {{ brand_name }} collects, why, who can see it, how long we keep it, and your rights under the Philippine <strong>Data Privacy Act of 2012</strong> (Republic Act No. 10173). {{ brand_name }} is a free student project run by the CSIT327 Group 4 team (“<strong>we</strong>”). We are responsible for the personal data described here.</p>
 
   <div class="legal-summary">
     <h2>The short version</h2>
@@ -59,7 +59,7 @@
 
   <section id="cookies">
     <h2>2. Cookies</h2>
-    <p>COLLABoard uses only two cookies, and both are needed for the site to work:</p>
+    <p>{{ brand_name }} uses only two cookies, and both are needed for the site to work:</p>
     <div class="legal-table-wrap">
       <table class="legal-table">
         <thead><tr><th>Cookie</th><th>What it does</th><th>How long</th></tr></thead>
@@ -69,15 +69,15 @@
         </tbody>
       </table>
     </div>
-    <p>There are no analytics, advertising or tracking cookies, and every page loads its scripts, styles and fonts from COLLABoard itself, so no other company sees your visits.</p>
+    <p>There are no analytics, advertising or tracking cookies, and every page loads its scripts, styles and fonts from {{ brand_name }} itself, so no other company sees your visits.</p>
   </section>
 
   <section id="use">
     <h2>3. Why we use it</h2>
     <ul>
-      <li><strong>To run COLLABoard for you:</strong> your account, the sessions you create or join, live drawing, chat, uploads and notifications. This is necessary to provide the service you signed up for.</li>
+      <li><strong>To run {{ brand_name }} for you:</strong> your account, the sessions you create or join, live drawing, chat, uploads and notifications. This is necessary to provide the service you signed up for.</li>
       <li><strong>So teachers can run their classes:</strong> participant lists, drawing permissions, attendance and participation.</li>
-      <li><strong>To keep COLLABoard secure:</strong> stopping password guessing, spam, harmful uploads and misuse.</li>
+      <li><strong>To keep {{ brand_name }} secure:</strong> stopping password guessing, spam, harmful uploads and misuse.</li>
       <li><strong>When the law requires it.</strong></li>
     </ul>
     <p>These are lawful reasons for processing under Section 12 of the Data Privacy Act: providing a service you asked for, legitimate interests that do not override your rights, and legal obligations. We do not sell personal data, use it for advertising, build profiles of you, make automated decisions about you, or use your content to train AI.</p>
@@ -88,7 +88,7 @@
     <ul>
       <li><strong>People in your sessions</strong> see your username and role, whether you are online, and what you draw, upload or write there.</li>
       <li><strong>The teacher who owns a session</strong> also sees your email, when you joined, when you were last active, and your stroke and upload counts. They can export this as a spreadsheet.</li>
-      <li><strong>Site administrators</strong> (members of our team) can access data when needed to run, fix or secure COLLABoard.</li>
+      <li><strong>Site administrators</strong> (members of our team) can access data when needed to run, fix or secure {{ brand_name }}.</li>
       <li><strong>Our hosting provider (Render)</strong> stores the data and runs the servers for us. Its servers may be outside the Philippines. It may only use the data to provide hosting to us.</li>
       <li><strong>Authorities</strong>, only when the law requires us to share it.</li>
     </ul>
@@ -102,9 +102,9 @@
       <li><strong>Session content</strong> (boards, uploads, snapshots, chat): until the teacher deletes the session, or the teacher's account is deleted.</li>
       <li><strong>When you delete your account</strong> (Settings → Delete account), we immediately delete your account, every session you created (with its boards, uploads, snapshots, chat and attendance), the files and messages you posted in other sessions, and your notifications.
         <br>Two things can remain: strokes you drew on another teacher's board can still appear in snapshots they already saved, and people may have downloaded or screenshotted things you shared.</li>
-      <li><strong>Backups:</strong> deleted data can remain in backups for up to 30 days until they are replaced.</li>
+      <li><strong>Backups:</strong> our hosting provider makes an encrypted copy of the server's disk every day and keeps each copy for a short period that it sets (currently at least 7 days). Backups we make ourselves are deleted after 30 days. Deleted data can stay in these copies until they expire. We use them only to recover from a failure, and if we ever restore one, we delete again anything that had been deleted.</li>
       <li><strong>Security data:</strong> IP counters for at most one hour; logs for our hosting provider's limited log period.</li>
-      <li><strong>If COLLABoard shuts down</strong>, we will try to give notice so you can download your data, then delete all personal data within 30 days.</li>
+      <li><strong>If {{ brand_name }} shuts down</strong>, we will try to give notice so you can download your data, then delete all personal data within 30 days.</li>
     </ul>
   </section>
 
@@ -131,12 +131,12 @@
 
   <section id="minors">
     <h2>8. Users under 18</h2>
-    <p>COLLABoard is meant for college classes. Users under 18 need their parent or guardian's permission. If you are a parent or guardian and believe your child is using COLLABoard without your permission, email us and we will delete the account.</p>
+    <p>{{ brand_name }} is meant for college classes. Users under 18 need their parent or guardian's permission. If you are a parent or guardian and believe your child is using {{ brand_name }} without your permission, email us and we will delete the account.</p>
   </section>
 
   <section id="changes">
     <h2>9. Changes to this policy</h2>
-    <p>If we change this policy, we will update the date at the top. If the change affects how your data is used, we will ask you to agree again the next time you use COLLABoard.</p>
+    <p>If we change this policy, we will update the date at the top. If the change affects how your data is used, we will ask you to agree again the next time you use {{ brand_name }}.</p>
   </section>
 
   <section id="contact">

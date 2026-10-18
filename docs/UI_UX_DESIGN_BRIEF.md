@@ -1,6 +1,6 @@
 # UI/UX Design Brief
 
-**Product:** COLLABoard: Collaborative Whiteboard
+**Product:** InkHive: Collaborative Whiteboard
 **Version:** 1.0 · **Date:** 2026-10-14
 
 This brief describes the visual language that already exists in the code (so new screens match it) and the UX rules every screen must follow.
@@ -11,7 +11,7 @@ This brief describes the visual language that already exists in the code (so new
 
 > **"A teacher's notebook that comes alive."**
 
-COLLABoard should feel like graph paper, sticky notes and marker pens, not a corporate dashboard. It must stay friendly for students (playful, informal) while the teacher can run a class from it without hunting for controls.
+InkHive should feel like graph paper, sticky notes and marker pens, not a corporate dashboard. It must stay friendly for students (playful, informal) while the teacher can run a class from it without hunting for controls.
 
 **Tone keywords:** playful · hand-made · clear · calm · classroom-safe
 
@@ -78,7 +78,9 @@ Keep at most two families per screen. Never set body text below 12 px.
 | Top bar height | 72 px |
 
 ### 3.5 Iconography
-PNG icons in `modules/core/static/core/icons/` (bell, dashboard, profile, chat, settings, help, logout, plus). Emoji are used as lightweight icons in content (📢 announcements, 👥 participants, 📁 upload, ⚠️ urgent). Every icon-only control needs an `aria-label` or visible text.
+SVG icons drawn for this project in `modules/core/static/core/icons/`: 24 × 24 viewBox, round-capped strokes about 2 px wide, one color per icon (sidebar icons are turned white with a CSS filter, so they must be line drawings, not filled shapes). New icons must follow the same style and be the team's own work (see [LEGAL.md](LEGAL.md) L-5).
+
+**Logo:** a navy honeycomb cell (`#283850`) holding a cream ink drop with a small yellow honey cell (`logo.svg`). On the login and sign-up pages it appears above the word *InkHive* (`logo-wordmark.svg`). Emoji are used as lightweight icons in content (📢 announcements, 👥 participants, 📁 upload, ⚠️ urgent). Every icon-only control needs an `aria-label` or visible text.
 
 ## 4. Layout
 

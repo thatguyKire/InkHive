@@ -1,6 +1,6 @@
 # Product Requirements Document (PRD)
 
-**Product:** COLLABoard: Collaborative Whiteboard
+**Product:** InkHive: Collaborative Whiteboard (formerly COLLABoard)
 **Team:** CSIT327 Group 4: Erik Samuel L. Bien (Lead Developer), Angel Anel C. Beato (Developer), Paul Andrei E. Bibit (Developer)
 **Version:** 1.0 · **Date:** 2026-10-14 · **Status:** Living document
 
@@ -8,7 +8,7 @@
 
 ## 1. Summary
 
-COLLABoard is a web-based, real-time whiteboard for classrooms. A **teacher** opens a session, shares a short join code (or QR code), and **students** join from any browser. Everyone sees the same board live. The teacher decides who may draw, can broadcast announcements, toggle a session chat, save snapshots, and later review attendance and participation.
+InkHive is a web-based, real-time whiteboard for classrooms. A **teacher** opens a session, shares a short join code (or QR code), and **students** join from any browser. Everyone sees the same board live. The teacher decides who may draw, can broadcast announcements, toggle a session chat, save snapshots, and later review attendance and participation.
 
 ## 2. Problem statement
 
@@ -116,7 +116,7 @@ Teachers need one place where they keep control of the board, can hand the "pen"
 | Unsaved boards are lost when everyone leaves | Lost lesson content | "Save" button, reminders in help; planned server-side stroke storage |
 | Render free instance sleeps | Slow first load | Paid instance for class hours, or warm-up ping |
 | Students drawing inappropriate content | Classroom disruption | Draw is off by default; teacher toggles per student; Clear All; Terms forbid it and allow suspension |
-| Product name *COLLABoard* matches a registered trademark (*COLLABOARD*, IBV Informatik AG, online whiteboard software) | Legal claim if launched publicly under this name | Rename before public launch ([LEGAL.md](LEGAL.md) L-1) |
+| The old name *COLLABoard* matched a registered trademark (*COLLABOARD*, IBV Informatik AG, online whiteboard software) | Legal claim if launched publicly under that name | ✅ Renamed to InkHive; check the trademark registries before launch ([LEGAL.md](LEGAL.md) L-1) |
 | Handling student personal data without a privacy notice or school approval | Data Privacy Act complaints | Privacy Policy, data rights in Settings, school DPO approval ([LEGAL.md](LEGAL.md) L-2) |
 
 ## 10. Related documents
