@@ -47,8 +47,8 @@ Full project documentation lives in [`docs/`](docs/README.md):
 ### 1. Clone
 
 ```bash
-git clone https://github.com/thatguyKire/CSIT327-G4-Collaborative-Whiteboard.git
-cd CSIT327-G4-Collaborative-Whiteboard
+git clone https://github.com/thatguyKire/InkHive.git
+cd InkHive
 ```
 
 ### 2. Create a virtual environment and install dependencies
