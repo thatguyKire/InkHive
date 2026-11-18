@@ -12,14 +12,14 @@
   <h1>Welcome, {{ user.username }}</h1>
   <p class="subtitle">Manage your classes, monitor sessions, and interact with your students.</p>
 
-  <div class="dashboard-grid">
+  <div class="dashboard-grid" data-stagger>
 
     <!-- My Classes -->
     <div class="card">
       <h3>My Classes</h3>
       <p class="active-class-text">
         You currently have
-        <span class="active-class-count">{{ active_classes_count }}</span>
+        <span class="active-class-count" data-count-up>{{ active_classes_count }}</span>
         {% if active_classes_count == 1 %}active class{% else %}active classes{% endif %}
       </p>
     </div>
@@ -57,22 +57,22 @@
       <p class="small muted">Participation across all your sessions (strokes, uploads, chat messages, last activity).</p>
 
       <!-- Summary badges -->
-      <div class="perf-summary">
+      <div class="perf-summary" data-stagger>
         <div class="perf-badge">
           <span class="label">Total Students</span>
-          <span class="value">{{ performance_totals.total_students }}</span>
+          <span class="value" data-count-up>{{ performance_totals.total_students }}</span>
         </div>
         <div class="perf-badge">
           <span class="label">Active Today</span>
-          <span class="value">{{ performance_totals.active_today }}</span>
+          <span class="value" data-count-up>{{ performance_totals.active_today }}</span>
         </div>
         <div class="perf-badge">
           <span class="label">Total Strokes</span>
-          <span class="value">{{ performance_totals.total_strokes }}</span>
+          <span class="value" data-count-up>{{ performance_totals.total_strokes }}</span>
         </div>
         <div class="perf-badge">
           <span class="label">Uploads</span>
-          <span class="value">{{ performance_totals.total_uploads }}</span>
+          <span class="value" data-count-up>{{ performance_totals.total_uploads }}</span>
         </div>
       </div>
 

@@ -69,12 +69,10 @@
   border-radius: 10px;
   border: 2px solid #333;
   box-shadow: 4px 4px 0 #333;
-  transition: transform 0.08s ease, background 0.12s ease;
 }
 
 .settings-header .back-arrow:hover {
   background: var(--info-dark);
-  transform: translateY(-2px);
   text-decoration: none !important;
 }
 
@@ -121,13 +119,11 @@
   text-decoration: none !important;
   color: var(--text-dark);
   border: 3px solid #333;
-  transition: transform 0.08s ease, background 0.12s ease;
   position: relative;
   overflow: hidden;
 }
 
 .setting-card:hover {
-  transform: translateY(-2px);
   background-color: var(--card-bg);
   text-decoration: none !important;
 }
@@ -137,12 +133,10 @@
   height: 56px;
   margin-bottom: 16px;
   opacity: 0.85;
-  transition: opacity 0.12s ease, transform 0.12s ease;
 }
 
 .setting-card:hover img {
   opacity: 1;
-  transform: scale(1.05);
 }
 
 .setting-card h2 {
@@ -218,7 +212,6 @@
   font-weight: 600;
   border-radius: 12px;
   text-decoration: none;
-  transition: all .18s ease;
   letter-spacing: .3px;
 }
 
@@ -231,12 +224,10 @@
 .password-change-card .action-btn.outline:hover {
   background: #1e9145;
   color: #fff;
-  transform: translateY(-2px);
   text-decoration: none !important;
 }
 
 .password-change-card .action-btn:active {
-  transform: translateY(0);
   box-shadow: none;
 }
 

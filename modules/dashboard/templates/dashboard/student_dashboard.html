@@ -22,7 +22,7 @@
   </div>
 
   <h2 style="margin-top:20px;">Your Joined Sessions</h2>
-  <ul class="session-list">
+  <ul class="session-list" data-stagger>
     {% for s in joined_sessions %}
       <li>
         <strong>{{ s.session.title }}</strong> — Code: {{ s.session.code }}

@@ -80,12 +80,11 @@
   box-shadow: 4px 4px 0 #333;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.08s ease, background 0.12s ease;
   font-size: 1.2rem; /* Increased font size */
   width: 100%; /* Full width button */
 }
 
-.join-card .btn:hover { transform: translateY(-2px); background:#219150; }
+.join-card .btn:hover { background:#219150; }
 
 /* Error message */
 .error-message {

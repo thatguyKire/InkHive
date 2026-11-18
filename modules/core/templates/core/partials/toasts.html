@@ -1,0 +1,11 @@
+{% if messages %}
+<div class="toast-stack" id="toastStack" aria-live="polite">
+  {% for message in messages %}
+    <div class="toast toast--{{ message.level_tag|default:'info' }}" role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}">
+      <p class="toast-text">{{ message }}</p>
+      <button type="button" class="toast-close" aria-label="Dismiss">&times;</button>
+      {% if message.level_tag != 'error' %}<span class="toast-timer" aria-hidden="true"></span>{% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}

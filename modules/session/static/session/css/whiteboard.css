@@ -237,12 +237,10 @@
   cursor: pointer;
   font-size: 0.85rem;
   box-shadow: 2px 2px 0 #333;
-  transition: transform 0.1s ease, background 0.2s ease;
   background: #fff;
 }
 
 .btn:hover:not(:disabled) {
-  transform: translateY(-2px);
 }
 
 .btn:disabled {

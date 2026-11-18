@@ -23,14 +23,6 @@
     </form>
 
     <!-- Flash messages -->
-    {% if messages %}
-      <ul class="messages">
-        {% for message in messages %}
-          <li class="message {{ message.tags }}">{{ message }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-
     <!-- Sessions -->
     <h3>Your Sessions</h3>
     <form method="get" class="create-session-form" role="search">
@@ -39,7 +31,7 @@
       {% if query %}<a href="{% url 'session_list' %}" class="btn btn-secondary">Clear</a>{% endif %}
     </form>
     <div class="session-list-wrapper">
-      <ul class="session-list">
+      <ul class="session-list" data-stagger>
         {% for s in sessions %}
           <li class="session-item">
             <div class="session-meta">

@@ -20,8 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function showUnread(count) {
       if (!badge) return;
       if (count > 0) {
+        const previous = Number(badge.textContent) || 0;
         badge.textContent = String(count);
         badge.classList.remove("hidden");
+        if (count > previous && previous > 0) {
+          // Replay the pop when more notifications arrive (see motion.css).
+          badge.classList.remove("is-bumped");
+          void badge.offsetWidth;
+          badge.classList.add("is-bumped");
+        }
       } else {
         badge.classList.add("hidden");
         badge.textContent = "";
@@ -111,6 +118,12 @@ document.addEventListener("DOMContentLoaded", () => {
           // 2. Prepend Newer -> [Newer, Oldest]
           // 3. Prepend Newest -> [Newest, Newer, Oldest]
           d.items.slice().reverse().forEach(it => prependItem(it));
+          if (!d.items.length) {
+            const empty = document.createElement("p");
+            empty.className = "notif-empty";
+            empty.textContent = "You're all caught up.";
+            list.appendChild(empty);
+          }
           // Only items that arrived since the last poll get the entrance animation.
           if (known.size) {
             list.querySelectorAll(".notification-item").forEach(el => {

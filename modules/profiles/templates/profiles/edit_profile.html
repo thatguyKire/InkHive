@@ -14,12 +14,6 @@
     <h2>Edit Profile</h2>
   </div>
 
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert {{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-
   <form method="post">
     {% csrf_token %}
     <div class="profile-info">

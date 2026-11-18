@@ -299,6 +299,72 @@ img { max-width: 100%; height: auto; display: inline-block; }
 .sidebar.collapsed .sidebar-footer { display: flex; justify-content: center; padding: 16px 0; }
 .sidebar.collapsed .user-info { display: none; }
 
+/* ---------- Toasts (flash messages, see core/partials/toasts.html) ---------- */
+.toast-stack {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1200;
+  width: min(360px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  --toast-color: var(--info);
+  position: relative;
+  overflow: hidden;
+  padding: 12px 40px 14px 16px;
+  border: 3px solid var(--border);
+  border-left-width: 8px;
+  border-left-color: var(--toast-color);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--border);
+  color: var(--text-dark);
+  pointer-events: auto;
+}
+
+.toast--success { --toast-color: var(--success); }
+.toast--warning { --toast-color: #e67e22; }
+.toast--error   { --toast-color: var(--error); }
+
+.toast-text { margin: 0; font-size: 0.95rem; line-height: 1.4; }
+
+.toast-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dark);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.toast-close:hover { background: #f1f1f1; }
+
+.toast-timer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--toast-color);
+  transform-origin: left;
+}
+
+@media (max-width: 768px) {
+  /* Below the menu button; the chat bubble owns the bottom corner. */
+  .toast-stack { top: 68px; right: 12px; width: calc(100vw - 24px); }
+}
+
 /* ---------- Main area ---------- */
 /* A column, so a page's top-level wrapper can take the remaining height with
    `flex: 1` instead of guessing it with calc(100vh - …). */
@@ -394,3 +460,5 @@ img { max-width: 100%; height: auto; display: inline-block; }
 
   .sidebar-backdrop.show { opacity: 1; pointer-events: auto; }
 }
+
+.notif-empty { margin: 12px 4px; color: var(--muted); font-size: 14px; text-align: center; }

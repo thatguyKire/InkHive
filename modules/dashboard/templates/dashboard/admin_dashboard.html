@@ -12,22 +12,22 @@
   <h1>Admin Dashboard</h1>
   <p class="subtitle">Monitor system usage, manage users, and oversee all activities.</p>
 
-  <div class="dashboard-grid">
+  <div class="dashboard-grid" data-stagger>
     <div class="card">
       <h3>Total Users</h3>
-      <p>Students: <strong>{{ student_count }}</strong> | Teachers: <strong>{{ teacher_count }}</strong> | Admins: <strong>{{ admin_count }}</strong></p>
+      <p>Students: <strong data-count-up>{{ student_count }}</strong> | Teachers: <strong data-count-up>{{ teacher_count }}</strong> | Admins: <strong data-count-up>{{ admin_count }}</strong></p>
       <a href="{% url 'admin:authentication_customuser_changelist' %}" class="btn">Manage Users</a>
     </div>
 
     <div class="card">
       <h3>Sessions</h3>
-      <p><strong>{{ session_count }}</strong> whiteboard sessions, <strong>{{ participant_count }}</strong> student joins.</p>
+      <p><strong data-count-up>{{ session_count }}</strong> whiteboard sessions, <strong data-count-up>{{ participant_count }}</strong> student joins.</p>
       <a href="{% url 'admin:session_session_changelist' %}" class="btn">View Sessions</a>
     </div>
 
     <div class="card">
       <h3>Activity</h3>
-      <p><strong>{{ upload_count }}</strong> uploads and <strong>{{ message_count }}</strong> chat messages.</p>
+      <p><strong data-count-up>{{ upload_count }}</strong> uploads and <strong data-count-up>{{ message_count }}</strong> chat messages.</p>
       <a href="{% url 'admin:index' %}" class="btn">Open Admin Site</a>
     </div>
 

@@ -12,7 +12,7 @@
     <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary">← Back</a>
 
     <div class="session-list-wrapper">
-      <ul class="session-list">
+      <ul class="session-list" data-stagger>
         {% for it in items %}
         <li>
           <div class="session-meta">

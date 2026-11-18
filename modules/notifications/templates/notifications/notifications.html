@@ -9,7 +9,7 @@
 <section class="notifications-container">
   <h1 class="page-title">📢 Notifications</h1>
   <p class="page-subtitle">All your latest alerts, updates, and announcements.</p>
-  <div class="notifications-list" id="fullNotificationsList">
+  <div class="notifications-list" id="fullNotificationsList" data-stagger>
     {% for n in items %}
       <div class="notif-card" data-id="{{ n.id }}">
         <div class="notif-icon">{% if n.is_urgent %}⚠️{% else %}🔔{% endif %}</div>

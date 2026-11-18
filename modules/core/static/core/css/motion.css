@@ -1,0 +1,264 @@
+/* =====================================================================
+   Motion: every shared animation and interaction timing in one place.
+
+   The look is "ink on paper": things rise onto the page and settle, buttons
+   lift off the paper on hover and press into it on click. Page stylesheets
+   style how things look; they should not set their own transition timing for
+   the components listed here.
+
+   Hooks a template can use:
+     data-stagger      children of this element enter one after another
+     data-count-up     a number that counts up from 0 when it scrolls into view
+   (both driven by core/js/motion.js; everything still works without JS)
+   ===================================================================== */
+
+:root {
+  /* Shared motion scale (transitions.dev tokens) */
+  --duration-stagger: 40ms;
+  --duration-micro: 80ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --distance-micro: 4px;
+  --distance-base: 8px;
+  --distance-medium: 12px;
+  --scale-medium: 0.97;
+  --scale-tiny: 0.99;
+  --blur-small: 2px;
+
+  /* InkHive */
+  --lift: -2px;             /* hover: off the paper */
+  --surface-lift: -3px;     /* hover on a whole card */
+  --press: 1px;             /* active: into the paper */
+  --press-scale: 0.98;
+  --stagger-step: 55ms;
+  --focus-ring: 3px dashed var(--info, #3498db);
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes ink-rise {
+  from { opacity: 0; transform: translateY(var(--distance-medium)); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes ink-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(calc(-1 * var(--distance-micro))) scale(var(--scale-medium)); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes badge-pop {
+  0%   { transform: scale(0); opacity: 0; filter: blur(var(--blur-small)); }
+  100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+
+/* Same motion under a second name so a count change can replay it. */
+@keyframes badge-bump {
+  0%   { transform: scale(0.4); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(calc(-1 * var(--distance-base))); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Page entrance ---------- */
+/* Each top-level block of the page rises in. `backwards` holds the start
+   state only during the delay, so no transform is left on the wrapper
+   afterwards (a transform would trap position: fixed children). */
+.main > * {
+  animation: ink-rise var(--duration-very-slow) var(--ease-smooth-out) backwards;
+}
+
+/* Full-screen tools only fade: moving the board would shift its canvas. */
+.main--fill > * { animation-name: ink-fade; }
+
+/* Pure CSS (no flicker if scripts load late); items past 12 share the last delay. */
+[data-stagger] > * {
+  animation: ink-rise var(--duration-very-slow) var(--ease-smooth-out) backwards;
+  animation-delay: calc(120ms + var(--i, 12) * var(--stagger-step));
+}
+[data-stagger] > :nth-child(1)  { --i: 0; }
+[data-stagger] > :nth-child(2)  { --i: 1; }
+[data-stagger] > :nth-child(3)  { --i: 2; }
+[data-stagger] > :nth-child(4)  { --i: 3; }
+[data-stagger] > :nth-child(5)  { --i: 4; }
+[data-stagger] > :nth-child(6)  { --i: 5; }
+[data-stagger] > :nth-child(7)  { --i: 6; }
+[data-stagger] > :nth-child(8)  { --i: 7; }
+[data-stagger] > :nth-child(9)  { --i: 8; }
+[data-stagger] > :nth-child(10) { --i: 9; }
+[data-stagger] > :nth-child(11) { --i: 10; }
+[data-stagger] > :nth-child(12) { --i: 11; }
+
+/* ---------- Pressables: buttons and clickable cards ---------- */
+/* :where() keeps specificity at zero, so a page can still opt a component out. */
+:where(.btn, .back-btn, .back-arrow, .action-btn, .contact-email, .setting-card,
+       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn, .see-all-btn) {
+  transition:
+    transform var(--duration-fast) var(--ease-smooth-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out),
+    background-color var(--duration-quick) var(--ease-out),
+    border-color var(--duration-quick) var(--ease-out),
+    color var(--duration-quick) var(--ease-out);
+}
+
+:where(.btn, .back-btn, .back-arrow, .action-btn, .contact-email, .setting-card,
+       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn):hover:not(:disabled) {
+  transform: translateY(var(--lift));
+}
+
+:where(.btn, .back-btn, .back-arrow, .action-btn, .contact-email, .setting-card,
+       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn, .see-all-btn):active:not(:disabled) {
+  transform: translateY(var(--press)) scale(var(--press-scale));
+  transition-duration: var(--duration-micro);
+}
+
+:where(.btn, .back-btn, .back-arrow, .action-btn, .contact-email, .setting-card,
+       .session-card, .notif-card, .mobile-nav-btn, .see-all-btn, .menu-btn, .toggle-btn):focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Icons inside clickable cards wiggle like a doodle. */
+:where(.setting-card, .session-card) img {
+  transition: transform var(--duration-slow) var(--ease-bounce);
+}
+:where(.setting-card, .session-card):hover img { transform: rotate(-6deg) scale(1.08); }
+
+/* ---------- Surfaces: cards that are not links ---------- */
+:where(.card, .session-list li, .perf-badge) {
+  transition:
+    transform var(--duration-fast) var(--ease-smooth-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out);
+}
+:where(.card, .session-list li, .perf-badge):hover { transform: translateY(var(--surface-lift)); }
+
+/* ---------- Form fields ---------- */
+:where(input, textarea, select) {
+  transition:
+    border-color var(--duration-quick) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out);
+}
+
+/* ---------- App shell ---------- */
+.sidebar {
+  transition: width var(--duration-slow) var(--ease-smooth-out);
+}
+
+.main {
+  transition: margin-left var(--duration-slow) var(--ease-smooth-out);
+}
+
+.toggle-btn { transition: background-color var(--duration-quick) var(--ease-out); }
+.toggle-btn:hover { background: rgba(255, 255, 255, 0.1); }
+.toggle-icon { transition: transform var(--duration-slow) var(--ease-smooth-out); }
+
+.menu-btn {
+  transition:
+    background-color var(--duration-quick) var(--ease-out),
+    color var(--duration-quick) var(--ease-out);
+}
+
+.menu-icon {
+  transition:
+    transform var(--duration-fast) var(--ease-bounce),
+    opacity var(--duration-quick) var(--ease-out);
+}
+.menu-btn:hover .menu-icon { transform: translateX(2px) rotate(-8deg); }
+
+/* Ink mark beside the current page. */
+.menu-btn[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 8px;
+  bottom: 8px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: #f9d342;
+  animation: slide-in-left var(--duration-slow) var(--ease-smooth-out) both;
+}
+.sidebar.collapsed .menu-btn[aria-current="page"]::before { left: -8px; }
+
+/* Phone drawer: slide in, and only become hidden after sliding out. */
+@media (max-width: 768px) {
+  .sidebar,
+  .sidebar.collapsed {
+    transition:
+      transform var(--duration-slow) var(--ease-smooth-out),
+      visibility 0s linear var(--duration-slow);
+  }
+  .sidebar.open {
+    transition: transform var(--duration-slow) var(--ease-smooth-out), visibility 0s;
+  }
+  .sidebar-backdrop { transition: opacity var(--duration-slow) var(--ease-smooth-out); }
+
+  .mobile-nav-btn span { transition: transform var(--duration-fast) var(--ease-smooth-out), opacity var(--duration-quick); }
+  .mobile-nav-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .mobile-nav-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .mobile-nav-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+}
+
+/* Restoring a remembered collapsed sidebar on page load: no animation. */
+.no-shell-motion .sidebar,
+.no-shell-motion .main,
+.no-shell-motion .toggle-icon { transition: none !important; }
+
+/* ---------- Notifications ---------- */
+.notifications-panel.show {
+  transform-origin: top left;
+  animation: pop-in var(--duration-fast) var(--ease-smooth-out);
+}
+
+.notification-item.is-new { animation: ink-rise var(--duration-very-slow) var(--ease-smooth-out); }
+
+.notif-badge-sidebar { animation: badge-pop var(--duration-very-slow) var(--ease-bounce); }
+.notif-badge-sidebar.is-bumped { animation: badge-bump var(--duration-very-slow) var(--ease-bounce); }
+
+/* ---------- Toasts (flash messages) ---------- */
+.toast {
+  opacity: 0;
+  transform: translateY(var(--distance-medium)) scale(var(--scale-medium));
+  filter: blur(var(--blur-small));
+  transition:
+    opacity var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out),
+    filter var(--duration-fast) var(--ease-smooth-out);
+}
+.toast.is-open {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition-duration: var(--duration-medium);
+}
+/* The countdown bar shows how long the toast stays; toasts.js closes the
+   toast when it ends, so hovering pauses both. */
+.toast.is-open .toast-timer { animation: toast-countdown var(--toast-life, 5s) linear forwards; }
+.toast:hover .toast-timer { animation-play-state: paused; }
+@keyframes toast-countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* ---------- Reduced motion ---------- */
+/* Near-zero (not none) so animationend/transitionend still fire for the JS. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .toast.is-open .toast-timer { animation: none !important; }
+}

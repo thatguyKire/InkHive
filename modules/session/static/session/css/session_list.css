@@ -36,7 +36,6 @@
   text-decoration: none;
   background: #dfe6e9;
   color: #2c3e50;
-  transition: all 0.2s ease;
   margin-bottom: 12px;
   width: fit-content; /* only as wide as content */
   max-width: 80px; /* prevent stretching */
@@ -44,7 +43,6 @@
 
 .dashboard-wrapper > a.btn.btn-secondary:hover {
   background: #b2bec3;
-  transform: translateY(-1px);
 }
 
 /* ---------- Create Session Form ---------- */
@@ -53,51 +51,6 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 20px;
-}
-
-/* ---------- Flash Messages ---------- */
-.messages {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 16px 0;
-}
-
-.messages .message {
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  font-weight: 500;
-  border: 2px solid;
-  animation: slideIn 0.3s ease;
-}
-
-.messages .message.error {
-  background: #fee;
-  color: #c33;
-  border-color: #e74c3c;
-}
-
-.messages .message.success {
-  background: #efe;
-  color: #2a7;
-  border-color: #27ae60;
-}
-
-.messages .message.warning {
-  background: #fffbe6;
-  color: #d68910;
-  border-color: #f39c12;
-}
-
-.messages .message.info {
-  background: #e8f4fd;
-  color: #2980b9;
-  border-color: #3498db;
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .create-session-form input[type="text"] {
@@ -115,7 +68,6 @@
   color: white;
   border: none;
   border-radius: 6px;
-  transition: background 0.2s ease;
 }
 
 .create-session-form .btn:hover {

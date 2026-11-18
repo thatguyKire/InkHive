@@ -121,7 +121,6 @@
   border-radius: 10px;
   cursor: pointer;
   font-weight: 700;
-  transition: transform 0.08s ease, background 0.12s ease;
   font-size: 1rem;
   box-shadow: 4px 4px 0 #333;
   text-decoration: none;
@@ -132,7 +131,6 @@
 
 .profile-actions .btn:hover {
   background: var(--success-dark);
-  transform: translateY(-2px);
 }
 
 /* Secondary (Cancel) Button */
@@ -160,13 +158,11 @@
   font-size: 1rem;
   text-decoration: none;
   display: inline-block;
-  transition: transform 0.08s ease, background 0.12s ease;
   cursor: pointer;
 }
 
 .btn-danger:hover {
   background: var(--error-dark);
-  transform: translateY(-2px);
 }
 
 /* Floating animation */
@@ -215,12 +211,10 @@
   border: 2px solid #333;
   border-radius: 10px;
   box-shadow: 4px 4px 0 #333;
-  transition: transform 0.08s ease, background 0.12s ease;
 }
 
 .password-section .btn:hover {
   background: var(--error-dark);
-  transform: translateY(-2px);
 }
 
 /* Back button (if added later) */
@@ -240,14 +234,12 @@
   border-radius: 10px;
   box-shadow: 4px 4px 0 #333;
   padding: 8px;
-  transition: transform 0.08s ease, background 0.12s ease;
   cursor: pointer;
   text-decoration: none;
 }
 
 .back-arrow:hover {
   background: var(--info-dark);
-  transform: translateY(-2px);
 }
 
 .back-icon {
@@ -286,28 +278,6 @@
 .toggle-password:hover {
   transform: scale(1.1);
   color: var(--text-dark);
-}
-
-/* Alert styles */
-.alert {
-  padding: 12px 14px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 2px solid var(--border);
-}
-
-.alert.error {
-  background: #fee;
-  border-color: var(--error);
-  color: var(--error-dark);
-}
-
-.alert.success {
-  background: #efe;
-  border-color: var(--success);
-  color: var(--success-dark);
 }
 
 /* Responsive Design */

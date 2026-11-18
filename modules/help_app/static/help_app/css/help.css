@@ -145,12 +145,10 @@
   border: 2px solid #333;
   text-decoration: none !important;
   box-shadow: 4px 4px 0 #333;
-  transition: transform 0.08s, background 0.08s;
 }
 
 .help-section .contact-email:hover {
   background: var(--success-dark);
-  transform: translateY(-2px);
   text-decoration: none !important;
 }
 

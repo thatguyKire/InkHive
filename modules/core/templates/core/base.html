@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
   <link rel="stylesheet" href="{% static 'notifications/css/notifications.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/motion.css' %}">
 
   {% block extra_css %}{% endblock %}
 </head>
@@ -115,6 +116,9 @@
     {% block content %}{% endblock %}
   </main>
 
+  {# Pages that show messages next to their form override this with an empty block. #}
+  {% block messages %}{% include 'core/partials/toasts.html' %}{% endblock %}
+
 
   {% include 'chat/chat_box.html' %}
 
@@ -126,6 +130,8 @@
   </div>
 
   <script src="{% static 'core/js/sidebar.js' %}" defer></script>
+  <script src="{% static 'core/js/motion.js' %}" defer></script>
+  <script src="{% static 'core/js/toasts.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
 
   <script src="{% static 'notifications/js/Bell.js' %}" defer></script>
