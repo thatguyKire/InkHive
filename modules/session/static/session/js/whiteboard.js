@@ -69,24 +69,10 @@
   addA11yButton(undoBtn, "Undo");
   addA11yButton(redoBtn, "Redo");
 
-  // Toast for user-friendly messages (aria-live)
-  let toastEl = document.getElementById("wb-toast");
-  if (!toastEl) {
-    toastEl = document.createElement("div");
-    toastEl.id = "wb-toast";
-    toastEl.style.cssText = "position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 14px;border-radius:6px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9999;font:14px/1.3 system-ui, -apple-system, Segoe UI, Roboto;";
-    toastEl.setAttribute("role", "status");
-    toastEl.setAttribute("aria-live", "polite");
-    document.body.appendChild(toastEl);
-  }
-  let toastTimer;
+  // User-facing messages use the app's shared toasts (core/js/toasts.js).
   function showToast(msg, type = "info") {
-    if (!toastEl) return alert(msg);
-    toastEl.textContent = msg;
-    toastEl.style.background = type === "error" ? "#c0392b" : type === "success" ? "#2ecc71" : "#333";
-    toastEl.style.opacity = "1";
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => (toastEl.style.opacity = "0"), 2500);
+    if (window.InkHive?.toast) window.InkHive.toast(msg, type);
+    else alert(msg);
   }
 
   // State

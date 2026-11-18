@@ -1,15 +1,15 @@
 .announcement-box {
-  background:#fffbe6;
-  border:2px solid #333;
+  background:var(--surface);
+  border:2px solid var(--ink);
   border-radius:12px;
   padding:14px 16px;
   max-width:340px;
-  box-shadow:4px 4px 0 #333;
+  box-shadow:4px 4px 0 var(--ink);
   margin:12px 0;
 }
 .announcement-box h3 { margin:0 0 8px; font-size:1rem; }
 .announcement-box textarea {
-  width:100%; resize:vertical; border:1px solid #999; border-radius:8px; padding:8px; font-family:inherit;
+  width:100%; resize:vertical; border:1px solid var(--subtle); border-radius:8px; padding:8px; font-family:inherit;
 }
 .announcement-box button[type="submit"] {
   display: block;
@@ -17,6 +17,10 @@
   width: 50%;
 }
 .sent-list { margin-top:10px; max-height:160px; overflow-y:auto; }
-.sent-item { font-size:0.85rem; padding:4px 0; border-bottom:1px dashed #bbb; }
+.sent-item { font-size:0.85rem; padding:4px 0; border-bottom:1px dashed var(--subtle); }
 .sent-item:last-child { border-bottom:none; }
-.sent-item time { display:block; color:#666; font-size:0.7rem; }
+.sent-item time { display:block; color:var(--muted); font-size:0.7rem; }
+
+/* Set by announcements.js / student_announcements.js */
+.announce-empty { font-size: .75rem; color: var(--muted); }
+.sent-meta { display: block; font-size: .65rem; color: var(--muted); }

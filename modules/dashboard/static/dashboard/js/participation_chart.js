@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     data: {
       labels: data.labels,
       datasets: [
-        { label:"Strokes", data:data.strokes, backgroundColor:"#2ca866", borderColor:"#1f7d4c", borderWidth:2, borderRadius:6 },
-        { label:"Uploads", data:data.uploads, backgroundColor:"#ff9f1c", borderColor:"#d87500", borderWidth:2, borderRadius:6 }
+        InkHiveChart.series("strokes", "Strokes", data.strokes),
+        InkHiveChart.series("uploads", "Uploads", data.uploads)
       ]
     },
     options: { responsive:true, maintainAspectRatio:false, scales:{ y:{ beginAtZero:true } } }

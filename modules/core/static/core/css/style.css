@@ -9,11 +9,11 @@
 body {
   /* graph-paper grid drawn in CSS (no third-party image) */
   background:
-    linear-gradient(#dcdcdc 1px, transparent 1px) 0 0 / 100% 80px,
-    linear-gradient(#e5e5e5 1px, transparent 1px) 0 0 / 5px 5px,
-    linear-gradient(90deg, #e5e5e5 1px, transparent 1px) 0 0 / 5px 5px,
-    #f1f1f1;
-  color: #2c3e50;
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 80px,
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 5px 5px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 5px 5px,
+    var(--wash);
+  color: var(--text-dark);
   min-height: 100vh;
 }
 
@@ -29,50 +29,50 @@ body {
 
 
 .card {
-  background: #fff;
+  background: var(--card-bg);
   padding: 25px;
-  border: 3px solid #333;
+  border: 3px solid var(--ink);
   border-radius: 12px;
-  box-shadow: 4px 4px 0 #333;
+  box-shadow: 4px 4px 0 var(--ink);
   margin-bottom: 20px;
 }
 
 
 h1, h2, h3 {
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--text-dark);
   text-align: center;
   margin-bottom: 15px;
-  text-shadow: 1px 1px #f9d342;
+  text-shadow: 1px 1px var(--honey);
 }
 
 
 .btn {
   display: inline-block;
-  background: #27ae60;
-  color: #fff;
-  border: 2px solid #222;
+  background: var(--success);
+  color: var(--card-bg);
+  border: 2px solid var(--ink-strong);
   border-radius: 8px;
   padding: 10px 14px;
   cursor: pointer;
-  box-shadow: 3px 3px 0 #222;
+  box-shadow: 3px 3px 0 var(--ink-strong);
 }
 
 .btn:hover {
-  background: #219150;
+  background: var(--success-dark);
 }
 
 .btn-secondary {
-  background: #3498db;
+  background: var(--info);
 }
 
 .btn-secondary:hover {
-  background: #2980b9;
+  background: var(--info-dark);
 }
 
 
 a {
-  color: #d35400;
+  color: var(--link);
   font-weight: bold;
   text-decoration: none;
 }
@@ -85,10 +85,10 @@ a:hover {
 .demo-banner {
   margin: 0 0 20px;
   padding: 10px 14px;
-  background: #fff3c4;
-  border: 2px dashed #333;
+  background: var(--honey-wash);
+  border: 2px dashed var(--ink);
   border-radius: 10px;
-  color: #2c3e50;
+  color: var(--text-dark);
   font-size: 0.95rem;
   line-height: 1.45;
 }

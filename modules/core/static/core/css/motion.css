@@ -38,7 +38,7 @@
   --press: 1px;             /* active: into the paper */
   --press-scale: 0.98;
   --stagger-step: 55ms;
-  --focus-ring: 3px dashed var(--info, #3498db);
+  --focus-ring: 3px dashed var(--info);
 }
 
 /* ---------- Keyframes ---------- */
@@ -187,7 +187,7 @@
   bottom: 8px;
   width: 4px;
   border-radius: 0 4px 4px 0;
-  background: #f9d342;
+  background: var(--honey);
   animation: slide-in-left var(--duration-slow) var(--ease-smooth-out) both;
 }
 .sidebar.collapsed .menu-btn[aria-current="page"]::before { left: -8px; }

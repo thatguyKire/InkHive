@@ -13,8 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const arr = items || [];
     if (!arr.length) {
       const p = document.createElement('p');
-      p.style.fontSize = '.75rem';
-      p.style.color = '#666';
+      p.className = 'announce-empty';
       p.textContent = 'No announcements yet.';
       list.appendChild(p);
       return;
@@ -32,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       wrapper.appendChild(time);
 
       const small = document.createElement('small');
-      small.style.display = 'block';
-      small.style.fontSize = '.65rem';
-      small.style.color = '#666';
+      small.className = 'sent-meta';
       small.textContent = `Sent to ${i.recipient_count} participant${i.recipient_count===1? '':'s'}`;
       wrapper.appendChild(small);
 

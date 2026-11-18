@@ -17,30 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     data: {
       labels: data.labels,
       datasets: [
-        {
-            label: "Uploads",
-            data: data.uploads,
-            backgroundColor: "#ff9f1c",
-            borderColor: "#d87500",
-            borderWidth: 2,
-            borderRadius: 6
-        },
-        {
-            label: "Messages",
-            data: data.messages,
-            backgroundColor: "#2ca866",
-            borderColor: "#1f7d4c",
-            borderWidth: 2,
-            borderRadius: 6
-        },
-        {
-            label: "Strokes",
-            data: data.strokes,
-            backgroundColor: "#4d7cff",
-            borderColor: "#2f55b3",
-            borderWidth: 2,
-            borderRadius: 6
-        }
+        InkHiveChart.series("uploads", "Uploads", data.uploads),
+        InkHiveChart.series("messages", "Messages", data.messages),
+        InkHiveChart.series("strokes", "Strokes", data.strokes),
       ]
     },
     options: {

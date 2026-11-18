@@ -1,20 +1,4 @@
 /* General Styles */
-:root {
-  --accent: #2ca866;
-  --accent-dark: #24926d;
-  --card-bg: #fff;
-  --muted: #666;
-  --surface: #FFFAE7;
-  --border: #333;
-  --text-dark: #2c3e50;
-  --error: #e74c3c;
-  --error-dark: #c0392b;
-  --success: #27ae60;
-  --success-dark: #219150;
-  --info: #3498db;
-  --info-dark: #2980b9;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -22,7 +6,7 @@
 /* Main Container */
 .settings-page {
   flex: 1;
-  background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);
+  background: var(--surface);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,8 +23,8 @@
   align-items: center;
   border-radius: 14px;
   padding: 24px 28px;
-  box-shadow: 8px 8px 0 #333;
-  border: 3px solid #333;
+  box-shadow: 8px 8px 0 var(--ink);
+  border: 3px solid var(--ink);
   margin-bottom: 40px;
   position: relative;
   overflow: hidden;
@@ -53,7 +37,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #2ca866, #24926d);
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
   display: none;
 }
 
@@ -67,8 +51,8 @@
   height: 40px;
   background: var(--info);
   border-radius: 10px;
-  border: 2px solid #333;
-  box-shadow: 4px 4px 0 #333;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .settings-header .back-arrow:hover {
@@ -113,12 +97,12 @@
 .setting-card {
   background-color: var(--card-bg);
   border-radius: 14px;
-  box-shadow: 8px 8px 0 #333;
+  box-shadow: 8px 8px 0 var(--ink);
   padding: 40px 28px;
   text-align: center;
   text-decoration: none !important;
   color: var(--text-dark);
-  border: 3px solid #333;
+  border: 3px solid var(--ink);
   position: relative;
   overflow: hidden;
 }
@@ -155,7 +139,7 @@
 
 /* Logout Card */
 .logout-card {
-  border-color: #333;
+  border-color: var(--ink);
 }
 
 .logout-card button {
@@ -172,7 +156,7 @@
 }
 
 .logout-card:hover {
-  border-color: #333;
+  border-color: var(--ink);
 }
 
 .logout-card:hover::before {
@@ -188,7 +172,7 @@
   flex: 1;
   display: flex;
   padding: 40px 24px;
-  background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);
+  background: var(--surface);
 }
 
 .password-change-card.profile-container {
@@ -216,14 +200,14 @@
 }
 
 .password-change-card .action-btn.outline {
-  background: #fff;
-  color: #1e9145;
-  border: 2px solid #1e9145;
+  background: var(--card-bg);
+  color: var(--success-dark);
+  border: 2px solid var(--success-dark);
 }
 
 .password-change-card .action-btn.outline:hover {
-  background: #1e9145;
-  color: #fff;
+  background: var(--success-dark);
+  color: var(--card-bg);
   text-decoration: none !important;
 }
 
@@ -235,7 +219,7 @@
 .form-errors {
   margin: 8px 0 12px;
   padding: 12px 14px;
-  background: #fee;
+  background: var(--error-wash);
   border: 2px solid var(--error);
   border-radius: 10px;
   list-style: none;
@@ -244,7 +228,7 @@
 }
 
 .form-errors.client-side {
-  background: #fee;
+  background: var(--error-wash);
   border-color: var(--error);
 }
 
@@ -264,11 +248,11 @@
 /* Make the input border red when there's an error (match login/signup style) */
 .form-group.has-error input {
   border-color: var(--error) !important;
-  background: #fff6f6;
+  background: var(--error-wash);
 }
 
 .form-group.has-error label {
-  color: #8a1f1f;
+  color: var(--error-deep);
 }
 
 .password-hints ul {
@@ -276,7 +260,7 @@
 }
 
 .password-hints li.ok {
-  color: #1e9145;
+  color: var(--success-dark);
   font-weight: 700;
 }
 
@@ -325,7 +309,7 @@
     align-items: flex-start;
     gap: 12px;
     padding: 20px;
-    box-shadow: 4px 4px 0 #333;
+    box-shadow: 4px 4px 0 var(--ink);
   }
   
   .settings-header .back-arrow {

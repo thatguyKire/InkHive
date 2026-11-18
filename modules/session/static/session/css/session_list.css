@@ -7,10 +7,10 @@
   width: 95%;
   margin: 0 auto; /* centered horizontally */
   padding: 20px 30px;
-  background: #ffffff;
+  background: var(--card-bg);
   border-radius: 12px;
-  border: 3px solid #333; /* Added border */
-  box-shadow: 4px 4px 0 #333; /* Added hard shadow */
+  border: 3px solid var(--ink); /* Added border */
+  box-shadow: 4px 4px 0 var(--ink); /* Added hard shadow */
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
 .dashboard-wrapper h1 {
   margin-bottom: 16px;
   font-size: 1.6rem;
-  color: #222;
+  color: var(--ink-strong);
   font-weight: 700;
 }
 
@@ -34,15 +34,15 @@
   font-size: 0.85rem;
   border-radius: 6px;
   text-decoration: none;
-  background: #dfe6e9;
-  color: #2c3e50;
+  background: var(--stone);
+  color: var(--text-dark);
   margin-bottom: 12px;
   width: fit-content; /* only as wide as content */
   max-width: 80px; /* prevent stretching */
 }
 
 .dashboard-wrapper > a.btn.btn-secondary:hover {
-  background: #b2bec3;
+  background: var(--stone);
 }
 
 /* ---------- Create Session Form ---------- */
@@ -55,7 +55,7 @@
 
 .create-session-form input[type="text"] {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--line);
   border-radius: 6px;
   flex: 1;
   min-width: 220px;
@@ -64,20 +64,20 @@
 
 .create-session-form .btn {
   padding: 8px 16px;
-  background: #27ae60;
+  background: var(--success);
   color: white;
   border: none;
   border-radius: 6px;
 }
 
 .create-session-form .btn:hover {
-  background: #219150;
+  background: var(--success-dark);
 }
 
 .dashboard-wrapper h3 {
   margin: 20px 0 12px 0;
   font-size: 1.3rem;
-  color: #222;
+  color: var(--ink-strong);
   font-weight: 600;
   flex-shrink: 0; /* prevent shrinking */
 }
@@ -94,7 +94,7 @@
   overflow-y: auto;
   max-height: none;
   min-height: 0; /* crucial for flex scrolling */
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--line);
   border-radius: 8px;
   padding: 8px;
 }
@@ -108,7 +108,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 10px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--wash);
 }
 
 .dashboard-wrapper li:last-child {
@@ -117,7 +117,7 @@
 
 .session-meta {
   flex: 1;
-  color: #2c3e50;
+  color: var(--text-dark);
   font-weight: 600;
 }
 
@@ -134,12 +134,12 @@
 }
 
 .session-actions .btn-danger {
-  background: #e74c3c;
-  color: #fff;
+  background: var(--error);
+  color: var(--card-bg);
 }
 
 .session-actions .btn-danger:hover {
-  background: #c0392b;
+  background: var(--error-dark);
 }
 
 /* Scrollbar styling */
@@ -148,17 +148,17 @@
 }
 
 .session-list-wrapper::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--wash);
   border-radius: 4px;
 }
 
 .session-list-wrapper::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: var(--line);
   border-radius: 4px;
 }
 
 .session-list-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: var(--subtle);
 }
 
 /* ---------- Responsive ---------- */
@@ -197,7 +197,7 @@
 }
 
 .qr-modal-content {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 18px;
   max-width: 420px;
@@ -220,10 +220,10 @@
   max-width: 280px;
   width: 100%;
   height: auto;
-  border: 1px solid #eee;
+  border: 1px solid var(--wash);
   border-radius: 8px;
   padding: 8px;
-  background: #fff;
+  background: var(--card-bg);
 }
 
 .qr-code-row {
@@ -236,7 +236,7 @@
 
 .qr-code-row input {
   padding: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--line);
   border-radius: 6px;
   width: 60%;
 }
@@ -244,14 +244,14 @@
 .qr-hint {
   margin-top: 10px;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--muted);
 }
 
 /* Saved Sessions: make the top "Back" button readable on light bg */
 .dashboard-wrapper > a.btn.btn-secondary {
-  background: #f1f3f5;
-  color: #253444 !important;
-  border: 2px solid #333;
-  box-shadow: 3px 3px 0 #333;
+  background: var(--wash);
+  color: var(--nav) !important;
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
 }
 

@@ -1,20 +1,4 @@
 /* CSS Variables */
-:root {
-  --accent: #2ca866;
-  --accent-dark: #24926d;
-  --card-bg: #fff;
-  --muted: #666;
-  --surface: #FFFAE7;
-  --border: #333;
-  --text-dark: #2c3e50;
-  --error: #e74c3c;
-  --error-dark: #c0392b;
-  --success: #27ae60;
-  --success-dark: #219150;
-  --info: #3498db;
-  --info-dark: #2980b9;
-}
-
 /* ===========================
    Main Layout
    =========================== */
@@ -25,15 +9,15 @@
   flex: 1;
   padding: 40px 20px;
   box-sizing: border-box;
-  background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);
+  background: var(--surface);
 }
 
 
 .help-section {
   background: var(--card-bg);
   border-radius: 14px;
-  box-shadow: 8px 8px 0 #333;
-  border: 3px solid #333;
+  box-shadow: 8px 8px 0 var(--ink);
+  border: 3px solid var(--ink);
   padding: 40px;
   max-width: 1500px; /* Increased width */
   width: 95%;
@@ -61,9 +45,9 @@
   margin-top: 25px;
   background: var(--surface);
   border-radius: 14px;
-  border: 3px solid #333;
+  border: 3px solid var(--ink);
   padding: 20px;
-  box-shadow: 8px 8px 0 #333;
+  box-shadow: 8px 8px 0 var(--ink);
 }
 
 .faq-item {
@@ -77,29 +61,29 @@
   font-size: 1.2rem;
   font-weight: 700;
   background: var(--card-bg);
-  border: 2px solid #333;
+  border: 2px solid var(--ink);
   border-radius: 10px;
   cursor: pointer;
   transition: 0.08s;
-  box-shadow: 4px 4px 0 #333;
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .faq-question:hover {
-  background: #f8f9fa;
+  background: var(--wash);
   transform: translateY(-2px);
 }
 
 .faq-question.active {
-  background: #ffeeb8;
+  background: var(--honey-wash);
 }
 
 .faq-answer {
   max-height: 0;
   overflow: hidden;
   background: var(--card-bg);
-  border-left: 2px solid #333;
-  border-right: 2px solid #333;
-  border-bottom: 2px solid #333;
+  border-left: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
   border-radius: 0 0 10px 10px;
   padding: 0 20px;
   transition: max-height 0.25s ease-out;
@@ -118,10 +102,10 @@
   margin-top: 80px; /* space from last FAQ */
   padding: 30px 25px; /* top/bottom, left/right */
   background: var(--surface);
-  border: 3px solid #333;
+  border: 3px solid var(--ink);
   border-radius: 14px;
   text-align: center;
-  box-shadow: 8px 8px 0 #333;
+  box-shadow: 8px 8px 0 var(--ink);
 }
 
 .help-section .contact-section p {
@@ -142,9 +126,9 @@
   font-weight: 700;
   font-size: 1.1rem;
   border-radius: 10px;
-  border: 2px solid #333;
+  border: 2px solid var(--ink);
   text-decoration: none !important;
-  box-shadow: 4px 4px 0 #333;
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .help-section .contact-email:hover {

@@ -1,20 +1,4 @@
 /* CSS Variables */
-:root {
-  --accent: #2ca866;
-  --accent-dark: #24926d;
-  --card-bg: #fff;
-  --muted: #666;
-  --surface: #FFFAE7;
-  --border: #333;
-  --text-dark: #2c3e50;
-  --error: #e74c3c;
-  --error-dark: #c0392b;
-  --success: #27ae60;
-  --success-dark: #219150;
-  --info: #3498db;
-  --info-dark: #2980b9;
-}
-
 /* Floating panel (handled by dashboard.css now) */
 /* .notifications-panel { ... } removed to prevent conflicts */
 
@@ -49,7 +33,7 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: 44px 40px 120px;
-  background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);
+  background: var(--surface);
   width: 100%;
 }
 .page-title {
@@ -79,10 +63,10 @@
   align-items: flex-start;
   gap: 12px;
   background: var(--card-bg);
-  border: 3px solid #333;
+  border: 3px solid var(--ink);
   border-radius: 14px;
   padding: 20px;
-  box-shadow: 8px 8px 0 #333;
+  box-shadow: 8px 8px 0 var(--ink);
   text-decoration: none !important;
 }
 .notif-card:hover {
@@ -121,14 +105,14 @@
   height: 20px;
   padding: 0 6px;
   background: var(--error);
-  color: #fff;
-  border: 2px solid #333;
+  color: var(--card-bg);
+  border: 2px solid var(--ink);
   border-radius: 999px;
   font-size: 12px;
   line-height: 16px;
   text-align: center;
   font-weight: 700;
-  box-shadow: 4px 4px 0 #333;
+  box-shadow: 4px 4px 0 var(--ink);
 }
 .notif-badge.hidden { display: none; }
 
@@ -136,7 +120,7 @@
 #notifWrap { position: relative; z-index: 2000; }
 #notifBell { cursor: pointer; position: relative; width: 100%; }
 #notifBell .bell-img { width: 28px; height: 28px; display: block; pointer-events: none; }
-.notif-dot { position: absolute; top: 4px; right: 6px; width: 10px; height: 10px; background:#e00000; border-radius:50%; box-shadow:0 0 0 2px #fff; }
+.notif-dot { position: absolute; top: 4px; right: 6px; width: 10px; height: 10px; background:var(--error); border-radius:50%; box-shadow:0 0 0 2px var(--card-bg); }
 .notif-dot.hidden { display:none; }
 /* .notifications-panel { ... } removed duplicate */
 

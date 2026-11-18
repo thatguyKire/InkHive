@@ -7,20 +7,20 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--line);
   border-radius: 8px;
   padding: 4px 8px;
-  background: #fffbe6;
+  background: var(--surface);
   transition: border-color 0.2s ease;
 }
 
 .upload-section:hover {
-  border-color: #333;
+  border-color: var(--ink);
 }
 
 .upload-section .upload-status {
   font-size: 0.75rem;
-  color: #555;
+  color: var(--muted);
   white-space: nowrap;
   max-width: 120px;
   overflow: hidden;
@@ -40,14 +40,14 @@
    ======================================== */
 
 .uploaded-files-container {
-  background: #fafaf5;
-  border-bottom: 1px solid #ddd;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
   padding: 8px 12px;
   max-height: 80px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
+  scrollbar-color: var(--line) transparent;
 }
 
 .uploaded-files-container::-webkit-scrollbar {
@@ -59,12 +59,12 @@
 }
 
 .uploaded-files-container::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: var(--line);
   border-radius: 3px;
 }
 
 .uploaded-files-container::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: var(--subtle);
 }
 
 /* ========================================
@@ -90,7 +90,7 @@
   height: 50px;
   object-fit: cover;
   border-radius: 6px;
-  border: 2px solid #ccc;
+  border: 2px solid var(--line);
   cursor: pointer;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   display: block;
@@ -98,19 +98,19 @@
 
 .upload-preview:hover {
   transform: scale(1.1);
-  border-color: #3498db;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  border-color: var(--info);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--info) 30%, transparent);
 }
 
 /* File links (for non-image files like PDFs) */
 .uploaded-files a {
   display: inline-block;
   padding: 6px 10px;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
   border-radius: 4px;
   text-decoration: none;
-  color: #333;
+  color: var(--ink);
   font-size: 0.8rem;
   white-space: nowrap;
   transition: all 0.2s ease;
@@ -118,8 +118,8 @@
 }
 
 .uploaded-files a:hover {
-  background: #f0f0f0;
-  border-color: #333;
+  background: var(--wash);
+  border-color: var(--ink);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -127,7 +127,7 @@
 /* Empty state */
 .uploaded-files:empty::before {
   content: "No files uploaded yet";
-  color: #999;
+  color: var(--subtle);
   font-size: 0.8rem;
   font-style: italic;
 }

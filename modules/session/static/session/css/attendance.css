@@ -13,7 +13,7 @@
 .attendance-table thead th {
   background: rgba(0,0,0,0.03);
   font-weight: 600;
-  color: #222;
+  color: var(--ink-strong);
 }
 .attendance-table tbody tr:hover {
   background: rgba(0,0,0,0.02);
@@ -26,6 +26,6 @@
 
 /* Small utilities */
 .card-actions { margin-bottom: 8px; }
-.small.muted { color: #666; font-size: 13px; }
+.small.muted { color: var(--muted); font-size: 13px; }
 .btn { padding: 8px 12px; border-radius: 6px; }
 .btn-secondary { background: transparent; border: 1px solid rgba(0,0,0,0.08); }

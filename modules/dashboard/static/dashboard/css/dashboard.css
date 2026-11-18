@@ -47,8 +47,8 @@
   min-height: 220px;
   text-decoration: none;
   color: inherit;
-  border: 3px solid #333;
-  box-shadow: 8px 8px 0 #333;
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
   position: relative;
   overflow: hidden;
 }
@@ -60,7 +60,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #2ca866, #24926d);
+  background: linear-gradient(90deg, var(--accent), var(--accent-dark));
   display: none;
 }
 
@@ -109,20 +109,20 @@
 
 .session-list li {
   background: var(--card-bg);
-  border: 3px solid #333;
+  border: 3px solid var(--ink);
   border-radius: 14px;
   padding: 24px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 8px 8px 0 #333;
+  box-shadow: 8px 8px 0 var(--ink);
   font-size: 1rem;
   color: var(--muted);
   text-decoration: none !important;
 }
 
 .session-list li:hover {
-  border-color: #333;
+  border-color: var(--ink);
   text-decoration: none !important;
 }
 
@@ -138,11 +138,11 @@
   text-decoration: none !important;
   font-weight: 700;
   font-size: 1rem;
-  border: 2px solid #333;
+  border: 2px solid var(--ink);
   cursor: pointer;
   display: inline-block;
   margin-left: 16px;
-  box-shadow: 4px 4px 0 #333;
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .btn-primary {
@@ -159,14 +159,14 @@
 .session-list li:only-child {
   text-align: center;
   padding: 48px 24px;
-  border: 2px dashed #d0d0d0;
+  border: 2px dashed var(--line);
   justify-content: center;
-  color: #666;
+  color: var(--muted);
 }
 
 .session-list li:only-child:hover {
   transform: none;
-  border-color: #d0d0d0;
+  border-color: var(--line);
   box-shadow: 0 2px 6px rgba(0,0,0,0.03);
 }
 
@@ -179,11 +179,11 @@
 }
 .perf-badge {
   flex:1 1 140px;
-  background:#fff;
-  border:2px solid #333;
+  background:var(--card-bg);
+  border:2px solid var(--ink);
   border-radius:12px;
   padding:10px 14px;
-  box-shadow:4px 4px 0 #333;
+  box-shadow:4px 4px 0 var(--ink);
   display:flex;
   flex-direction:column;
   gap:4px;
@@ -192,17 +192,17 @@
   font-size:12px;
   text-transform:uppercase;
   letter-spacing:.5px;
-  color:#555;
+  color:var(--muted);
 }
 .perf-badge .value {
   font-size:20px;
   font-weight:700;
-  color:#2c3e50;
+  color:var(--text-dark);
 }
 .graph-host {
   position:relative;
-  background:#fff;
-  border:2px dashed #ccc;
+  background:var(--card-bg);
+  border:2px dashed var(--line);
   border-radius:14px;
   padding:16px 18px;
 }
@@ -210,20 +210,20 @@
   width:100%;
   margin-top:20px;
   border-collapse:collapse;
-  background:#fff;
+  background:var(--card-bg);
   font-size:14px;
 }
 .perf-table th, .perf-table td {
   padding:8px 10px;
-  border-bottom:1px solid #e2e2e2;
+  border-bottom:1px solid var(--line);
   text-align:left;
 }
 .perf-table th {
-  background:#f7f7f7;
+  background:var(--wash);
   font-weight:600;
 }
 .perf-table tbody tr:hover {
-  background:#fafafa;
+  background:var(--wash);
 }
 @media (max-width: 780px) {
   .perf-summary { gap:10px; }

@@ -1,27 +1,12 @@
 /* =====================================================================
-   App shell: design tokens, reset, sidebar, main area, notification panel.
+   App shell: layout sizes, reset, sidebar, main area, notification panel.
    This is the only stylesheet that styles html/body, .sidebar and .main.
    Page stylesheets style their own content inside .main; a page that needs
    the main area locked to the viewport opts in with {% block main_class %}.
-   Motion lives in motion.css, the visual theme (fonts, buttons) in style.css.
+   Colours come from tokens.css, motion from motion.css, the theme from style.css.
    ===================================================================== */
 
 :root {
-  --accent: #2ca866;
-  --accent-dark: #24926d;
-  --card-bg: #fff;
-  --muted: #666;
-  --surface: #FFFAE7;
-  --border: #333;
-  --text-dark: #2c3e50;
-  --error: #e74c3c;
-  --error-dark: #c0392b;
-  --success: #27ae60;
-  --success-dark: #219150;
-  --info: #3498db;
-  --info-dark: #2980b9;
-
-  --sidebar-bg: #253444;
   --sidebar-expanded: 240px;
   --sidebar-collapsed: 72px;
 }
@@ -35,7 +20,7 @@ html, body {
   min-height: 100%;
   background-color: var(--surface);
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  color: #222;
+  color: var(--ink-strong);
 }
 
 img { max-width: 100%; height: auto; display: inline-block; }
@@ -47,8 +32,8 @@ img { max-width: 100%; height: auto; display: inline-block; }
   left: 0;
   bottom: 0;
   width: var(--sidebar-expanded);
-  background: var(--sidebar-bg);
-  color: #fff;
+  background: var(--nav);
+  color: var(--card-bg);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -73,7 +58,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
   align-items: center;
   gap: 10px;
   overflow: hidden;
-  color: #fff;
+  color: var(--card-bg);
   font-weight: 700;
 }
 
@@ -81,7 +66,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
   width: 32px;
   height: 32px;
   object-fit: contain;
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -140,7 +125,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #e6eef6;
+  color: var(--nav-text);
   font-size: 15px;
   font-weight: 500;
   text-align: left;
@@ -150,9 +135,9 @@ img { max-width: 100%; height: auto; display: inline-block; }
 }
 
 .menu-btn:hover,
-.menu-btn:focus-visible { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.menu-btn:focus-visible { background: rgba(255, 255, 255, 0.1); color: var(--card-bg); }
 
-.menu-btn[aria-current="page"] { background: rgba(255, 255, 255, 0.14); color: #fff; }
+.menu-btn[aria-current="page"] { background: rgba(255, 255, 255, 0.14); color: var(--card-bg); }
 
 .menu-icon {
   width: 24px;
@@ -179,7 +164,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
   padding: 2px 6px;
   border-radius: 10px;
   background: var(--error);
-  color: #fff;
+  color: var(--card-bg);
   font-size: 11px;
   font-weight: bold;
 }
@@ -198,9 +183,9 @@ img { max-width: 100%; height: auto; display: inline-block; }
   display: none;
   flex-direction: column;
   padding: 16px;
-  background: #fff;
-  color: #333;
-  border: 2px solid var(--border);
+  background: var(--card-bg);
+  color: var(--ink);
+  border: 2px solid var(--ink);
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
@@ -210,7 +195,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
 .notifications-panel h3 {
   margin: 0;
   padding: 0 2px 12px;
-  border-bottom: 2px solid #f5f5f5;
+  border-bottom: 2px solid var(--wash);
   color: var(--text-dark);
   font-size: 18px;
   font-weight: 700;
@@ -225,21 +210,21 @@ img { max-width: 100%; height: auto; display: inline-block; }
 
 .notification-item {
   padding: 14px 18px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--wash);
   cursor: pointer;
 }
 
 .notification-item:last-child { border-bottom: none; }
-.notification-item:hover { background: #f8f9fa; }
+.notification-item:hover { background: var(--wash); }
 
 /* Scoped to the panel so it beats the theme's generic .btn-secondary. */
 .notifications-panel .see-all-btn {
   display: block;
   margin-top: 12px;
   padding: 8px;
-  border: 2px solid var(--border);
+  border: 2px solid var(--ink);
   border-radius: 6px;
-  background: #f8f9fa;
+  background: var(--wash);
   color: var(--accent);
   font-size: 13px;
   font-weight: 600;
@@ -251,7 +236,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
 .notifications-panel .see-all-btn:focus {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--card-bg);
   text-decoration: none;
 }
 
@@ -288,13 +273,13 @@ img { max-width: 100%; height: auto; display: inline-block; }
   padding: 0;
   border: none;
   background: none;
-  color: #aaa;
+  color: var(--subtle);
   font-size: 12px;
   text-align: left;
   cursor: pointer;
 }
 
-.logout-link:hover { color: #fff; text-decoration: underline; }
+.logout-link:hover { color: var(--card-bg); text-decoration: underline; }
 
 .sidebar.collapsed .sidebar-footer { display: flex; justify-content: center; padding: 16px 0; }
 .sidebar.collapsed .user-info { display: none; }
@@ -317,18 +302,18 @@ img { max-width: 100%; height: auto; display: inline-block; }
   position: relative;
   overflow: hidden;
   padding: 12px 40px 14px 16px;
-  border: 3px solid var(--border);
+  border: 3px solid var(--ink);
   border-left-width: 8px;
   border-left-color: var(--toast-color);
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 4px 4px 0 var(--border);
+  background: var(--card-bg);
+  box-shadow: 4px 4px 0 var(--ink);
   color: var(--text-dark);
   pointer-events: auto;
 }
 
 .toast--success { --toast-color: var(--success); }
-.toast--warning { --toast-color: #e67e22; }
+.toast--warning { --toast-color: var(--warning); }
 .toast--error   { --toast-color: var(--error); }
 
 .toast-text { margin: 0; font-size: 0.95rem; line-height: 1.4; }
@@ -348,7 +333,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
   cursor: pointer;
 }
 
-.toast-close:hover { background: #f1f1f1; }
+.toast-close:hover { background: var(--wash); }
 
 .toast-timer {
   position: absolute;
@@ -433,10 +418,10 @@ img { max-width: 100%; height: auto; display: inline-block; }
     align-items: center;
     gap: 5px;
     padding: 0;
-    border: 3px solid var(--border);
+    border: 3px solid var(--ink);
     border-radius: 12px;
-    background: #fff;
-    box-shadow: 3px 3px 0 var(--border);
+    background: var(--card-bg);
+    box-shadow: 3px 3px 0 var(--ink);
     cursor: pointer;
   }
 
@@ -445,7 +430,7 @@ img { max-width: 100%; height: auto; display: inline-block; }
     width: 20px;
     height: 3px;
     border-radius: 2px;
-    background: var(--border);
+    background: var(--ink);
   }
 
   .sidebar-backdrop {

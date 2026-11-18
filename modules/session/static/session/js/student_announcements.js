@@ -56,8 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (!listEl.children.length) {
       const p = document.createElement("p");
-      p.style.fontSize = ".75rem";
-      p.style.color = "#666";
+      p.className = "announce-empty";
       p.textContent = "No announcements yet.";
       listEl.appendChild(p);
     }
