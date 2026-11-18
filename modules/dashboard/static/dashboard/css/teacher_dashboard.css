@@ -1,0 +1,62 @@
+/* Teacher dashboard layout. The pieces (stat cards, panels, rows, chips)
+   come from core/css/components.css; this file only arranges them. */
+
+.teacher-home { width: 100%; max-width: 1180px; margin: 0 auto; padding-bottom: 40px; }
+
+.teacher-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.panel-spark { color: var(--muted); font-size: 1.1rem; }
+
+/* Latest saved board, or the doodle placeholder */
+.canvas-frame {
+  margin: 0;
+  aspect-ratio: 17 / 10;
+  overflow: hidden;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: var(--card-bg);
+}
+
+.canvas-frame img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+.canvas-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.quick-actions .btn { justify-content: flex-start; box-shadow: none; }
+
+.bulletin { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 10px; }
+.bulletin li { color: var(--text-dark); font-size: 0.93rem; line-height: 1.45; }
+.bulletin .urgent {
+  margin-right: 4px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--error-wash);
+  color: var(--error-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.performance-panel .graph-host { min-height: 300px; margin-bottom: 16px; }
+
+@media (max-width: 1000px) {
+  .teacher-grid { grid-template-columns: minmax(0, 1fr); }
+}

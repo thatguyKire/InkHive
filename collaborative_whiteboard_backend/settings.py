@@ -73,8 +73,7 @@ if not DEBUG:
 # Django admin lives here; set ADMIN_URL to something less guessable in production.
 ADMIN_URL = os.getenv("ADMIN_URL", "admin/").strip("/") + "/"
 
-# The app's public name: page titles, sidebar and legal pages. The big logo on the
-# login page (authentication/img/logo-wordmark.svg) spells it out too.
+# The app's public name: page titles, sidebar, sign-in pages and legal pages.
 SITE_NAME = "InkHive"
 
 # Public portfolio demo (modules/demo): one-click demo accounts on the login

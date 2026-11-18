@@ -104,7 +104,7 @@ See **[SECURITY.md](SECURITY.md)** for the threat model, every security control,
 
 The app has a [Terms of Service](modules/legal/templates/legal/terms.html) and [Privacy Policy](modules/legal/templates/legal/privacy.html) (Philippine Data Privacy Act of 2012) at `/legal/terms/` and `/legal/privacy/`. Users must agree at sign-up, and again whenever `TERMS_VERSION` changes. They can download their data or delete their account in Settings. **Before a public launch, finish the team to-do in [docs/LEGAL.md](docs/LEGAL.md#3-before-launch-team-to-do)**.
 
-The name lives in one place: `SITE_NAME` in `collaborative_whiteboard_backend/settings.py` (templates use `{{ brand_name }}`). The big login-page logo, `modules/authentication/static/authentication/img/logo-wordmark.svg`, spells it out too. All icons and the logo were drawn for this project ([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
+The name lives in one place: `SITE_NAME` in `collaborative_whiteboard_backend/settings.py` (templates use `{{ brand_name }}`). The logo (`modules/core/static/core/icons/logo.svg`, a bee whose stinger is a pen nib writing a line of ink) has no text in it. All icons and the logo were drawn for this project ([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
 
 ## Project structure
 

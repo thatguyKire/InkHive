@@ -1,15 +1,35 @@
 /* =====================================================================
-   InkHive colour palette: the only place colours are defined.
-   Every layout loads this first (core/base.html, the sign-in pages and the
-   legal pages). Stylesheets use var(--…) and never hex values; a retheme is
-   a change to this file. Sizes live in base.css, motion in motion.css.
+   InkHive design tokens: the only place colours, type and surface styles
+   are defined. Every layout loads this first (core/base.html, the sign-in
+   pages and the legal pages). Stylesheets use var(--…) and never hex values;
+   a retheme is a change to this file. Layout sizes live in base.css, motion
+   in motion.css.
    ===================================================================== */
 
+/* Figtree (SIL Open Font License, see ../fonts/Figtree-OFL.txt), served from
+   this site because the Content-Security-Policy allows only local fonts. */
+@font-face {
+  font-family: "Figtree";
+  src: url("../fonts/figtree-latin-wght.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
+  /* Type */
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+
+  /* Paper surfaces: thick ink outline + hard offset shadow */
+  --radius-card: 16px;
+  --radius-control: 10px;
+  --shadow-hard: 4px 4px 0 var(--ink);
+  --shadow-hard-sm: 3px 3px 0 var(--ink);
+
   /* Ink: outlines, hard shadows and text */
   --ink: #333;            /* outlines and offset shadows */
   --ink-strong: #222;
-  --text-dark: #2c3e50;   /* headings and primary text */
+  --text-dark: #1f2a37;   /* headings and primary text */
   --text-soft: #55606b;
   --muted: #666;          /* secondary text */
   --subtle: #999;         /* hints, disabled */
@@ -18,9 +38,10 @@
   --surface: #fffae7;     /* the page */
   --paper-deep: #f9f4e6;
   --paper-line: #c9c1a8;
-  --card-bg: #fff;
+  --card-bg: #fffdf7;     /* warm white cards */
   --wash: #f5f5f5;        /* quiet fills: table headers, hover rows */
   --line: #ddd;           /* hairlines and input borders */
+  --grid-line: #f0e6c6;   /* graph-paper grid on the page */
 
   /* Brand */
   --nav: #253444;         /* sidebar */
@@ -28,9 +49,12 @@
   --honey: #f9d342;       /* highlights and heading shadow */
   --honey-light: #ffe066;
   --honey-wash: #fff3c4;
+  --honey-tint: #fde7a3;  /* icon tiles */
   --ink-teal: #2bb3b1;     /* the bee's ink line in the logo */
   --ink-teal-dark: #15807e;
-  --link: #d35400;
+  --teal-wash: #d9f2f0;
+  --rose-wash: #f8dcd2;
+  --link: #15807e;        /* ink teal, dark enough for text */
   --link-blue: #1f6fb2;
   --accent: #2ca866;
   --accent-dark: #24926d;

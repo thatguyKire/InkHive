@@ -68,11 +68,6 @@
   100% { transform: scale(1); }
 }
 
-@keyframes slide-in-left {
-  from { opacity: 0; transform: translateX(calc(-1 * var(--distance-base))); }
-  to   { opacity: 1; transform: none; }
-}
-
 /* ---------- Page entrance ---------- */
 /* Each top-level block of the page rises in. `backwards` holds the start
    state only during the delay, so no transform is left on the wrapper
@@ -105,7 +100,7 @@
 /* ---------- Pressables: buttons and clickable cards ---------- */
 /* :where() keeps specificity at zero, so a page can still opt a component out. */
 :where(.btn, .back-btn, .back-arrow, .action-btn, .contact-email, .setting-card,
-       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn, .see-all-btn) {
+       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn, .see-all-btn, .topbar-bell) {
   transition:
     transform var(--duration-fast) var(--ease-smooth-out),
     box-shadow var(--duration-fast) var(--ease-smooth-out),
@@ -115,7 +110,7 @@
 }
 
 :where(.btn, .back-btn, .back-arrow, .action-btn, .contact-email, .setting-card,
-       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn):hover:not(:disabled) {
+       .session-card, .notif-card, .uploaded-files a, .mobile-nav-btn, .topbar-bell):hover:not(:disabled) {
   transform: translateY(var(--lift));
 }
 
@@ -168,6 +163,8 @@
 .menu-btn {
   transition:
     background-color var(--duration-quick) var(--ease-out),
+    border-color var(--duration-quick) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-smooth-out),
     color var(--duration-quick) var(--ease-out);
 }
 
@@ -178,19 +175,6 @@
 }
 .menu-btn:hover .menu-icon { transform: translateX(2px) rotate(-8deg); }
 
-/* Ink mark beside the current page. */
-.menu-btn[aria-current="page"]::before {
-  content: "";
-  position: absolute;
-  left: -12px;
-  top: 8px;
-  bottom: 8px;
-  width: 4px;
-  border-radius: 0 4px 4px 0;
-  background: var(--honey);
-  animation: slide-in-left var(--duration-slow) var(--ease-smooth-out) both;
-}
-.sidebar.collapsed .menu-btn[aria-current="page"]::before { left: -8px; }
 
 /* Phone drawer: slide in, and only become hidden after sliding out. */
 @media (max-width: 768px) {

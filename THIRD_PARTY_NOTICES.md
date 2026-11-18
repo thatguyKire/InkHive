@@ -32,6 +32,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
+## Figtree font
+
+* File: `modules/core/static/core/fonts/figtree-latin-wght.woff2` (Latin subset, variable weight, from the `@fontsource-variable/figtree` package), licence text in `Figtree-OFL.txt` next to it
+* Source: https://github.com/erikdkennedy/figtree
+* Licence: SIL Open Font License 1.1 (Copyright 2022 The Figtree Project Authors)
+
 ## Python packages
 
 The server uses the packages in `requirements.txt` (Django, Channels, Daphne, WhiteNoise, Pillow and others) under their own permissive licences (BSD, MIT, HPND and similar). They are installed at build time and are not copied into this repository.
@@ -44,4 +50,4 @@ The server uses the packages in `requirements.txt` (Django, Channels, Daphne, Wh
 
 ## Our own artwork
 
-Every icon and logo in the app was drawn for this project and belongs to the team: the SVG icons in `core/static/core/icons/` (arrows, bell, chat, dashboard, bookmark, profile, settings gear, help, plus, user, logout, lock, shield, download, profile settings, trash, the InkHive logo), `help_app/img/email.svg` and `authentication/img/logo-wordmark.svg`. They are simple geometric line drawings, not copied from an icon set.
+Every icon and logo in the app was drawn for this project and belongs to the team: the SVG icons in `core/static/core/icons/` (arrows, bell, chat, dashboard, bookmark, profile, settings gear, help, plus, plus-circle, user, users, user-plus, pen, shapes, megaphone, arrow-up-right, logout, lock, shield, download, profile settings, trash, the InkHive logo), `help_app/img/email.svg` and `dashboard/img/canvas-doodles.svg`. The logo was redrawn by hand from a concept image the team generated in Canva. They are simple geometric line drawings, not copied from an icon set.

@@ -80,7 +80,7 @@ Keep at most two families per screen. Never set body text below 12 px.
 ### 3.5 Iconography
 SVG icons drawn for this project in `modules/core/static/core/icons/`: 24 × 24 viewBox, round-capped strokes about 2 px wide, one color per icon (sidebar icons are turned white with a CSS filter, so they must be line drawings, not filled shapes). New icons must follow the same style and be the team's own work (see [LEGAL.md](LEGAL.md) L-5).
 
-**Logo:** a navy honeycomb cell (`#283850`) holding a cream ink drop with a small yellow honey cell (`logo.svg`). On the login and sign-up pages it appears above the word *InkHive* (`logo-wordmark.svg`). Emoji are used as lightweight icons in content (📢 announcements, 👥 participants, 📁 upload, ⚠️ urgent). Every icon-only control needs an `aria-label` or visible text.
+**Logo:** a honey-striped bee on a navy hive cell outlined in honey, its stinger a pen nib writing a teal ink line (`logo.svg`). On the sign-in pages it sits beside the name *InkHive*, set in Figtree with the same teal ink line under it. Colours and type are defined once in `core/css/tokens.css`; the teacher dashboard follows the Canva redesign (stat cards with tinted icon tiles, panels, code chips, honey pill for the current page). Emoji are used as lightweight icons in content (📢 announcements, 👥 participants, 📁 upload, ⚠️ urgent). Every icon-only control needs an `aria-label` or visible text.
 
 ## 4. Layout
 

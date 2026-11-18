@@ -2,11 +2,11 @@ import logging
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from modules.authentication.decorators import role_required
-from django.utils import timezone
-from django.db.models import Count, Max
+from django.db.models import Count
 from modules.authentication.models import CustomUser
 from modules.chat.models import Message
 from modules.session.models import Participant, UploadedFile, Session
+from .metrics import teacher_overview, teacher_performance
 
 logger = logging.getLogger(__name__)
 
@@ -37,82 +37,14 @@ def student_dashboard(request):
 @login_required
 @role_required(['teacher'])
 def teacher_dashboard(request):
-    """
-    Teacher dashboard with performance metrics.
-    """
-    user = request.user
-
-    # Sessions owned by teacher
-    sessions_qs = Session.objects.filter(created_by=user)
-    open_sessions = sessions_qs.order_by("-created_at")[:10]
-    active_classes_count = sessions_qs.count()
-
-    # Participants across teacher sessions
-    participants_qs = Participant.objects.filter(session__in=sessions_qs).select_related("user")
-
-    # Per-user uploads
-    uploads_agg = UploadedFile.objects.filter(session__in=sessions_qs) \
-        .values("uploaded_by_id").annotate(upload_count=Count("id"), last_upload=Max("uploaded_at"))
-    uploads_map = {u["uploaded_by_id"]: u for u in uploads_agg}
-
-    # Per-user chat messages (live chat lives in modules.chat)
-    msgs_agg = Message.objects.filter(room__session__in=sessions_qs) \
-        .values("sender_id").annotate(msg_count=Count("id"), last_msg=Max("timestamp"))
-    msgs_map = {m["sender_id"]: m for m in msgs_agg}
-
-    today = timezone.localdate()
-
-    # One row per student, summed across all of this teacher's sessions.
-    rows_by_user = {}
-    for p in participants_qs:
-        row = rows_by_user.get(p.user_id)
-        if row is None:
-            up = uploads_map.get(p.user_id)
-            ms = msgs_map.get(p.user_id)
-            row = rows_by_user[p.user_id] = {
-                "username": p.user.username,
-                "strokes": 0,
-                "uploads": up["upload_count"] if up else 0,
-                "messages": ms["msg_count"] if ms else 0,
-                "last_active": max(
-                    [d for d in (up["last_upload"] if up else None, ms["last_msg"] if ms else None) if d],
-                    default=None,
-                ),
-            }
-        row["strokes"] += p.strokes_count
-        seen = [d for d in (row["last_active"], p.last_active, p.joined_at) if d]
-        row["last_active"] = max(seen) if seen else None
-    performance_rows = sorted(rows_by_user.values(), key=lambda r: r["username"].lower())
-
-    # Active today: any activity (join, stroke, upload, message) today
-    active_today = sum(
-        1 for r in performance_rows
-        if r["last_active"] and timezone.localtime(r["last_active"]).date() == today
-    )
-
-    performance_totals = {
-        "total_students": len(performance_rows),
-        "active_today": active_today,
-        "total_strokes": sum(r["strokes"] for r in performance_rows),
-        "total_uploads": sum(r["uploads"] for r in performance_rows),
-        "total_messages": sum(r["messages"] for r in performance_rows),
-    }
-
-    performance_chart = {
-        "labels": [r["username"] for r in performance_rows],
-        "uploads": [r["uploads"] for r in performance_rows],
-        "messages": [r["messages"] for r in performance_rows],
-        "strokes": [r["strokes"] for r in performance_rows],
-    }
-
-    context = {
-        "open_sessions": open_sessions,
-        "active_classes_count": active_classes_count,
-        "performance_rows": performance_rows,
-        "performance_totals": performance_totals,
-        "performance_chart": performance_chart,
-    }
-    return render(request, "dashboard/teacher_dashboard.html", context)
+    """Teacher home: headline stats, open sessions, latest board, announcements, performance."""
+    rows, totals, chart = teacher_performance(request.user)
+    return render(request, "dashboard/teacher_dashboard.html", {
+        **teacher_overview(request.user),
+        "performance_rows": rows,
+        "performance_totals": totals,
+        "performance_chart": chart,
+    })
 
 
 # ---------- ADMIN DASHBOARD ----------

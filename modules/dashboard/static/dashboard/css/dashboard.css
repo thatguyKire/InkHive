@@ -132,28 +132,8 @@
   color: var(--text-dark);
 }
 
-.btn {
-  padding: 14px 24px;
-  border-radius: 10px;
-  text-decoration: none !important;
-  font-weight: 700;
-  font-size: 1rem;
-  border: 2px solid var(--ink);
-  cursor: pointer;
-  display: inline-block;
-  margin-left: 16px;
-  box-shadow: 4px 4px 0 var(--ink);
-}
 
-.btn-primary {
-  background: var(--success);
-  color: white;
-}
 
-.btn-primary:hover {
-  background: var(--success-dark);
-  text-decoration: none !important;
-}
 
 /* Empty state styling */
 .session-list li:only-child {
@@ -261,13 +241,7 @@
     align-items: flex-start;
     gap: 12px;
   }
-  
-  .btn {
-    width: 100%;
-    text-align: center;
-    margin-left: 0;
-    margin-top: 8px;
-  }
+
 }
 
 /* Wide tables scroll sideways on small screens instead of widening the page. */

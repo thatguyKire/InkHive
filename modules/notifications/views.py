@@ -1,6 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Min, Count
-from django.db.models.functions import TruncMinute
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
@@ -9,6 +7,7 @@ from django.views.decorators.http import require_GET, require_POST
 from modules.core import ratelimit
 from modules.session.access import can_manage
 from modules.session.models import Session, Participant
+from .announcements import recent_announcements
 from .models import Notification
 from .notify import notify
 
@@ -98,28 +97,11 @@ def session_announcements_json(request, session_id):
     session = get_object_or_404(Session, id=session_id)
     if not can_manage(request.user, session):
         return JsonResponse({"items": []})
-    # One row per announcement: same text/urgency sent within the same minute.
-    agg = (
-        Notification.objects
-        .filter(session=session)
-        .annotate(sent_minute=TruncMinute("created_at"))
-        .values("content", "is_urgent", "sent_minute")
-        .annotate(
-            created_at=Min("created_at"),
-            first_id=Min("id"),
-            recipient_count=Count("recipient", distinct=True),
-        )
-        .order_by("-created_at")[:30]
-    )
+    items = recent_announcements(Session.objects.filter(pk=session.pk))
     data = [
-        {
-            "id": a["first_id"],
-            "content": a["content"],
-            "is_urgent": a["is_urgent"],
-            "created_at": a["created_at"].isoformat(),
-            "recipient_count": a["recipient_count"],
-        }
-        for a in agg
+        {key: a[key] for key in ("id", "content", "is_urgent", "recipient_count")}
+        | {"created_at": a["created_at"].isoformat()}
+        for a in items
     ]
     return JsonResponse({"items": data})
 

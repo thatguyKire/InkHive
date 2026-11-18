@@ -3,117 +3,164 @@
 {% block title %}Teacher Dashboard - {{ brand_name }}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'dashboard/css/dashboard-shared.css' %}">
-<link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'dashboard/css/teacher_dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="dashboard-section">
-  <h1>Welcome, {{ user.username }}</h1>
-  <p class="subtitle">Manage your classes, monitor sessions, and interact with your students.</p>
+<div class="teacher-home">
+  <header class="page-head">
+    <p class="eyebrow">Your teaching space &#10022;</p>
+    <h1>Welcome back, <span class="ink-underline">{{ user.display_name }}</span></h1>
+    <p class="page-sub">Bring your classroom to life, one bright idea at a time.</p>
+  </header>
 
-  <div class="dashboard-grid" data-stagger>
+  <div class="stat-grid" data-stagger>
+    <article class="stat-card">
+      <p class="stat-label">Active classes</p>
+      <span class="stat-value" data-count-up>{{ class_count }}</span>
+      <p class="stat-delta">&#8599; +{{ classes_this_week }} this week</p>
+      <span class="icon-tile" aria-hidden="true"><span class="icon" style="--icon:url('{% static 'core/icons/shapes.svg' %}')"></span></span>
+    </article>
+    <article class="stat-card">
+      <p class="stat-label">Students</p>
+      <span class="stat-value" data-count-up>{{ performance_totals.total_students }}</span>
+      <p class="stat-delta">&#8599; +{{ students_this_week }} this week</p>
+      <span class="icon-tile icon-tile--teal" aria-hidden="true"><span class="icon" style="--icon:url('{% static 'core/icons/users.svg' %}')"></span></span>
+    </article>
+    <article class="stat-card">
+      <p class="stat-label">Strokes drawn</p>
+      <span class="stat-value" data-count-up>{{ performance_totals.total_strokes }}</span>
+      <p class="stat-delta">&#8599; {{ performance_totals.active_today }} student{{ performance_totals.active_today|pluralize }} active today</p>
+      <span class="icon-tile icon-tile--rose" aria-hidden="true"><span class="icon" style="--icon:url('{% static 'core/icons/pen.svg' %}')"></span></span>
+    </article>
+  </div>
 
-    <!-- My Classes -->
-    <div class="card">
-      <h3>My Classes</h3>
-      <p class="active-class-text">
-        You currently have
-        <span class="active-class-count" data-count-up>{{ active_classes_count }}</span>
-        {% if active_classes_count == 1 %}active class{% else %}active classes{% endif %}
-      </p>
-    </div>
-
-    <!-- Active Sessions -->
-    <div class="card">
-      <h3>Active Sessions</h3>
+  <div class="teacher-grid" data-stagger>
+    <section class="panel" aria-labelledby="sessions-title">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title" id="sessions-title">Active sessions</h2>
+          <p class="panel-sub">Pick up right where your class left off.</p>
+        </div>
+        <a href="{% url 'session_list' %}" class="btn btn-sm">
+          <span class="icon" style="--icon:url('{% static 'core/icons/plus-circle.svg' %}')"></span> Create session
+        </a>
+      </div>
       {% if open_sessions %}
-        <div class="active-sessions-scroll">
-          <ul class="session-list">
-            {% for session in open_sessions %}
-              <li class="session-row">
-                <div>
-                  <strong>{{ session.title|default:"Untitled Session" }}</strong>
-                  <div class="session-meta">Code: {{ session.code|default:"—" }}</div>
-                </div>
-                <div class="session-actions">
-                  <a href="{% url 'whiteboard' session.id %}" class="btn btn-primary">Join Whiteboard</a>
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
+        <ul class="list-rows">
+          {% for session in open_sessions %}
+            <li class="list-row">
+              <div>
+                <p class="list-row-title">{{ session.title }}</p>
+                <p class="meta">
+                  <span class="live-dot{% if session.online %} is-live{% endif %}" aria-hidden="true"></span>
+                  {% if session.online %}Live &middot; {{ session.online }} online{% else %}Idle{% endif %}
+                  &middot; {{ session.student_count }} student{{ session.student_count|pluralize }}
+                  <span class="chip">{{ session.code }}</span>
+                </p>
+              </div>
+              <a href="{% url 'whiteboard' session.id %}" class="btn btn-secondary btn-sm">
+                <span class="icon" style="--icon:url('{% static 'core/icons/arrow-up-right.svg' %}')"></span> Join whiteboard
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <p class="panel-foot"><a href="{% url 'session_list' %}">Manage all sessions &rarr;</a></p>
       {% else %}
-        <div class="empty-state"><p>No active sessions right now.</p></div>
+        <p class="panel-foot">No sessions yet. Create one to get a join code for your class.</p>
       {% endif %}
-      <div class="card-footer" style="margin-top:16px;">
-        <a href="{% url 'session_list' %}" class="btn">Manage Sessions</a>
+    </section>
+
+    <section class="panel" aria-labelledby="canvas-title">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title" id="canvas-title">Today's classroom canvas</h2>
+          <p class="panel-sub">A peek at ideas in motion.</p>
+        </div>
+        <span class="panel-spark" aria-hidden="true">&#10035;</span>
+      </div>
+      <figure class="canvas-frame">
+        {% if canvas_session %}
+          <img src="{{ canvas_session.snapshot_url }}" alt="Latest saved board of {{ canvas_session.title }}">
+        {% else %}
+          <img src="{% static 'dashboard/img/canvas-doodles.svg' %}" alt="">
+        {% endif %}
+      </figure>
+      <div class="canvas-foot">
+        <p class="meta">
+          {% if canvas_session %}
+            <span class="live-dot is-live" aria-hidden="true"></span> Latest saved board &middot; {{ canvas_session.title }}
+          {% else %}
+            Save a board from a whiteboard and it shows up here.
+          {% endif %}
+        </p>
+        <a href="{% if canvas_session %}{% url 'whiteboard' canvas_session.id %}{% else %}{% url 'session_list' %}{% endif %}" class="btn btn-secondary btn-sm">
+          Open canvas <span class="icon" style="--icon:url('{% static 'core/icons/arrow-up-right.svg' %}')"></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="actions-title">
+      <h2 class="panel-title" id="actions-title">Quick actions &#9998;</h2>
+      <div class="quick-actions">
+        <a href="{% url 'session_list' %}" class="btn btn-secondary">
+          <span class="icon" style="--icon:url('{% static 'core/icons/plus-circle.svg' %}')"></span> Start a session
+        </a>
+        <a href="{% url 'session_list' %}" class="btn btn-secondary">
+          <span class="icon" style="--icon:url('{% static 'core/icons/user-plus.svg' %}')"></span> Invite a class
+        </a>
+        <a href="{% url 'notifications:notifications' %}" class="btn btn-secondary">
+          <span class="icon" style="--icon:url('{% static 'core/icons/megaphone.svg' %}')"></span> View announcements
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="bulletin-title">
+      <h2 class="panel-title" id="bulletin-title">On the bulletin board &#128204;</h2>
+      {% if bulletin %}
+        <ul class="bulletin">
+          {% for item in bulletin %}
+            <li>{% if item.is_urgent %}<span class="urgent">Urgent</span> {% endif %}<strong>{{ item.session_title }}:</strong> {{ item.content|truncatechars:90 }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="panel-sub">Announcements you send from a whiteboard are pinned here.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <section class="panel performance-panel" aria-labelledby="performance-title">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title" id="performance-title">Student performance</h2>
+        <p class="panel-sub">Across all your sessions: {{ performance_totals.total_uploads }} upload{{ performance_totals.total_uploads|pluralize }} and {{ performance_totals.total_messages }} chat message{{ performance_totals.total_messages|pluralize }} so far.</p>
       </div>
     </div>
-
-    <!-- Student Performance -->
-    <div class="card card--wide">
-      <h3>Student Performance</h3>
-      <p class="small muted">Participation across all your sessions (strokes, uploads, chat messages, last activity).</p>
-
-      <!-- Summary badges -->
-      <div class="perf-summary" data-stagger>
-        <div class="perf-badge">
-          <span class="label">Total Students</span>
-          <span class="value" data-count-up>{{ performance_totals.total_students }}</span>
-        </div>
-        <div class="perf-badge">
-          <span class="label">Active Today</span>
-          <span class="value" data-count-up>{{ performance_totals.active_today }}</span>
-        </div>
-        <div class="perf-badge">
-          <span class="label">Total Strokes</span>
-          <span class="value" data-count-up>{{ performance_totals.total_strokes }}</span>
-        </div>
-        <div class="perf-badge">
-          <span class="label">Uploads</span>
-          <span class="value" data-count-up>{{ performance_totals.total_uploads }}</span>
-        </div>
-      </div>
-
-      <div id="teacherPerformanceGraph" class="graph-host" style="min-height:320px; margin-top:18px;">
-        Loading performance graph...
-      </div>
-
-      <div class="table-scroll">
+    <div id="teacherPerformanceGraph" class="graph-host">Loading performance graph...</div>
+    <div class="table-scroll">
       <table class="perf-table">
         <thead>
-          <tr>
-            <th>Student</th>
-            <th>Strokes</th>
-            <th>Uploads</th>
-            <th>Messages</th>
-            <th>Last Active</th>
-          </tr>
+          <tr><th>Student</th><th>Strokes</th><th>Uploads</th><th>Messages</th><th>Last active</th></tr>
         </thead>
         <tbody>
           {% for row in performance_rows %}
-          <tr>
-            <td>{{ row.username }}</td>
-            <td>{{ row.strokes }}</td>
-            <td>{{ row.uploads }}</td>
-            <td>{{ row.messages }}</td>
-            <td>{{ row.last_active|default:"—" }}</td>
-          </tr>
+            <tr>
+              <td>{{ row.username }}</td>
+              <td>{{ row.strokes }}</td>
+              <td>{{ row.uploads }}</td>
+              <td>{{ row.messages }}</td>
+              <td>{{ row.last_active|default:"—" }}</td>
+            </tr>
           {% empty %}
-          <tr><td colspan="5">No data yet.</td></tr>
+            <tr><td colspan="5">No student activity yet.</td></tr>
           {% endfor %}
         </tbody>
       </table>
-      </div>
     </div>
-
-  </div>
-</section>
+  </section>
+</div>
 
 {{ performance_chart|json_script:"teacher_perf_data" }}
-
-<!-- Scripts -->
 <script src="{% static 'dashboard/vendor/chart.umd.min.js' %}"></script>
 <script src="{% static 'dashboard/js/chart_theme.js' %}"></script>
 <script src="{% static 'dashboard/js/teacher_performance_chart.js' %}"></script>

@@ -12,12 +12,12 @@ change permissions, clear the board or toggle chat).
 """
 import logging
 import time
-from collections import defaultdict
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 from .models import Session, Participant
+from .presence import PRESENCE
 
 logger = logging.getLogger(__name__)
 
@@ -36,11 +36,6 @@ DRAW_EVENTS = {"stroke", "image", "anno"}
 TEACHER_EVENTS = {"perm", "meta"}
 OPEN_EVENTS = {"sync"}
 TEACHER_ONLY_ACTIONS = {"clear_all"}
-
-# Presence lives in process memory, matching the in-memory channel layer.
-# {session_id: {channel_name: {"uid": "5", "meta": {...}}}}
-PRESENCE = defaultdict(dict)
-
 
 class BoardConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):

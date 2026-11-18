@@ -92,3 +92,40 @@ class PageSmokeTests(AppTestCase):
         self.client.post(reverse("edit_profile"), {"email": "Fresh@cit.edu"})
         self.student.refresh_from_db()
         self.assertEqual(self.student.email, "fresh@cit.edu")
+
+
+class TeacherHomeTests(AppTestCase):
+    """The redesigned teacher dashboard shows real numbers, not the mockup's."""
+
+    def test_overview_counts_this_week_and_live_users(self):
+        from modules.session.presence import PRESENCE
+
+        self.join(self.student)
+        PRESENCE[str(self.session.id)]["chan-1"] = {"uid": str(self.student.id), "meta": {}}
+        self.addCleanup(PRESENCE.clear)
+        self.client.force_login(self.teacher)
+        resp = self.client.get(reverse("teacher_dashboard"))
+        self.assertEqual(resp.context["class_count"], 1)
+        self.assertEqual(resp.context["classes_this_week"], 1)
+        self.assertEqual(resp.context["students_this_week"], 1)
+        [session] = resp.context["open_sessions"]
+        self.assertEqual((session.online, session.student_count), (1, 1))
+        self.assertContains(resp, "Live &middot; 1 online", html=False)
+
+    def test_bulletin_lists_sent_announcements(self):
+        from modules.notifications.notify import notify
+
+        self.join(self.student)
+        notify(self.student, "Bring your rulers tomorrow", session=self.session)
+        self.client.force_login(self.teacher)
+        resp = self.client.get(reverse("teacher_dashboard"))
+        self.assertContains(resp, "Bring your rulers tomorrow")
+        self.assertContains(resp, "Algebra:")
+
+
+class InitialsTests(AppTestCase):
+    def test_initials_from_full_name_or_username(self):
+        self.teacher.first_name, self.teacher.last_name = "Maria", "Reyes"
+        self.assertEqual((self.teacher.display_name, self.teacher.initials), ("Maria Reyes", "MR"))
+        self.assertEqual(CustomUser(username="demo_teacher").initials, "DT")
+        self.assertEqual(CustomUser(username="x").initials, "X")

@@ -8,7 +8,6 @@
   <meta name="user-id" content="{{ request.user.id }}">
   <title>{% block title %}{{ brand_name }}{% endblock %}</title>
 
-
   <link rel="icon" type="image/svg+xml" href="{% static 'core/icons/logo.svg' %}">
 
   <link rel="stylesheet" href="{% static 'core/css/tokens.css' %}">
@@ -16,6 +15,7 @@
   <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
   <link rel="stylesheet" href="{% static 'notifications/css/notifications.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/components.css' %}">
   <link rel="stylesheet" href="{% static 'core/css/motion.css' %}">
 
   {% block extra_css %}{% endblock %}
@@ -95,22 +95,34 @@
       </a>
     </nav>
 
-    <!-- Footer: User Profile -->
     <div class="sidebar-footer">
-      <div class="user-profile">
-        <img src="{% static 'core/icons/user.svg' %}" class="user-avatar" alt="User">
-        <div class="user-info">
-          <span class="username">{{ user.username }}</span>
-          <form action="{% url 'auth:logout' %}" method="post" class="logout-form">
-            {% csrf_token %}
-            <button type="submit" class="logout-link">Logout</button>
-          </form>
-        </div>
-      </div>
+      <p class="sidebar-tagline">Make ideas buzz. &#10022;</p>
+      <p class="sidebar-tagline-sub">A little space for big classroom thinking.</p>
+      <form action="{% url 'auth:logout' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit" class="logout-link" aria-label="Log out">
+          <img src="{% static 'core/icons/logout.svg' %}" class="menu-icon" alt="">
+          <span class="logout-text">Log out</span>
+        </button>
+      </form>
     </div>
   </aside>
 
   <main class="main {% block main_class %}{% endblock %}">
+    <header class="topbar">
+      <p class="topbar-date">{% now "l, F j" %}</p>
+      <div class="topbar-right">
+        <a href="{% url 'notifications:notifications' %}" class="topbar-bell"
+           aria-label="Notifications{% if notif_unread_count %} ({{ notif_unread_count }} unread){% endif %}">
+          <span class="icon" style="--icon:url('{% static 'core/icons/bell.svg' %}')"></span>
+          {% if notif_unread_count %}<span class="topbar-bell-dot"></span>{% endif %}
+        </a>
+        <a href="{% url 'profile' %}" class="user-chip" title="My profile">
+          <span class="user-chip-name">{{ user.display_name }}</span>
+          <span class="avatar" aria-hidden="true">{{ user.initials }}</span>
+        </a>
+      </div>
+    </header>
     {% if user.is_demo %}
       <p class="demo-banner" role="note"><strong>Demo account.</strong> Other visitors share it and can see what you draw, write and upload. Everything resets about once a day. Password, email and account deletion are turned off. Please don't enter personal information.</p>
     {% endif %}

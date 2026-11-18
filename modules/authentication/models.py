@@ -1,4 +1,5 @@
-# modules/authentication/models.py
+import re
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -19,6 +20,17 @@ class CustomUser(AbstractUser):
     terms_accepted_at = models.DateTimeField(blank=True, null=True)
     # Shared account for the public demo (modules/demo); no password, can't be edited.
     is_demo = models.BooleanField(default=False)
+
+    @property
+    def display_name(self):
+        """Full name when set, otherwise the username."""
+        return self.get_full_name() or self.username
+
+    @property
+    def initials(self):
+        """Up to two letters for an avatar: "Maria Reyes" -> "MR", "demo_teacher" -> "DT"."""
+        words = re.findall(r"[^\W\d_]+", self.display_name)
+        return "".join(w[0] for w in words[:2]).upper() or self.username[:1].upper()
 
     @property
     def has_accepted_terms(self):

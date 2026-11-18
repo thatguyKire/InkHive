@@ -22,8 +22,8 @@ This document lists what the app does to stay on the right side of the law, what
 | Only strictly necessary cookies (`sessionid`, `csrftoken`); no analytics, ads, trackers or third-party scripts/fonts | CSP in `core/middleware/security_headers.py` | No cookie-consent banner is needed for strictly necessary cookies |
 | "Not an official service of CIT-U" notice | legal pages footer, Terms §1 | Avoids implying the university runs or endorses the app |
 | Third-party code licences recorded; unlicensed assets removed | [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) | The background texture (unclear licence) is now drawn in CSS; the Gmail logo on the Help page was replaced by our own envelope icon |
-| **New name: InkHive** (was COLLABoard) | `SITE_NAME` in `settings.py`; templates use `{{ brand_name }}`; `authentication/img/logo-wordmark.svg` | "COLLABOARD" is IBV Informatik AG's registered trademark (US Reg. No. 5505406) for collaboration software, and they sell an online whiteboard called *Collaboard* |
-| **Own icons and logo**: every icon and the logo are SVGs drawn for this project | `core/static/core/icons/*.svg`, `authentication/static/authentication/img/logo-wordmark.svg` | The old PNG icons had no recorded source, and some looked like stock icons that need attribution |
+| **New name: InkHive** (was COLLABoard) | `SITE_NAME` in `settings.py`; templates use `{{ brand_name }}` | "COLLABOARD" is IBV Informatik AG's registered trademark (US Reg. No. 5505406) for collaboration software, and they sell an online whiteboard called *Collaboard* |
+| **Own icons and logo**: every icon and the logo are SVGs drawn for this project | `core/static/core/icons/*.svg`, `dashboard/static/dashboard/img/canvas-doodles.svg` | The old PNG icons had no recorded source, and some looked like stock icons that need attribution |
 | Accurate backup promise + `manage.py backup` that deletes our own copies after 30 days | Privacy Policy §5, `core/management/commands/backup.py` | Render keeps its daily disk snapshots for a period it sets (at least 7 days), so we cannot promise a maximum for those |
 | Contact address for privacy, copyright and abuse reports | `CONTACT_EMAIL` setting (default `COLLABoardDevTeam@gmail.com`) | Shown on the legal and Help pages |
 | **Portfolio demo mode** (`DEMO_MODE=True`): shared demo accounts, sign-up off, "don't enter personal information" banner, demo section in the Terms and Privacy Policy, daily wipe of demo data | `modules/demo/` | A public demo then collects almost no personal data |
@@ -69,7 +69,7 @@ No sensitive personal information (health, religion, government IDs …) is requ
 3. Deploy. On their next visit every user sees "We've updated our terms" and must accept before continuing.
 4. If you change what is collected, exported or deleted, update `modules/settings_app/account.py` and §2 above so the policy stays true.
 
-**Changing the app's name:** set `SITE_NAME` in `settings.py` and edit the two `<text>` lines in `modules/authentication/static/authentication/img/logo-wordmark.svg`. Every page, including the Terms and Privacy Policy, picks up the new name. A name change alone does not need a new `TERMS_VERSION`.
+**Changing the app's name:** set `SITE_NAME` in `settings.py`. Every page, including the Terms and Privacy Policy, picks up the new name. A name change alone does not need a new `TERMS_VERSION`.
 
 ## 5. Handling reports
 
