@@ -19,21 +19,9 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: var(--surface);
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  height: 100%;
-  background-color: var(--surface);
-}
-
 /* Main Container */
 .settings-page {
-  min-height: calc(100vh - 80px);
+  flex: 1;
   background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);
   display: flex;
   flex-direction: column;
@@ -203,7 +191,7 @@ html, body {
 
 /* Password change page layout */
 .password-change-wrapper {
-  min-height: calc(100vh - 80px);
+  flex: 1;
   display: flex;
   padding: 40px 24px;
   background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);

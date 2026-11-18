@@ -22,9 +22,8 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: calc(100vh - 80px); /* lock to viewport minus topbar */
+  flex: 1;
   padding: 40px 20px;
-  overflow: hidden; /* prevent page-level scroll; contain inside */
   box-sizing: border-box;
   background: linear-gradient(180deg, rgba(255, 251, 230, 1) 0%, rgba(255, 251, 230, 1) 100%);
 }
@@ -39,9 +38,6 @@
   max-width: 1500px; /* Increased width */
   width: 95%;
   margin: 0 auto;
-  max-height: calc(100vh - 160px); /* leave space for wrapper padding */
-  overflow: auto; /* enable internal scrolling for long content */
-  -webkit-overflow-scrolling: touch;
   text-align: center; /* Center align content as per screenshot */
 }
 
@@ -186,4 +182,14 @@
   margin-bottom: 15px;
   padding: 5px 5px;
   margin-top: 5px;
+}
+
+/* ---------- Small screens ---------- */
+.help-section .contact-email { max-width: 100%; overflow-wrap: anywhere; }
+
+@media (max-width: 600px) {
+  .help-wrapper { padding: 16px 0; }
+  .help-section { width: 100%; padding: 24px 16px; }
+  .help-section .contact-section { margin-top: 40px; padding: 20px 14px; }
+  .help-section .contact-email { padding: 12px 16px; font-size: 1rem; }
 }

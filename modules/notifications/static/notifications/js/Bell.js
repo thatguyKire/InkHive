@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (Array.isArray(d.items)) {
           // Clear & rebuild without losing dedupe memory? Keep seenIds; avoid re-adding existing
           while (list.firstChild) list.removeChild(list.firstChild);
-          const current = [...seenIds];
+          const known = new Set(seenIds);
           seenIds.clear();
           // Reverse items so that when we prepend them one by one, the newest ends up at the top
           // (Assuming d.items comes as [Newest, ..., Oldest])
@@ -111,7 +111,12 @@ document.addEventListener("DOMContentLoaded", () => {
           // 2. Prepend Newer -> [Newer, Oldest]
           // 3. Prepend Newest -> [Newest, Newer, Oldest]
           d.items.slice().reverse().forEach(it => prependItem(it));
-          // (old seen IDs removed so list reflects latest set)
+          // Only items that arrived since the last poll get the entrance animation.
+          if (known.size) {
+            list.querySelectorAll(".notification-item").forEach(el => {
+              if (!known.has(el.dataset.id)) el.classList.add("is-new");
+            });
+          }
         }
       } catch (e) {
         console.warn("Notifications: bootstrapList failed", e);
@@ -129,6 +134,22 @@ document.addEventListener("DOMContentLoaded", () => {
       showUnread(0);
     }
 
+    // Next to the bell, kept inside the viewport (below it when there is no room beside it).
+    function placePanel() {
+      const gap = 10;
+      const rect = bellBtn.getBoundingClientRect();
+      const width = panel.offsetWidth;
+      let left = rect.right + gap;
+      let top = rect.top;
+      if (left + width > window.innerWidth - gap) {
+        left = Math.max(gap, Math.min(rect.left, window.innerWidth - width - gap));
+        top = rect.bottom + gap;
+      }
+      top = Math.max(gap, Math.min(top, window.innerHeight - panel.offsetHeight - gap));
+      panel.style.left = `${left}px`;
+      panel.style.top = `${top}px`;
+    }
+
     // Toggle dropdown (stopPropagation to prevent immediate close)
     bellBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -136,24 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bellBtn.setAttribute("aria-expanded", opened ? "true" : "false");
       
       if (opened) {
-        // Dynamic positioning
-        const rect = bellBtn.getBoundingClientRect();
-        panel.style.top = `${rect.top}px`;
-        panel.style.left = `${rect.right + 10}px`; // 10px gap to the right
-        
-        // Prevent going off-screen vertically
-        const panelRect = panel.getBoundingClientRect();
-        // We need to check height after it becomes visible. 
-        // Since we just toggled 'show', it should be visible now.
-        // However, we might need a slight delay or force layout if height is 0 immediately.
-        // But usually synchronous toggle is fine.
-        
-        // If bottom goes past viewport
-        if (rect.top + panel.offsetHeight > window.innerHeight) {
-             // Align bottom with viewport bottom - 10px
-             panel.style.top = `${Math.max(10, window.innerHeight - panel.offsetHeight - 10)}px`;
-        }
-
+        placePanel();
         markAllRead();
       }
     });

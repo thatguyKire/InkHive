@@ -2,17 +2,6 @@
    Manage Sessions (Teacher Side)
    =============================== */
 
-/* Override base.html .main styles to prevent conflicts */
-.main {
-  margin-top: 0 !important;
-  margin-left: var(--sidebar-expanded, 220px) !important;
-  padding: 20px !important;
-  height: 100vh !important;
-  overflow: hidden !important;
-  background: #FFFAE7 !important;
-  box-sizing: border-box;
-}
-
 .dashboard-wrapper {
   max-width: 1300px;
   width: 95%;
@@ -25,8 +14,6 @@
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   display: flex;
   flex-direction: column;
-  height: 100%; /* Fill available space in .main */
-  max-height: none;
 }
 
 /* ---------- Headings ---------- */
@@ -237,6 +224,7 @@
   }
   .session-actions {
     width: 100%;
+    flex-wrap: wrap;
     justify-content: flex-start;
   }
 }

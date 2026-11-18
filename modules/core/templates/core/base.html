@@ -11,7 +11,6 @@
 
   <link rel="icon" type="image/svg+xml" href="{% static 'core/icons/logo.svg' %}">
 
- 
   <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
   <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
   <link rel="stylesheet" href="{% static 'notifications/css/notifications.css' %}">
@@ -22,15 +21,21 @@
 
 <body>
 
-  <aside class="sidebar" id="sidebar">
+  <button type="button" class="mobile-nav-btn" id="mobileNavBtn"
+          aria-controls="sidebar" aria-expanded="false" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <aside class="sidebar" id="sidebar" aria-label="Main navigation">
     <!-- Header: Logo + Toggle -->
     <div class="sidebar-header">
       <div class="logo">
         <img src="{% static 'core/icons/logo.svg' %}" alt="" class="logo-image">
         <span class="logo-text">{{ brand_name }}</span>
       </div>
-      <button class="toggle-btn" id="toggleBtn">
-        <img src="{% static 'core/icons/left-arrow.svg' %}" class="toggle-icon" alt="Toggle Sidebar" />
+      <button type="button" class="toggle-btn" id="toggleBtn" aria-controls="sidebar" aria-expanded="true" aria-label="Collapse sidebar">
+        <img src="{% static 'core/icons/left-arrow.svg' %}" class="toggle-icon" alt="">
       </button>
     </div>
 
@@ -103,7 +108,7 @@
     </div>
   </aside>
 
-  <main class="main">
+  <main class="main {% block main_class %}{% endblock %}">
     {% if user.is_demo %}
       <p class="demo-banner" role="note"><strong>Demo account.</strong> Other visitors share it and can see what you draw, write and upload. Everything resets about once a day. Password, email and account deletion are turned off. Please don't enter personal information.</p>
     {% endif %}
@@ -120,7 +125,7 @@
     <a href="{% url 'notifications:notifications' %}" class="btn-secondary see-all-btn">See all</a>
   </div>
 
-  <script src="{% static 'core/js/dashboard-sidebar.js' %}" defer></script>
+  <script src="{% static 'core/js/sidebar.js' %}" defer></script>
   {% block extra_js %}{% endblock %}
 
   <script src="{% static 'notifications/js/Bell.js' %}" defer></script>
