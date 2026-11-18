@@ -7,10 +7,10 @@ urlpatterns = [
     path("export/", views.export_data, name="export_data"),
     path("delete-account/", views.delete_account, name="delete_account"),
 
-    # Password change
+    # Password change (Django's view keeps the user signed in afterwards)
     path(
         "password_change/",
-        views.CustomPasswordChangeView.as_view(
+        auth_views.PasswordChangeView.as_view(
             template_name="settings_app/password_change.html",
             success_url="/settings/password_change_done/",
         ),

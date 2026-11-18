@@ -18,7 +18,6 @@ def get_or_create_session_chat(request, session_id):
     session = get_object_or_404(Session, id=session_id)
     if not _authorized(request.user, session):
         return JsonResponse({"error": "Forbidden"}, status=403)
-    session.refresh_from_db()
     if not session.chat_enabled:
         return JsonResponse({"chat_enabled": False}, status=403)
     room, _ = ChatRoom.objects.get_or_create(session=session, defaults={"name": f"Session {session_id} Chat"})

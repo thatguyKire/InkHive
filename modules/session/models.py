@@ -30,7 +30,7 @@ class Session(models.Model):
     code = models.CharField(max_length=8, unique=True)
     scheduled_for = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    chat_enabled = models.BooleanField(default=True)  # <-- added
+    chat_enabled = models.BooleanField(default=True)
     snapshot_url = models.CharField(max_length=500, blank=True, null=True)  # /media/snapshots/...
     is_archived = models.BooleanField(default=False)
     is_saved = models.BooleanField(default=False)
@@ -69,7 +69,7 @@ class Participant(models.Model):
 class ChatMessage(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="messages")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField(default="", blank=True)  # rename from message
+    content = models.TextField(default="", blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

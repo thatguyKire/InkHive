@@ -1,34 +1,36 @@
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.utils import timezone
-from .models import Notification
-from django.views.decorators.http import require_GET, require_POST
-from django.contrib import messages
-from modules.session.models import Session, Participant
-from .notify import notify
-from modules.core import ratelimit
-
-ANNOUNCEMENTS_PER_MINUTE = 10
 from django.db.models import Min, Count
 from django.db.models.functions import TruncMinute
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+from django.views.decorators.http import require_GET, require_POST
+
+from modules.core import ratelimit
+from modules.session.access import can_manage
+from modules.session.models import Session, Participant
+from .models import Notification
+from .notify import notify
+
+ANNOUNCEMENTS_PER_MINUTE = 10
+
+
+def _as_json(n):
+    return {
+        "id": n.id,
+        "content": n.content,
+        "is_urgent": n.is_urgent,
+        "created_at": n.created_at.isoformat(),
+        "read_at": n.read_at.isoformat() if n.read_at else None,
+        "session_id": n.session_id,
+    }
+
 
 @require_GET
 @login_required
 def latest_json(request):
     qs = Notification.objects.filter(recipient=request.user).order_by("-created_at")[:20]
-    data = [
-        {
-            "id": n.id,
-            "content": n.content,
-            "is_urgent": n.is_urgent,
-            "created_at": n.created_at.isoformat(),
-            "read_at": n.read_at.isoformat() if n.read_at else None,
-            "session_id": n.session_id,  # added for announcement tagging
-        }
-        for n in qs
-    ]
-    return JsonResponse({"items": data})
+    return JsonResponse({"items": [_as_json(n) for n in qs]})
 
 @login_required
 def notifications_view(request):
@@ -58,7 +60,7 @@ def mark_read(request, pk: int):
 @require_POST
 def send_announcement(request, session_id):
     session = get_object_or_404(Session, id=session_id)
-    if request.user != session.created_by and not request.user.is_staff:
+    if not can_manage(request.user, session):
         return JsonResponse({"ok": False, "error": "permission_denied"}, status=403)
 
     text = request.POST.get("message", "").strip()
@@ -94,7 +96,7 @@ def send_announcement(request, session_id):
 @login_required
 def session_announcements_json(request, session_id):
     session = get_object_or_404(Session, id=session_id)
-    if request.user != session.created_by and not request.user.is_staff:
+    if not can_manage(request.user, session):
         return JsonResponse({"items": []})
     # One row per announcement: same text/urgency sent within the same minute.
     agg = (
@@ -137,15 +139,4 @@ def session_student_announcements_json(request, session_id):
     if not is_allowed:
         return JsonResponse({"items": []})
     qs = Notification.objects.filter(session=session, recipient=request.user).order_by("-created_at")[:50]
-    data = [
-        {
-            "id": n.id,
-            "content": n.content,
-            "is_urgent": n.is_urgent,
-            "created_at": n.created_at.isoformat(),
-            "session_id": n.session_id,
-            "read_at": n.read_at.isoformat() if n.read_at else None,
-        }
-        for n in qs
-    ]
-    return JsonResponse({"items": data})
+    return JsonResponse({"items": [_as_json(n) for n in qs]})

@@ -112,13 +112,13 @@ INSTALLED_APPS = [
 
     # Your modular apps
     'modules.authentication',
-    'modules.profiles',         # ✅ renamed “profile” → “profiles” to avoid conflicts
+    'modules.profiles',
     'modules.dashboard',
     'modules.settings_app',
     'modules.notifications',
     'modules.help_app',
     'modules.session',
-    'modules.core',             # ✅ where base templates/icons live
+    'modules.core',
     'modules.chat',
     'modules.legal',
     'modules.demo',
@@ -135,7 +135,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'modules.core.middleware.no_cache.NoCacheForAuthMiddleware',  # renamed to match actual class
+    'modules.core.middleware.no_cache.NoCacheForAuthMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'modules.legal.middleware.TermsAcceptanceMiddleware',
     'modules.demo.middleware.DemoModeMiddleware',
@@ -161,8 +161,8 @@ CHANNEL_LAYERS = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # ✅ Include a global "modules/core/templates" directory for shared templates
-        'DIRS': [BASE_DIR / 'modules' / 'core' / 'templates'],
+        # Every app's templates/ folder (shared layout: modules/core/templates)
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -170,7 +170,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'modules.notifications.notifcounts.notif_counts',  # was wrong module path
+                'modules.notifications.notifcounts.notif_counts',
                 'modules.core.context_processors.site',
             ],
         },
@@ -231,7 +231,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # INTERNATIONALIZATION
 # -------------------------------------------------------------
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Manila'  # ✅ optional — better for PH timezone
+TIME_ZONE = 'Asia/Manila'
 USE_I18N = True
 USE_TZ = True
 
@@ -254,14 +254,13 @@ MEDIA_ROOT = Path(os.getenv("MEDIA_ROOT", str(BASE_DIR / 'media')))
 BACKUP_DIR = Path(os.getenv("BACKUP_DIR", str(BASE_DIR / 'backups')))
 BACKUP_RETENTION_DAYS = 30
 
-# ✅ WhiteNoise for Render (static caching)
+# WhiteNoise serves static files; user uploads go to MEDIA_ROOT
 STORAGES = {
     # Handles Django static files
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 
-    # ✅ Handles user uploads (images, PDFs, etc.)
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
         "OPTIONS": {

@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
-from modules.authentication.models import CustomUser  # ✅ updated import path
+from modules.authentication.models import CustomUser
 
 class CustomSignupForm(UserCreationForm):
     # Make email explicit and autofill-friendly
@@ -71,12 +71,6 @@ class CustomSignupForm(UserCreationForm):
             cleaned["student_id"] = None
             self.instance.student_id = None
 
-        # Ensure any password validator errors are not attached to the
-        # `password2` field (we surface them as non-field errors).
-        if hasattr(self, "_errors") and self._errors is not None:
-            if "password2" in self._errors:
-                del self._errors["password2"]
-
         return cleaned
 
     def clean_email(self):
@@ -93,63 +87,30 @@ class CustomSignupForm(UserCreationForm):
             raise forms.ValidationError("A user with that email address already exists.")
         return email
 
-    # Use Django's built-in password validation (AUTH_PASSWORD_VALIDATORS)
-    # by relying on UserCreationForm's built-in validation. Do not override
-    # clean_password2 here so validators configured in settings.py are applied.
-
     def clean_password2(self):
-        """Validate password and surface validator messages as form-level errors.
+        """Show the mismatch and password-validator messages as form-level errors.
 
-        Django's UserCreationForm attaches validator errors to `password2` by
-        default which can render as the field name `Password2` in some
-        templates. To avoid exposing `password1`/`password2` internals in the
-        UI, capture validator errors and add them as non-field (form-level)
-        errors instead.
+        Django attaches them to ``password2``, which the template would label
+        "Password2"; full_clean() then drops that field's copies.
         """
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
-        # Preserve the standard password match check but show it as a
-        # non-field/form-level error so the UI doesn't expose `password2`.
         if password1 and password2 and password1 != password2:
             self.add_error(None, "The two password fields didn't match.")
-            # Ensure no field-level password2 errors remain
-            if hasattr(self, "_errors") and self._errors is not None:
-                if "password2" in self._errors:
-                    del self._errors["password2"]
             return password2
 
-        # Run Django's password validators and attach any messages to the
-        # form's non-field errors so the template shows them without a
-        # `Password2:` label prefix.
         if password1:
             try:
                 validate_password(password1, self.instance)
             except DjangoValidationError as e:
                 for msg in e.messages:
                     self.add_error(None, msg)
-
-        # Remove any validator messages that may have been attached to the
-        # `password2` field by other code paths to avoid duplicate messages
-        # (we already surfaced them as non-field errors above).
-        if hasattr(self, "_errors") and self._errors is not None:
-            if "password2" in self._errors:
-                del self._errors["password2"]
-
         return password2
 
     def full_clean(self):
-        """Run full validation then remove any `password2` field errors.
-
-        Overriding `full_clean` is the most reliable place to clear out
-        `password2` errors because it runs after all field and form
-        validators have executed. This prevents duplicate/inlined
-        `password2` messages from appearing in the template while keeping
-        the single, form-level validator messages we added earlier.
-        """
+        # Runs after every field/form validator, so this catches all copies.
         super().full_clean()
-        if hasattr(self, "_errors") and self._errors is not None:
-            if "password2" in self._errors:
-                del self._errors["password2"]
+        self._errors.pop("password2", None)
 
     def save(self, commit=True):
         user = super().save(commit=False)

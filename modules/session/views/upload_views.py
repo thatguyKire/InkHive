@@ -3,6 +3,7 @@ import logging
 import os
 import time as systime
 
+import qrcode
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
@@ -16,6 +17,7 @@ from django.utils.text import get_valid_filename
 
 from modules.core import ratelimit
 from modules.core.decorators import safe_view
+from ..access import can_manage
 from ..file_checks import content_matches
 from ..models import Session, Participant, UploadedFile, generate_session_code
 from ..storage import media_path
@@ -37,10 +39,6 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
 UPLOADS_PER_10_MIN = 30
 
 
-def _is_owner_or_staff(request, session):
-    return request.user.is_staff or session.created_by == request.user
-
-
 # ==========================
 # 📂 FILE UPLOAD HANDLER
 # ==========================
@@ -58,7 +56,7 @@ def upload_attachment(request, session_id):
     session = get_object_or_404(Session, id=session_id)
 
     participant = None
-    if not _is_owner_or_staff(request, session):
+    if not can_manage(request.user, session):
         participant = session.participants.filter(user=request.user).first()
         if not participant or not participant.can_draw:
             return JsonResponse({"ok": False, "error": "permission_denied"}, status=403)
@@ -121,15 +119,9 @@ def upload_attachment(request, session_id):
 def session_qr(request, session_id):
     """PNG QR code that opens the join page with the session code pre-filled."""
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request, session):
+    if not can_manage(request.user, session):
         return HttpResponse(status=403)
     join_url = request.build_absolute_uri(f"{reverse('join_session')}?code={session.code}")
-
-    try:
-        import qrcode
-    except ImportError:
-        return HttpResponse("qrcode library not installed. Run: pip install qrcode", status=501)
-
     img = qrcode.make(join_url)
     buf = io.BytesIO()
     img.save(buf, format="PNG")
@@ -145,7 +137,7 @@ def session_qr(request, session_id):
 def export_session_pdf(request, session_id):
     """Convert the latest saved snapshot to a one-page PDF."""
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request, session):
+    if not can_manage(request.user, session):
         return HttpResponse(status=403)
     snapshot_path = media_path(session.snapshot_url)
     if not snapshot_path or not default_storage.exists(snapshot_path):
@@ -180,7 +172,7 @@ def export_session_pdf(request, session_id):
 def duplicate_session(request, session_id):
     """Copy a session's title/settings/snapshot into a new session with a fresh code."""
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request, session):
+    if not can_manage(request.user, session):
         messages.error(request, "You do not have permission to duplicate this session.")
         return redirect(reverse("session_list"))
     if request.method != "POST":

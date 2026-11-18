@@ -15,11 +15,6 @@ def landing(request):
     return redirect("auth:login")
 
 
-def home(request):
-    # Legacy path → also go to login
-    return redirect("auth:login")
-
-
 @never_cache
 def healthz(request):
     """Liveness check for the hosting platform (exempt from the HTTPS redirect)."""

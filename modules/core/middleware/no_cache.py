@@ -7,7 +7,3 @@ class NoCacheForAuthMiddleware(MiddlewareMixin):
             response["Pragma"] = "no-cache"
             response["Expires"] = "0"
         return response
-
-# Backward compatibility (old settings entry)
-class NoCacheAuthenticatedMiddleware(NoCacheForAuthMiddleware):
-    pass

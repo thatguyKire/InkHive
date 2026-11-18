@@ -13,6 +13,11 @@ _SNAPSHOT_RE = re.compile(rf"^snapshots/({_UUID})_\d+(?:_[A-Za-z0-9]+)?\.png$")
 _UPLOAD_RE = re.compile(rf"^session_files/({_UUID})/[^/]+$")
 
 
+def can_manage(user, session):
+    """Owner or staff: may change, export, delete or announce to the session."""
+    return user == session.created_by or user.is_staff
+
+
 def accessible_sessions(user):
     """Sessions the user owns or has joined (staff: all)."""
     if user.is_staff:

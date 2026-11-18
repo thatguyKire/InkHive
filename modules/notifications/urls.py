@@ -11,5 +11,5 @@ urlpatterns = [
     path("latest/", views.latest_json, name="latest_json"),
     path("announce/<uuid:session_id>/", views.send_announcement, name="send_announcement"),
     path("session/<uuid:session_id>/list/", views.session_announcements_json, name="session_announcements_json"),
-    path("session/<uuid:session_id>/mine/", views.session_student_announcements_json, name="session_student_announcements_json"),  # NEW
+    path("session/<uuid:session_id>/mine/", views.session_student_announcements_json, name="session_student_announcements_json"),
 ]

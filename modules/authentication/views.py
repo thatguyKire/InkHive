@@ -2,7 +2,7 @@ import logging
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView
 from django.db import IntegrityError
 from django.urls import reverse_lazy
 
@@ -63,8 +63,3 @@ class CustomLoginView(LoginView):
             return response
         messages.error(self.request, "⚠️ Invalid credentials. Please try again.")
         return super().form_invalid(form)
-
-
-class CustomLogoutView(LogoutView):
-    """Logs out the user and redirects to landing page."""
-    next_page = reverse_lazy("landing")

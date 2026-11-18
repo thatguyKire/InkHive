@@ -15,6 +15,7 @@ from django.views.decorators.http import require_POST
 
 from modules.core import ratelimit
 from modules.core.decorators import safe_view
+from ..access import can_manage
 from ..file_checks import content_matches
 from ..models import Session, Participant
 from ..storage import session_file_paths, delete_unreferenced
@@ -26,17 +27,13 @@ MAX_SNAPSHOT_BYTES = 15 * 1024 * 1024
 SNAPSHOTS_PER_10_MIN = 30
 
 
-def _is_owner_or_staff(user, session):
-    return user == session.created_by or user.is_staff
-
-
 @login_required
 @safe_view
 def delete_session(request, session_id):
     """Delete a session (POST only). Only the owner or staff may delete."""
     session = get_object_or_404(Session, id=session_id)
 
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         messages.error(request, "You do not have permission to delete this session.")
         return redirect(reverse("session_list"))
 
@@ -89,7 +86,7 @@ def save_snapshot(request, session_id):
         return HttpResponseBadRequest("POST required")
 
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         return JsonResponse({"ok": False, "error": "permission"}, status=403)
 
     img_file = request.FILES.get("image")
@@ -125,7 +122,7 @@ def save_snapshot(request, session_id):
 def export_session(request, session_id):
     """Send the latest saved snapshot (PNG) to the owner; 404 if never saved."""
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         return HttpResponse(status=403)
     if not session.snapshot_url:
         return HttpResponse("No snapshot available", status=404)
@@ -137,7 +134,7 @@ def export_session(request, session_id):
 @safe_view
 def toggle_chat(request, session_id):
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
     session.chat_enabled = not session.chat_enabled
     session.save(update_fields=["chat_enabled"])
@@ -157,7 +154,7 @@ def presence_sync(request, session_id):
     - Participants are never deleted; absent users just lose can_draw.
     """
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
 
     try:
@@ -198,7 +195,7 @@ def presence_sync(request, session_id):
 def attendance_json(request, session_id):
     """Attendance data as JSON for live updates on the attendance page."""
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         return JsonResponse({"ok": False, "error": "forbidden"}, status=403)
     parts = Participant.objects.filter(session=session).select_related("user").order_by("joined_at")
     data = [{
@@ -220,7 +217,7 @@ def attendance_view(request, session_id):
     Supports CSV export via ``?export=csv``.
     """
     session = get_object_or_404(Session, id=session_id)
-    if not _is_owner_or_staff(request.user, session):
+    if not can_manage(request.user, session):
         return HttpResponse(status=403)
 
     participants = Participant.objects.filter(session=session).select_related("user").order_by("joined_at")

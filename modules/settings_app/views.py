@@ -5,8 +5,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import views as auth_views
-from django.contrib.auth import logout, update_session_auth_hash
+from django.contrib.auth import logout
 from django.http import HttpResponse
 from django.utils.text import slugify
 
@@ -17,17 +16,6 @@ logger = logging.getLogger(__name__)
 
 DELETE_ATTEMPTS_PER_15_MIN = 5
 
-
-class CustomPasswordChangeView(auth_views.PasswordChangeView):
-    """Ensure the session auth hash is updated so users remain logged in
-    after changing their password. This prevents unexpected logout when
-    redirecting back to profile."""
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        # Update the session with the new auth hash
-        update_session_auth_hash(self.request, form.user)
-        return response
 
 @login_required
 def settings_view(request):
