@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from modules.session.access import can_manage
 from modules.session.models import Session, Participant
 from modules.core import ratelimit
 from .models import ChatRoom, Message
@@ -10,7 +11,8 @@ import json
 MESSAGES_PER_MINUTE = 30
 
 def _authorized(user, session: Session):
-    return user == session.created_by or Participant.objects.filter(session=session, user=user).exists()
+    # Same people who can open the board: owner, staff, or a participant.
+    return can_manage(user, session) or Participant.objects.filter(session=session, user=user).exists()
 
 @login_required
 @require_http_methods(["GET"])

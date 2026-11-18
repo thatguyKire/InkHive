@@ -193,6 +193,8 @@ img { max-width: 100%; height: auto; display: inline-block; }
   margin-left: auto;
 }
 
+.notif-badge-sidebar.hidden { display: none; }
+
 .sidebar.collapsed .notif-badge-sidebar {
   position: absolute;
   top: 4px;

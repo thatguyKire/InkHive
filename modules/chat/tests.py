@@ -37,3 +37,8 @@ class ChatTests(AppTestCase):
     def test_message_length_limit(self):
         self.client.force_login(self.teacher)
         self.assertEqual(self.send(self.room_id(), "x" * 1001).status_code, 400)
+
+    def test_staff_can_chat_on_boards_they_can_open(self):
+        admin = self.make_user("admin1", "admin", is_staff=True)
+        self.client.force_login(admin)
+        self.assertEqual(self.send(self.room_id(), "hello from admin").status_code, 200)

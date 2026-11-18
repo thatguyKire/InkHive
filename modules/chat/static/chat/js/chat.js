@@ -16,8 +16,7 @@
 
   if (!bubble || !win) return;
 
-  const sessionId = window.CURRENT_SESSION_ID;
-  if (!sessionId) console.warn("[chat] No CURRENT_SESSION_ID");
+  const sessionId = window.CURRENT_SESSION_ID;  // empty outside a whiteboard
 
   let enabled = typeof window.CHAT_ENABLED === "boolean" ? window.CHAT_ENABLED : true;
   let roomId = null;

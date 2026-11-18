@@ -33,11 +33,11 @@
     <a href="{% url 'profile' %}" class="setting-card">
       <img src="{% static 'core/icons/profile-settings.svg' %}" alt="Profile Management">
       <h2>Profile Management</h2>
-      <p>Update your name, email, and other details</p>
+      <p>View your account and update your email</p>
     </a>
 
     {% if not user.is_demo %}
-    <a href="{% url 'edit_profile' %}" class="setting-card">
+    <a href="{% url 'password_change' %}" class="setting-card">
       <img src="{% static 'core/icons/lock.svg' %}" alt="Account Settings">
       <h2>Account Settings</h2>
       <p>Change password and security preferences</p>
