@@ -1,7 +1,3 @@
-/* CSS Variables */
-/* Floating panel (handled by dashboard.css now) */
-/* .notifications-panel { ... } removed to prevent conflicts */
-
 .notif-list {
   max-height: 180px;
   overflow-y: auto;
@@ -24,9 +20,6 @@
   color: var(--muted);
   margin-top: 4px;
 }
-
-/* Buttons */
-/* .btn-secondary removed to prevent conflicts with dashboard styles */
 
 /* Full notifications page */
 .notifications-container {
@@ -119,10 +112,6 @@
 /* Bell & panel fixes */
 #notifWrap { position: relative; z-index: 2000; }
 #notifBell { cursor: pointer; position: relative; width: 100%; }
-#notifBell .bell-img { width: 28px; height: 28px; display: block; pointer-events: none; }
-.notif-dot { position: absolute; top: 4px; right: 6px; width: 10px; height: 10px; background:var(--error); border-radius:50%; box-shadow:0 0 0 2px var(--card-bg); }
-.notif-dot.hidden { display:none; }
-/* .notifications-panel { ... } removed duplicate */
 
 /* Mobile */
 @media (max-width: 640px) {

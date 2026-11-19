@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const hw = navigator.hardwareConcurrency || 4;
     const mem = navigator.deviceMemory || 4;
-    // If user prefers reduced motion or device is low-end, add a class
     if (prefersReduced || hw < 4 || mem < 2) {
       document.body.classList.add('reduce-motion');
     }
@@ -35,10 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Run once on load
   toggleStudentId();
 
-  // Re-run every time the role changes
   roleSelect?.addEventListener('change', toggleStudentId);
 
   // If the server returned validation errors, move focus to the first invalid field

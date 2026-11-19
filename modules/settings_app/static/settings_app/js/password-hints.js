@@ -21,19 +21,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function checkPassword() {
     const v = pwInput.value || '';
-    // Uppercase
     if (/[A-Z]/.test(v)) {
       hintUpper.classList.add('ok');
     } else {
       hintUpper.classList.remove('ok');
     }
-    // Digit
     if (/\d/.test(v)) {
       hintDigit.classList.add('ok');
     } else {
       hintDigit.classList.remove('ok');
     }
-    // Special char
     if (/[^A-Za-z0-9]/.test(v)) {
       hintSpecial.classList.add('ok');
     } else {
@@ -52,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   pwInput.addEventListener('input', checkPassword);
-  // run once to initialize state
   checkPassword();
 
   // Prevent form submit if client-side requirements are not met

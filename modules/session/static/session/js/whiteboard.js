@@ -3,27 +3,25 @@
   const canvas = document.getElementById("whiteboardCanvas");
   if (!canvas) return;
 
-  // Dynamic fit-to-viewport (keeps toolbar + participants visible)
+  // The canvas fills its host (.canvas-stack), which the page layout sizes.
+  // 1 canvas pixel = 1 CSS pixel, so pointer coordinates map directly.
+  const host = canvas.parentElement;
   function resizeMainCanvas() {
-    // Unified simple sizing: use parent width & fixed min height without DPR scaling.
-    const parent = canvas.parentElement;
-    const w = parent ? parent.getBoundingClientRect().width : 1200;
-    const h = Math.max(500, window.innerHeight - 220); // leave room for toolbar/title
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    canvas.width = w;    // 1:1 pixel mapping for accurate pointer alignment
+    const rect = host.getBoundingClientRect();
+    const w = Math.max(1, Math.floor(rect.width));
+    const h = Math.max(1, Math.floor(rect.height));
+    if (canvas.width === w && canvas.height === h) return false;
+    canvas.width = w;
     canvas.height = h;
+    return true;
   }
-  window.addEventListener("resize", resizeMainCanvas);
   resizeMainCanvas();
 
-  // If you already had drawing logic below, keep it here.
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   let canDraw = typeof window.CAN_DRAW === "boolean"
     ? window.CAN_DRAW
     : JSON.parse(document.getElementById("can_draw_data")?.textContent || "false");
 
-  // UI Elements
   const colorPicker = document.getElementById("colorPicker");
   const sizePicker = document.getElementById("sizePicker");
   const penBtn = document.getElementById("penBtn");
@@ -75,14 +73,12 @@
     else alert(msg);
   }
 
-  // State
   let drawing = false;
   let lastX = 0, lastY = 0;
   let currentColor = "#000";
   let lineWidth = 3;
   let erasing = false;
 
-  // Images
   let images = [];
   let activeImage = null;
   let dragging = false;
@@ -95,7 +91,7 @@
   let strokeCanvas = document.createElement("canvas");
   let strokeCtx = strokeCanvas.getContext("2d", { willReadFrequently: true });
 
-  // Remote strokes handling (moved from bottom)
+  // Each user's strokes live on their own offscreen layer, keyed by user id.
   const remoteStrokeLayers = {}; // sid -> offscreen canvas context
 
   // Performance: throttle redraws with rAF
@@ -104,12 +100,7 @@
     if (redrawPending) return;
     redrawPending = true;
     requestAnimationFrame(() => {
-      // Always include remote layers so other users' strokes don't disappear
-      if (typeof redrawWithRemotes === "function") {
-        redrawWithRemotes();
-      } else {
-        redrawAll();
-      }
+      redrawAll();
       redrawPending = false;
     });
   }
@@ -287,37 +278,40 @@
     scheduleRedraw();
   }
   resizeCanvas();
-  window.addEventListener("resize", () => { resizeMainCanvas(); resizeCanvas(); });
+  // Follows the host, so the board also grows when the sidebar collapses.
+  new ResizeObserver(() => { if (resizeMainCanvas()) resizeCanvas(); }).observe(host);
 
   // ========================================
   // REDRAW EVERYTHING
   // ========================================
-  function redrawAll() {
+  // The board's content, bottom to top: saved snapshot, images, every user's strokes.
+  function drawContent(target) {
     const width = canvas.width;
     const height = canvas.height;
-
-    // Clear main canvas
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, width, height);
-
-    // Draw base layer (snapshot/background) first
     try {
-      ctx.drawImage(strokeCanvas, 0, 0, width, height);
-    } catch (e) { /* noop */ }
+      target.drawImage(strokeCanvas, 0, 0, width, height);
+    } catch (e) { /* not loaded yet */ }
 
-    // Draw images (middle layer)
     images.forEach(item => {
-      ctx.save();
-      ctx.translate(item.x + item.width / 2, item.y + item.height / 2);
-      ctx.rotate((item.rotation || 0) * Math.PI / 180);
-      ctx.drawImage(item.img, -item.width / 2, -item.height / 2, item.width, item.height);
-      ctx.restore();
+      target.save();
+      target.translate(item.x + item.width / 2, item.y + item.height / 2);
+      target.rotate((item.rotation || 0) * Math.PI / 180);
+      target.drawImage(item.img, -item.width / 2, -item.height / 2, item.width, item.height);
+      target.restore();
     });
 
-    // Strokes are composited from per-user layers in redrawWithRemotes()
+    Object.values(remoteStrokeLayers).forEach(obj => {
+      target.drawImage(obj.canvas, 0, 0, width, height);
+    });
+  }
 
-    // Draw selection handles
+  // The visible canvas is transparent: the paper and its grid are the CSS
+  // background of .canvas-stack, so they never end up in saved images.
+  function redrawAll() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawContent(ctx);
+
+    // Selection handles (screen only)
     if (activeImage && canDraw) {
       ctx.strokeStyle = "#3498db";
       ctx.lineWidth = 3;
@@ -618,12 +612,12 @@
     if (!activeImage || !canDraw || isTypingTarget(e.target)) return;
     if (e.key === "Delete" || e.key === "Backspace") {
       e.preventDefault();
-      const deletedId = activeImage.id;                 // fix: keep id before nulling
+      const deletedId = activeImage.id;
       images = images.filter(i => i !== activeImage);
       activeImage = null;
       scheduleRedraw();
       snapshotState("delete-image");
-      broadcastDelete(deletedId);                       // fix: broadcast correct id
+      broadcastDelete(deletedId);
     }
   });
 
@@ -680,7 +674,7 @@
     try {
       Object.values(remoteStrokeLayers).forEach(obj => obj.ctx.clearRect(0, 0, obj.canvas.width, obj.canvas.height));
     } catch {}
-    // Also clear legacy base layer for safety
+    // and the saved-board base layer
     strokeCtx.clearRect(0, 0, canvas.width, canvas.height);
 
     images = [];
@@ -700,11 +694,27 @@
   // ========================================
   // EXPORT
   // ========================================
+  // A copy of the board without grid or selection handles. Downloads get white
+  // paper; saved snapshots stay transparent because they are reloaded as the
+  // board's base layer, on top of the grid.
+  function boardImage({ paper }) {
+    const out = document.createElement("canvas");
+    out.width = canvas.width;
+    out.height = canvas.height;
+    const outCtx = out.getContext("2d");
+    if (paper) {
+      outCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--board-paper").trim() || "#fff";
+      outCtx.fillRect(0, 0, out.width, out.height);
+    }
+    drawContent(outCtx);
+    return out;
+  }
+
   exportBtn?.addEventListener("click", () => {
     try {
       const link = document.createElement("a");
       link.download = "whiteboard.png";
-      link.href = canvas.toDataURL("image/png");
+      link.href = boardImage({ paper: true }).toDataURL("image/png");
       link.click();
       showToast("Exported as whiteboard.png", "success");
     } catch (e) {
@@ -725,7 +735,7 @@
     const prev = saveBtn.textContent;
     saveBtn.textContent = "Saving...";
 
-    canvas.toBlob(blob => {
+    boardImage({ paper: false }).toBlob(blob => {
       if (!blob) {
         showToast("Failed to generate image.", "error");
         saveBtn.textContent = prev;
@@ -877,8 +887,6 @@
     recordSnapshot: (reason = "external") => { try { snapshotState(reason); } catch(e){ console.warn('recordSnapshot failed', e); } }
   };
 
-  // Undo/Redo structures exist here (history, redoStack, snapshotState, undo, redo)
-  // Add a small helper to reflect availability in the buttons
   function updateUndoRedoButtons() {
     if (undoBtn) undoBtn.disabled = history.length <= 1;
     if (redoBtn) redoBtn.disabled = redoStack.length === 0;
@@ -913,7 +921,6 @@
   undoBtn?.addEventListener("click", (e) => { e.preventDefault(); undo(); });
   redoBtn?.addEventListener("click", (e) => { e.preventDefault(); redo(); });
 
-  // After initial setup
   updateUndoRedoButtons();
 
   // Realtime over the app's own WebSocket (core/js/realtime.js → session/consumers.py)
@@ -1041,9 +1048,6 @@
       });
   });
 
-  // Remote strokes handling
-  // const remoteStrokeLayers = {}; // moved to top
-
   function getRemoteCtx(sid) {
     if (!remoteStrokeLayers[sid]) {
       const c = document.createElement("canvas");
@@ -1053,22 +1057,6 @@
       remoteStrokeLayers[sid] = { canvas: c, ctx: rc };
     }
     return remoteStrokeLayers[sid].ctx;
-  }
-
-  function redrawWithRemotes() {
-    redrawAll();
-    // Base layer is now drawn inside redrawAll() to ensure correct z-order (Background -> Images -> Strokes)
-
-    // Then draw per-user stroke layers on top
-    Object.values(remoteStrokeLayers).forEach(obj => {
-      ctx.drawImage(
-        obj.canvas,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-    });
   }
 
   // Broadcast a full sync of the local stroke layer (for undo/redo/eraser)
@@ -1124,7 +1112,7 @@
         img.onload = () => {
           rc.clearRect(0, 0, rc.canvas.width, rc.canvas.height);
           rc.drawImage(img, 0, 0, rc.canvas.width, rc.canvas.height);
-          redrawWithRemotes();
+          redrawAll();
         };
         img.src = payload.img;
         return;
@@ -1143,7 +1131,7 @@
         rc.clearRect(0, 0, rc.canvas.width, rc.canvas.height);
         break;
     }
-    redrawWithRemotes();
+    redrawAll();
   });
 
   channel?.on("broadcast", { event: "image" }, ({ payload }) => {

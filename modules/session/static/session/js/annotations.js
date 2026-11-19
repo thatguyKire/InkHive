@@ -14,7 +14,6 @@
   }
   const ctx = overlay.getContext("2d");
 
-  // UI
   const highlightBtn = document.getElementById("highlightBtn");
   const pinBtn = document.getElementById("pinBtn");
   const clearBtn = document.getElementById("clearBtn");
@@ -22,14 +21,12 @@
 
   // Permissions: allow annotations even in view-only mode
   function canAnnotate() {
-    // If a stricter rule is needed later, toggle via a global flag.
     return true;
   }
 
   // Realtime channel (created in whiteboard.js)
   const channel = window.WhiteboardChannel;
 
-  // Data
   let tool = "none";            // "highlight" | "pin" | "none"
   let dragStart = null;
   const highlights = [];        // {id,x,y,w,h,color}

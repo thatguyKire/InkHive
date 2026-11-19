@@ -30,7 +30,6 @@
   <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
   <aside class="sidebar" id="sidebar" aria-label="Main navigation">
-    <!-- Header: Logo + Toggle -->
     <div class="sidebar-header">
       <div class="logo">
         <img src="{% static 'core/icons/logo.svg' %}" alt="" class="logo-image">
@@ -42,7 +41,6 @@
     </div>
 
     <nav class="menu">
-      <!-- Notifications (as menu item) -->
       <div class="menu-item-wrap" id="notifWrap">
         <button id="notifBell" class="menu-btn notif-btn-sidebar" aria-haspopup="true" aria-expanded="false">
           <img src="{% static 'core/icons/bell.svg' %}" alt="Notifications" class="menu-icon">
@@ -135,7 +133,6 @@
 
   {% include 'chat/chat_box.html' %}
 
-  <!-- Notifications Panel (Moved outside sidebar to be a true floating widget) -->
   <div class="notifications-panel" id="notificationsPanel" role="region" aria-label="Notifications dropdown">
     <h3>Notifications</h3>
     <div class="notif-list" role="list"></div>

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     if (qrImage) {
-      qrImage.src = ""; // reset
+      qrImage.src = "";
       qrImage.alt = "Loading QR code...";
       qrImage.src = url + (url.indexOf('?') === -1 ? '?' : '&') + "_=" + Date.now();
       qrImage.onload = () => { qrImage.alt = "QR code"; };

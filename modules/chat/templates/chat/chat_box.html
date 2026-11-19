@@ -1,12 +1,10 @@
 {% load static %}
 
-<!-- 💬 Floating Chat Bubble (like Messenger) -->
 <div id="chatBubble" class="chat-bubble" draggable="false" role="button" aria-haspopup="dialog" aria-controls="chatWindow" aria-label="Open chat" tabindex="0">
   <img src="{% static 'core/icons/logo.svg' %}" alt="Chat" class="bubble-icon">
   <span class="chat-badge" id="unreadBadge" role="status" aria-live="polite">0</span>
 </div>
 
-<!-- 💬 Chat Window -->
 <div id="chatWindow" class="chat-window hidden" role="dialog" aria-modal="false" aria-labelledby="chatWindowTitle">
   <div class="chat-window-header">
     <div class="chat-header-left">
@@ -24,7 +22,6 @@
     <div class="chat-empty">No messages yet. Start the conversation!</div>
   </div>
 
-  <!-- POPUP WHEN DISABLED -->
   <div id="chatDisabledPopup"
        class="chat-disabled-popup hidden"
        role="alertdialog"
@@ -37,7 +34,7 @@
     <button id="chatDisabledCloseBtn" type="button" class="chat-disabled-close" aria-label="Close notice">OK</button>
   </div>
 
-  <div id="chatDisabledNotice" class="hidden" aria-hidden="true"></div> <!-- legacy hook -->
+  <div id="chatDisabledNotice" class="hidden" aria-hidden="true"></div>
 
   <div class="chat-input-container">
     <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off" maxlength="500" aria-label="Type a message">

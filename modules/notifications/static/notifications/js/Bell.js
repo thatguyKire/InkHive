@@ -108,15 +108,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!r.ok) return;
         const d = await r.json();
         if (Array.isArray(d.items)) {
-          // Clear & rebuild without losing dedupe memory? Keep seenIds; avoid re-adding existing
           while (list.firstChild) list.removeChild(list.firstChild);
           const known = new Set(seenIds);
           seenIds.clear();
-          // Reverse items so that when we prepend them one by one, the newest ends up at the top
-          // (Assuming d.items comes as [Newest, ..., Oldest])
-          // 1. Prepend Oldest -> [Oldest]
-          // 2. Prepend Newer -> [Newer, Oldest]
-          // 3. Prepend Newest -> [Newest, Newer, Oldest]
+          // The server sends newest first; prepend oldest first so the newest ends on top.
           d.items.slice().reverse().forEach(it => prependItem(it));
           if (!d.items.length) {
             const empty = document.createElement("p");
@@ -190,10 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
       setInterval(() => {
         refreshCount();
         bootstrapList();
-      }, 5000); // always keep a 5s poll
+      }, 5000);
     }
 
-    // init
     startPollingLoop();
     if (window.DEBUG) console.debug("Notifications: Bell initialized");
   } catch (err) {

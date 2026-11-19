@@ -9,8 +9,8 @@
   padding: 20px 30px;
   background: var(--card-bg);
   border-radius: 12px;
-  border: 3px solid var(--ink); /* Added border */
-  box-shadow: 4px 4px 0 var(--ink); /* Added hard shadow */
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
   font-family: var(--font-body);
   display: flex;
   flex-direction: column;
@@ -97,10 +97,6 @@
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 8px;
-}
-
-.session-list {
-  /* removed height constraints - wrapper handles it */
 }
 
 .dashboard-wrapper li {

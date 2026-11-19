@@ -80,6 +80,11 @@
   --chart-messages: #4d7cff;
   --chart-messages-edge: #2f55b3;
 
+  /* Whiteboard: white paper with a faint grid (the grid is never exported) */
+  --board-paper: #fff;
+  --board-grid: #e6edf2;
+  --board-grid-major: #d5e0e8;
+
   /* Tools */
   --stone: #bdc3c7;       /* neutral buttons */
   --violet: #9b59b6;      /* highlighter */

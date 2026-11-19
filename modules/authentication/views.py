@@ -42,17 +42,11 @@ def signup_view(request):
 
 class CustomLoginView(LoginView):
     template_name = "authentication/login.html"
-    # When users log in, always send them to their role-based dashboard
-    # instead of honoring a `next` query parameter that may point back
-    # to a previously accessed session URL.
-    # Show the login page even if already authenticated (prevents
-    # automatic redirect to dashboards when visiting /auth/login).
+    # Signed-in users can still open the login page (e.g. to switch account).
     redirect_authenticated_user = False
 
     def get_success_url(self):
-        # Ignore any `next` parameter and always redirect to the
-        # dashboard redirector which will send students/teachers/admins
-        # to their appropriate dashboard.
+        # Ignore `next`: it could point back at a session the user has no access to now.
         return reverse_lazy("redirect_dashboard")
 
     def form_invalid(self, form):

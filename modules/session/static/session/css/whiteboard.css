@@ -1,4 +1,3 @@
-/* Duplicate centering rules removed - layout already centered below */
 /* ---------- Base ---------- */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -9,7 +8,6 @@
   overflow: hidden;
   flex: 1;        /* fills the viewport-locked .main--fill area */
   min-height: 0;
-  padding: 12px 20px 20px 20px; /* compact padding */
   display: flex;
   flex-direction: column;
 }
@@ -18,39 +16,30 @@
 .session-title {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.35rem;
+  font-weight: 800;
   color: var(--text-dark);
-  text-align: center;
-  margin: 8px auto 12px auto; /* compact margins, auto left/right */
-  letter-spacing: 0.5px;
-  text-shadow: 2px 2px 0 var(--honey);
-  animation: fadeInTitle 0.8s ease;
-  flex-shrink: 0; /* prevent title from shrinking */
+  text-align: left;
+  margin: 0 0 12px;
+  flex-shrink: 0;
 }
 
-@keyframes fadeInTitle {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 
 /* ---------- Layout ---------- */
 .whiteboard-layout {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  align-items: stretch;
   gap: 16px;
   width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding-bottom: 0; /* remove extra bottom padding */
   flex-wrap: nowrap;
-  flex: 1; /* take remaining space */
-  overflow: hidden; /* prevent layout overflow */
+  flex: 1;
+  min-height: 0;
 }
 
 /* ---------- Main Whiteboard Container ---------- */
@@ -59,13 +48,12 @@
   display: flex;
   flex-direction: column;
   background: var(--card-bg);
-  border: 3px solid var(--ink);
-  border-radius: 12px;
-  box-shadow: 6px 6px 0 var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-hard);
   overflow: hidden;
-  width: 100%;
-  height: 100%; /* fill available space */
-  max-height: calc(100vh - 180px); /* cap height to fit viewport */
+  min-width: 0;
+  min-height: 0;
   position: relative;
 }
 
@@ -75,11 +63,15 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
-  padding: 8px 12px;
+  padding: 8px 10px;
   background: var(--surface);
   border-bottom: 2px solid var(--ink);
-  gap: 10px;
+  gap: 6px 8px;
 }
+
+/* Compact tools so the toolbar fits in one or two rows */
+.toolbar .btn { padding: 6px 11px; font-size: 0.86rem; box-shadow: 2px 2px 0 var(--ink); }
+.toolbar label { font-size: 0.86rem; font-weight: 700; }
 
 .toolbar label {
   font-weight: 600;
@@ -101,7 +93,7 @@
   min-width: 40px;
 }
 
-/* ---------- Mode Toggle Button (NEW) ---------- */
+/* ---------- Mode Toggle Button ---------- */
 #modeToggleBtn {
   font-weight: 600;
   padding: 6px 12px;
@@ -138,7 +130,7 @@
   text-overflow: ellipsis;
 }
 
-/* ---------- Uploaded Files Container (NEW) ---------- */
+/* ---------- Uploaded Files Container ---------- */
 .uploaded-files-container {
   background: var(--surface);
   border-bottom: 1px solid var(--line);
@@ -198,9 +190,16 @@
   position: relative;
   width: 100%;
   flex: 1;
+  min-height: 360px;
   overflow: hidden;
-  /* fit to container height */
-  max-height: 100%;
+  /* white paper with a faint grid; major lines every five squares */
+  background-color: var(--board-paper);
+  background-image:
+    linear-gradient(var(--board-grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--board-grid-major) 1px, transparent 1px),
+    linear-gradient(var(--board-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--board-grid) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
 }
 
 /* Remove absolute positioning for base canvas to keep container height */
@@ -213,10 +212,9 @@
   cursor: crosshair;
   touch-action: none;
   user-select: none;
-  image-rendering: pixelated;
   pointer-events: auto;
-  /* Prevent layout shifts from hidden snapshot elements */
   margin: 0;
+  background: transparent;
 }
 #snapshotImg { display:none !important; }
 
@@ -256,15 +254,14 @@
 
 /* ---------- Participants Panel ---------- */
 .participants-panel {
-  width: 260px;
+  width: 240px;
   background: var(--surface);
   border: 2px solid var(--ink);
-  border-radius: 12px;
-  box-shadow: 4px 4px 0 var(--ink);
-  padding: 16px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-hard);
+  padding: 14px;
   overflow-y: auto;
-  max-height: calc(100vh - 180px); /* match container height */
-  flex-shrink: 0; /* prevent panel from shrinking */
+  flex-shrink: 0;
 }
 
 .participants-panel h3 {
@@ -294,6 +291,9 @@
 .participant-name {
   font-weight: 600;
   color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Group presence dot with name */
@@ -301,6 +301,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Presence indicator */
@@ -366,13 +368,6 @@ input:checked + .slider:before { transform: translateX(18px); }
   width: 100%;
 }
 
-/* Remove old pin overlay styles if pinLayer removed
-.pin-layer { position:absolute; inset:0; pointer-events:none; }
-.pin-marker { position:absolute; width:26px; height:26px; transform:translate(-50%, -100%); animation: pin-pop .25s ease; }
-.pin-marker::before { content:"📍"; font-size:24px; line-height:1; }
-@keyframes pin-pop { from { transform:translate(-50%, -100%) scale(.4); opacity:0; } to { transform:translate(-50%, -100%) scale(1); opacity:1; } }
-*/
-
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
@@ -386,6 +381,10 @@ input:checked + .slider:before { transform: translateX(18px); }
     max-width: 600px;
     height: auto;
   }
+
+  .whiteboard-layout { width: 100%; }
+  .whiteboard-container { width: 100%; }
+  .canvas-stack { min-height: 60vh; }
 
   .toolbar {
     justify-content: center;

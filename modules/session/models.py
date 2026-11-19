@@ -16,9 +16,6 @@ def generate_session_code():
             return code
 
 
-# ==========================
-# 🎯 SESSION MODEL
-# ==========================
 class Session(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100)
@@ -46,9 +43,6 @@ class Session(models.Model):
         return self.title
 
 
-# ==========================
-# 🧍 PARTICIPANT MODEL
-# ==========================
 class Participant(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='participants')
@@ -62,10 +56,7 @@ class Participant(models.Model):
         return f"{self.user.username} in {self.session.title}"
 
 
-# ==========================
-# 💬 CHAT MESSAGE MODEL (CW-25)
 # Legacy: live chat uses modules.chat.Message. Kept so existing data/migrations stay valid.
-# ==========================
 class ChatMessage(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="messages")
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -79,9 +70,6 @@ class ChatMessage(models.Model):
         ordering = ['-timestamp']
 
 
-# ==========================
-# 🖼️ UPLOADED FILES / IMAGES (CW-26)
-# ==========================
 class UploadedFile(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploads")
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

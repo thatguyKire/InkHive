@@ -423,10 +423,13 @@ img { max-width: 100%; height: auto; display: inline-block; }
 .main > * { flex-shrink: 0; }
 
 /* Opt-in for full-screen tools (the whiteboard): the main area is exactly the
-   viewport; the page's wrapper takes the rest with `flex: 1; min-height: 0`. */
-@media (min-width: 769px) {
-  .main--fill { height: 100vh; overflow: hidden; }
+   viewport and the page's wrapper takes the rest with `flex: 1; min-height: 0`.
+   The top bar steps aside and the demo notice shrinks to give the tool room. */
+@media (min-width: 1025px) {
+  .main--fill { height: 100vh; overflow: hidden; padding-top: 14px; padding-bottom: 16px; }
 }
+.main--fill .topbar { display: none; }
+.main--fill .demo-banner { margin-bottom: 10px; padding: 6px 12px; font-size: 0.82rem; }
 
 /* ---------- Phone navigation (drawer) ---------- */
 .mobile-nav-btn,

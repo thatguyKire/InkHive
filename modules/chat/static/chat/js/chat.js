@@ -51,7 +51,7 @@
   function hideDisabled(){
     if (disabledNotice){
       disabledNotice.classList.add("hidden");
-      disabledNotice.textContent = "";               // clear stale text
+      disabledNotice.textContent = "";
     }
     if (disabledPopup){
       disabledPopup.classList.add("hidden");
@@ -107,7 +107,7 @@
         }
         if (!r.ok || !d.room_id) return;
         roomId = d.room_id;
-        hideDisabled();                               // ensure UI clears once room ready
+        hideDisabled();
         log("Room ID set:", roomId);
         loadMessages(true);
         if (open) startPolling();

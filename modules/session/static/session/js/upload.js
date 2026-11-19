@@ -19,7 +19,7 @@
     const parts = window.location.pathname.split("/").filter(Boolean);
     const idx = parts.indexOf("session");
     if (idx !== -1 && parts[idx + 1]) return parts[idx + 1];
-    // As a last resort, try the previous logic
+    // Last resort: the final path segment
     return parts.pop();
   }
 

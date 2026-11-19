@@ -201,7 +201,7 @@
   background: var(--error-dark);
 }
 
-/* Back button (if added later) */
+/* Back button */
 .back-dashboard {
   position: absolute;
   top: 20px;

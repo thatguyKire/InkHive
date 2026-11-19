@@ -1,4 +1,3 @@
-# modules/authentication/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
@@ -82,7 +81,6 @@ class CustomSignupForm(UserCreationForm):
         email = (self.cleaned_data.get("email") or "").strip().lower()
         if not email:
             raise forms.ValidationError("Enter a valid email address.")
-        # check for existing users with same email (case-insensitive)
         if CustomSignupForm.Meta.model.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("A user with that email address already exists.")
         return email

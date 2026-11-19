@@ -39,9 +39,6 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
 UPLOADS_PER_10_MIN = 30
 
 
-# ==========================
-# 📂 FILE UPLOAD HANDLER
-# ==========================
 @login_required
 @safe_view
 def upload_attachment(request, session_id):
@@ -111,9 +108,6 @@ def upload_attachment(request, session_id):
     })
 
 
-# ==========================
-# 🧾 QR GENERATOR
-# ==========================
 @login_required
 @safe_view
 def session_qr(request, session_id):
@@ -129,9 +123,6 @@ def session_qr(request, session_id):
     return FileResponse(buf, content_type="image/png")
 
 
-# ==========================
-# 📄 EXPORT SESSION AS PDF
-# ==========================
 @login_required
 @safe_view
 def export_session_pdf(request, session_id):
@@ -164,9 +155,6 @@ def export_session_pdf(request, session_id):
     return FileResponse(buf, as_attachment=True, filename=f"session_{session.code}.pdf", content_type="application/pdf")
 
 
-# ==========================
-# 🌀 DUPLICATE SESSION
-# ==========================
 @login_required
 @safe_view
 def duplicate_session(request, session_id):

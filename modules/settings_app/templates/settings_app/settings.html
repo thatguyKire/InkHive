@@ -10,7 +10,6 @@
 {% block content %}
 <div class="settings-page">
 
-  <!-- Header -->
   <div class="settings-header">
     <a href="{% if user.role == 'teacher' %}
                 {% url 'teacher_dashboard' %}
@@ -28,7 +27,6 @@
     </div>
   </div>
 
-  <!-- Options -->
   <div class="settings-container" data-stagger>
     <a href="{% url 'profile' %}" class="setting-card">
       <img src="{% static 'core/icons/profile-settings.svg' %}" alt="Profile Management">

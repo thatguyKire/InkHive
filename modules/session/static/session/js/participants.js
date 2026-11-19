@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const m=document.cookie.match('(^|;)\\s*'+name+'\\s*=\\s*([^;]+)');return m?m.pop():"";
   }
 
-  // Extracted handler for reuse
   async function handlePermissionChange(e, form) {
       e.preventDefault();
       const userId = form.dataset.userId;
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   }
 
-  // Attach to initial forms
   forms.forEach(form => {
     form.addEventListener("change", (e) => handlePermissionChange(e, form));
   });
@@ -67,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
       async function updateParticipantList(presentIds) {
           if (!listUrl || !listEl) return;
           
-          // Check which IDs are already in the DOM
           const currentIds = new Set();
           document.querySelectorAll(".participants-panel .participant-item").forEach(li => {
               const uid = li.dataset.userId || li.querySelector(".toggle-draw-form")?.dataset.userId;
@@ -77,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Identify if any present user is missing from the DOM
           const missingIds = presentIds.filter(id => !currentIds.has(String(id)));
           
-          if (missingIds.length === 0) return; // Nothing to add
+          if (missingIds.length === 0) return;
 
           try {
               const res = await fetch(listUrl);
@@ -88,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
               const newParticipants = data.participants.filter(p => missingIds.includes(p.user_id));
 
               newParticipants.forEach(p => {
-                  // Double check existence
                   if (document.querySelector(`.participant-item[data-user-id="${p.user_id}"]`)) return;
 
                   const li = document.createElement("li");
@@ -113,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
                   li.querySelector(".participant-name").textContent = p.username;
                   listEl.appendChild(li);
 
-                  // Bind event listener
                   const form = li.querySelector(".toggle-draw-form");
                   form.addEventListener("change", (e) => handlePermissionChange(e, form));
               });
@@ -133,8 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       async function handlePresenceSync() {
         const present = computePresentIds();
-        await updateParticipantList(present); // Add new users if any
-        applyUiFilter(present); // Update status
+        await updateParticipantList(present);
+        applyUiFilter(present);
         
         // debounce server sync
         clearTimeout(syncTimer);

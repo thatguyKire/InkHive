@@ -1,4 +1,4 @@
-// Live refresh of the attendance table (moved out of the template for CSP).
+// Live refresh of the attendance table (a separate file: the CSP blocks inline scripts).
 (function(){
   const actions = document.querySelector('.card-actions');
   const url = actions?.getAttribute('data-json-url');
