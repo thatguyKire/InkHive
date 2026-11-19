@@ -4,7 +4,8 @@
    from tokens.css; hover/press motion from motion.css.
 
    .icon          a line icon tinted with currentColor:
-                  <span class="icon" style="--icon:url('…/pen.svg')"></span>
+                  set its image with an inline --icon custom property (see the
+                  teacher dashboard template for an example)
    .page-head     eyebrow + headline (.ink-underline) + subtitle
    .stat-card     label, big value, delta, .icon-tile
    .panel         a card with a .panel-head (title, subtitle, action)
