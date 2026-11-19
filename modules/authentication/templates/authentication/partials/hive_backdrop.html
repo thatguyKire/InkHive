@@ -1,0 +1,81 @@
+{% comment %}
+  Ambient InkHive scene behind the sign-in pages: warm light, a faint drifting
+  honeycomb, ink lines that write themselves, and bees leaving a dotted ink
+  trail. Purely decorative; styles and motion in authentication/css/backdrop.css.
+{% endcomment %}
+<div class="hive-backdrop" aria-hidden="true">
+  <div class="hb-glow hb-glow--honey"></div>
+  <div class="hb-glow hb-glow--teal"></div>
+
+  <svg class="hb-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" focusable="false">
+    <defs>
+      <!-- Honeycomb tile (two half-offset rows) -->
+      <pattern id="hb-cells" width="56" height="100" patternUnits="userSpaceOnUse" patternTransform="scale(1.35)">
+        <path class="hb-cell" d="M28 66L0 50V16L28 0l28 16v34L28 66v34"/>
+      </pattern>
+      <!-- The comb shows at the edges and fades out behind the form -->
+      <radialGradient id="hb-fade" cx="50%" cy="50%" r="62%">
+        <stop offset="0.45" stop-color="#000"/>
+        <stop offset="1" stop-color="#9a9a9a"/>
+      </radialGradient>
+      <mask id="hb-edges">
+        <rect width="1440" height="900" fill="url(#hb-fade)"/>
+      </mask>
+
+      <!-- Flight paths (also drawn faintly as dotted ink trails) -->
+      <path id="hb-flight-1" d="M-60 210C180 90 360 300 560 190S900 40 1080 150 1380 330 1520 210"/>
+      <path id="hb-flight-2" d="M1500 720C1260 820 1080 600 860 700S470 860 260 740-20 610-80 700"/>
+      <path id="hb-flight-3" d="M200 980C260 760 120 620 300 480S520 300 420 -80"/>
+
+      <!-- One bee, facing right (+x) so rotate="auto" points it along its path -->
+      <g id="hb-bee-shape">
+        <ellipse class="hb-wing" cx="-2" cy="-9" rx="8" ry="5"/>
+        <ellipse class="hb-wing hb-wing--back" cx="5" cy="-8" rx="7" ry="4.5"/>
+        <ellipse class="hb-bee-body" cx="0" cy="0" rx="11" ry="7.5"/>
+        <path class="hb-bee-stripe" d="M-3 -7v14M3 -7v14"/>
+        <circle class="hb-bee-head" cx="11" cy="0" r="4.6"/>
+        <path class="hb-bee-nib" d="M-11 0l-7 -3v6z"/>
+      </g>
+    </defs>
+
+    <!-- Honeycomb, drifting upward behind a soft vignette -->
+    <g mask="url(#hb-edges)">
+      <rect class="hb-comb" x="-80" y="-140" width="1600" height="1180" fill="url(#hb-cells)"/>
+    </g>
+
+    <!-- Ink lines that write themselves along the edges -->
+    <g class="hb-ink">
+      <path class="hb-stroke hb-stroke--1" pathLength="1" d="M70 140C140 90 230 120 260 170s110 60 170 10"/>
+      <path class="hb-stroke hb-stroke--2" pathLength="1" d="M1060 120c60-40 150-30 190 20s100 50 150 0"/>
+      <path class="hb-stroke hb-stroke--3" pathLength="1" d="M90 780c80 30 170-40 250-10s120 70 210 20"/>
+      <path class="hb-stroke hb-stroke--4" pathLength="1" d="M1110 790c40-60 130-70 180-30s70 80 130 40"/>
+    </g>
+
+    <!-- Dotted ink trails and the bees writing them -->
+    <g class="hb-trails">
+      <use href="#hb-flight-1"/>
+      <use href="#hb-flight-2"/>
+      <use class="hb-trail-3" href="#hb-flight-3"/>
+    </g>
+    <g class="hb-bees">
+      <use class="hb-bee" href="#hb-bee-shape">
+        <animateMotion dur="26s" repeatCount="indefinite" rotate="auto"><mpath href="#hb-flight-1"/></animateMotion>
+      </use>
+      <use class="hb-bee" href="#hb-bee-shape">
+        <animateMotion dur="32s" begin="-9s" repeatCount="indefinite" rotate="auto"><mpath href="#hb-flight-2"/></animateMotion>
+      </use>
+      <use class="hb-bee hb-bee-3" href="#hb-bee-shape">
+        <animateMotion dur="22s" begin="-4s" repeatCount="indefinite" rotate="auto"><mpath href="#hb-flight-3"/></animateMotion>
+      </use>
+    </g>
+
+    <!-- Pollen drifting up -->
+    <g class="hb-pollen">
+      <circle cx="300" cy="640" r="3.5"/>
+      <circle cx="1180" cy="520" r="3"/>
+      <circle cx="760" cy="840" r="2.6"/>
+      <circle cx="1320" cy="300" r="2.4"/>
+      <circle cx="140" cy="420" r="2.8"/>
+    </g>
+  </svg>
+</div>

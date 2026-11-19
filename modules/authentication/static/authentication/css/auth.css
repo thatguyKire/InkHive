@@ -44,17 +44,6 @@ body {
 
 .auth-brand-tag { color: var(--muted); font-size: 1rem; line-height: 1.45; }
 
-/* Keep a single keyframes block (this one) */
-@keyframes moveBg {
-  0% { background-position: 0 0; }
-  100% { background-position: 400px 200px; }
-}
-
-/* Base animated paper background: one source of truth */
-.auth-bg {
-  background: var(--paper-deep); /* paper-like */
-}
-
 /* Card container */
 .auth-card {
   background: var(--surface);
@@ -209,111 +198,6 @@ body {
   margin-top: 5px;
 }
 
-/* ===== Artistic Curved Title ===== */
-.title-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 500px;
-  margin-top: 100px;    /* brings the title a bit lower */
-}
-
-
-.curved-title {
-  width: 100%;
-  max-width: 1200px;
-  height: 180px; /* reduced height */
-}
-
-.curved-title text {
-  font-size: 6rem; /* smaller but still readable */
-  font-weight: 1000;
-  fill: var(--text-dark);
-  font-family: var(--font-body);
-  text-shadow: 2px 2px var(--honey-light), -2px -2px var(--honey-light);
-  letter-spacing: 2px;
-  animation: waveText 3s ease-in-out infinite;
-}
-
-
-/* Wavy text animation */
-@keyframes waveText {
-  0%   { transform: rotate(-2deg); }
-  50%  { transform: rotate(2deg); }
-  100% { transform: rotate(-2deg); }
-}
-
-.page-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* Centers horizontally */
-  justify-content: flex-start;
-  min-height: 100vh;
-  width: 100%;
-}
-
-/* Optional: slightly reduce space if it feels too far apart */
-.title-wrapper {
-  margin-bottom: 60px; /* was 100px — you can adjust */
-}
-
-/* Respect user's reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  body { animation: none; }
-}
-
-/* Programmatic reduce-motion class: applied on low-power/low-core devices */
-.reduce-motion .draw-lines,
-.reduce-motion .paper-noise {
-  display: none !important;
-}
-
-.reduce-motion .auth-card,
-.reduce-motion .curved-title {
-  animation: none !important;
-  transition: none !important;
-  filter: none !important; /* avoid expensive filters on low-end devices */
-}
-
-.reduce-motion .auth-card { transform: none !important; }
-
-/* Animated lines layer (behind content, above paper noise) */
-.draw-lines {
-  position: fixed;
-  inset: 0;
-  z-index: 1;           /* paper-noise is 0; content is 2 */
-  pointer-events: none; /* it's decorative */
-  overflow: hidden;
-}
-.draw-svg { width: 100%; height: 100%; }
-
-/* Ensure content sits above backgrounds */
-.page-container, .auth-card { position: relative; z-index: 2; }
-
-/* Respect reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .draw-lines { display: none; }
-}
-
-/* Reduce motion/density on small screens */
-@media (max-width: 640px) {
-  .draw-lines { display: none; }        /* hide scribbles on small devices */
-  .title-wrapper { margin-bottom: 32px; }
-}
-
-/* Paper noise layer (behind everything) */
-.paper-noise {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Paper-like base (no doodle-light.png) */
-.auth-bg {
-  background: var(--paper-deep);
-}
-
 /* Narrow screens: a smaller brand row above the card */
 @media (max-width: 980px) {
   .auth-brand { flex-direction: row; max-width: none; gap: 12px; }
@@ -323,7 +207,13 @@ body {
   .auth-card { width: 92vw; }
 }
 
-/* Optional: reduce scribble intensity behind form for readability */
+/* The card floats gently; not for reduced motion or low-power devices (auth.js). */
+@media (prefers-reduced-motion: reduce) {
+  .auth-card { animation: none; }
+}
+.reduce-motion .auth-card { animation: none; transform: none; }
+
+/* Soften the backdrop behind the form for readability */
 .auth-card::after {
   content: "";
   position: absolute;

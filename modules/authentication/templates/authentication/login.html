@@ -8,11 +8,11 @@
   <link rel="icon" type="image/svg+xml" href="{% static 'core/icons/logo.svg' %}">
   <link rel="stylesheet" href="{% static 'core/css/tokens.css' %}">
   <link rel="stylesheet" href="{% static 'authentication/css/auth.css' %}">
+  <link rel="stylesheet" href="{% static 'authentication/css/backdrop.css' %}">
   <script src="{% static 'authentication/js/auth.js' %}" defer></script>
 </head>
 <body class="auth-bg">
-{% include 'authentication/partials/draw_lines.html' %}
-{% include 'authentication/partials/paper_noise.html' %}
+{% include 'authentication/partials/hive_backdrop.html' %}
 
     {% include 'authentication/partials/brand.html' %}
 
